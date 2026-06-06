@@ -1,0 +1,173 @@
+// request
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
+export interface LogoutRequest {
+  session_id: string;
+}
+
+export interface SendOtpRequest {
+  email: string;
+}
+
+export interface VerifyOtpRequest {
+  email: string;
+  otp_code: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+// response
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  message: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  session_id: string;
+}
+
+export interface AccountResponse {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  avatar_url?: string;
+}
+
+export interface ConversationListResponse {
+  conversation_id: string;
+  type: "private" | "group";
+  name: string;
+  avatar_url?: string;
+  last_message: string;
+  is_last_message_me: boolean;
+  is_last_message_seen: boolean;
+  is_online: boolean;
+}
+
+export interface ConversationDetailResponse {
+  conversation_id: string;
+  type: "private" | "group";
+  name: string; // tên group hoặc tên mình
+  avatar_url?: string; // avatar group hoặc của mình
+  is_online: boolean; // group online có ít nhất 1 member online trừ bản thân
+  members: ConversationMemberResponse[];
+  messages: PageResponse<MessageResponse>;
+  created_at: string;
+}
+
+export interface ConversationMemberResponse {
+  member_id: string;
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  avatar_url?: string;
+  status: "online" | "offline";
+  role: "owner" | "admin" | "member"; // private thì cả 2 đều là member
+  joined_at: string;
+}
+
+export interface MessageResponse {
+  message_id: string;
+  conversation_id: string;
+  sender_id: string;
+  sender_name: string;
+  sender_avatar_url?: string;
+  content?: string;
+  attachments?: MessageAttachmentResponse[];
+  reply_message?: ReplyMessageResponse;
+  seen_by?: MessageSeenResponse[];
+  is_recalled: boolean;
+  is_me: boolean;
+  is_seen: boolean;
+  created_at: string;
+}
+
+export interface MessageSeenResponse {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  avatar_url?: string;
+}
+
+export interface MessageAttachmentResponse {
+  attachment_id: string;
+  type: "image" | "document" | "audio";
+  url: string;
+  file_name: string;
+  file_size: number;
+  mime_type: string;
+}
+
+export interface ReplyMessageResponse {
+  message_id: string;
+  sender_name: string;
+  content?: string;
+  attachments?: MessageAttachmentResponse[];
+}
+
+export interface FriendResponse {
+  user_id: string;
+  conversation_id: string;
+  first_name: string;
+  last_name: string;
+  avatar_url?: string;
+  is_online: boolean;
+  updated_at: string; // khi status = accepted
+}
+
+export interface FriendRequestResponse {
+  request_id: string;
+  requester_id: string; // người yêu cầu
+  first_name: string;
+  last_name: string;
+  avatar_url?: string;
+  created_at: string;
+}
+
+// token
+export interface AccessTokenPayload {
+  sub: string; // userId
+  sessionId: string;
+  iat: number;
+  exp: number;
+}
+
+export interface RefreshTokenPayload {
+  sub: string; // userId
+  iat: number;
+  exp: number;
+}
+
+export interface CookieOptions {
+  expires?: number; // ngày
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: "Strict" | "Lax" | "None";
+}

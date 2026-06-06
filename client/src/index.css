@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0866ff;
+  --color-secondary: #ebf5ff;
+
+  --color-success: #74c69d;
+  --color-info: #076ffe;
+  --color-danger: #d9534f;
+  --color-neutral: #74767d;
+
+  --font-family: "Quicksand", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-family text-[#444];
+  }
+
+  a,
+  img {
+    @apply block;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  h1 {
+    @apply text-[1.8rem] font-bold;
+  }
+  h2 {
+    @apply text-[1.6rem] font-bold;
+  }
+  h3 {
+    @apply text-[1.4rem] font-bold;
+  }
+  h4 {
+    @apply text-[1.2rem] font-bold;
+  }
+  h5 {
+    @apply text-[1rem] font-semibold;
+  }
+
+  p,
+  span,
+  input,
+  select,
+  textarea,
+  button,
+  label {
+    @apply text-[0.9rem];
+  }
+
+  small {
+    @apply text-[0.75rem];
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer components {
+  .custom-scroll::-webkit-scrollbar {
+    width: 0px;
+  }
+}
