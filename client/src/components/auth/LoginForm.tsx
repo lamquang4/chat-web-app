@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Overplay from "../ui/Overplay";
 import Loading from "../ui/Loading";
 import Label from "../ui/Label";
