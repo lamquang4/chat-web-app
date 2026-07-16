@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Overplay from "../ui/Overplay";
 import Loading from "../ui/Loading";
 import Label from "../ui/Label";
@@ -9,38 +9,38 @@ import { Eye, EyeOff } from "lucide-react";
 import { useAppDispatch } from "../../redux/store";
 import { setAuthView } from "../../redux/slices/authSlice";
 import { setRegisterData } from "../../redux/slices/registerSlice";
-
+import { registerSchema, type RegisterData } from "../../schemas/authSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 function RegisterForm() {
   const dispatch = useAppDispatch();
 
-  const [data, setData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<RegisterData>({
+    resolver: zodResolver(registerSchema),
+    mode: "onBlur",
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      password: "",
+    },
   });
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-    // clearError(name as keyof typeof data);
-  };
-
   const isLoading = false;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    //if (!validateAll()) return;
-
+  const onSubmit = (data: RegisterData) => {
     dispatch(
       setRegisterData({
         first_name: data.first_name,
@@ -51,16 +51,18 @@ function RegisterForm() {
       }),
     );
 
+    reset();
+
     dispatch(setAuthView("otp"));
   };
 
   return (
     <>
-      <div className="w-full px-[15px] md:px-[30px] py-[40px] bg-white">
+      <div className="w-full px-[15px] md:px-[30px] sm:py-[60px] py-[40px] bg-white">
         <h1 className="relative text-center uppercase mb-6">Đăng ký</h1>
 
-        <form className="space-y-[15px]" onSubmit={handleSubmit}>
-          <div className="flex gap-[15px]">
+        <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex gap-[15px] sm:flex-row flex-col">
             <div className="space-y-[5px] w-full">
               <Label htmlFor="first_name" required>
                 Họ
@@ -68,13 +70,13 @@ function RegisterForm() {
               <Input
                 type="text"
                 id="first_name"
-                name="first_name"
-                value={data.first_name}
-                onChange={handleChange}
                 placeholder="Nhập họ"
-                className="block w-full px-3 py-2 border border-gray-300"
+                className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                error={errors.first_name?.message}
+                {...register("first_name")}
               />
-              <FieldError message={"errors.first_name"} />
+
+              <FieldError message={errors.first_name?.message} />
             </div>
 
             <div className="space-y-[5px] w-full">
@@ -84,30 +86,43 @@ function RegisterForm() {
               <Input
                 type="text"
                 id="last_name"
-                name="last_name"
-                value={data.last_name}
-                onChange={handleChange}
                 placeholder="Nhập tên"
-                className="block w-full px-3 py-2 border border-gray-300"
+                className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                error={errors.last_name?.message}
+                {...register("last_name")}
               />
-              <FieldError message={"errors.last_name"} />
+              <FieldError message={errors.last_name?.message} />
             </div>
           </div>
 
-          <div className="space-y-[5px]">
+          <div className="space-y-[5px] w-full">
             <Label htmlFor="email" required>
               Email
             </Label>
             <Input
               type="email"
               id="email"
-              name="email"
-              value={data.email}
-              onChange={handleChange}
               placeholder="Nhập email"
-              className="block w-full px-3 py-2 border border-gray-300"
+              className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+              error={errors.email?.message}
+              {...register("email")}
             />
-            <FieldError message={"errors.email"} />
+            <FieldError message={errors.email?.message} />
+          </div>
+
+          <div className="space-y-[5px] w-full">
+            <Label htmlFor="phone" required>
+              Số điện thoại
+            </Label>
+            <Input
+              type="tel"
+              id="phone"
+              placeholder="Nhập số điện thoại"
+              className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+              error={errors.phone?.message}
+              {...register("phone")}
+            />
+            <FieldError message={errors.phone?.message} />
           </div>
 
           <div className="space-y-[5px]">
@@ -119,11 +134,10 @@ function RegisterForm() {
               <Input
                 type={!showPassword ? "password" : "text"}
                 id="password"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
                 placeholder="Nhập mật khẩu"
-                className="block w-full px-3 pr-12 py-2 border border-gray-300"
+                {...register("password")}
+                error={errors.password?.message}
+                className="block w-full px-3 pr-12 py-2 border border-gray-300 focus:border-primary"
               />
 
               <Button
@@ -135,7 +149,7 @@ function RegisterForm() {
               </Button>
             </div>
 
-            <FieldError message={"errors.password"} />
+            <FieldError message={errors.password?.message} />
           </div>
 
           <Button

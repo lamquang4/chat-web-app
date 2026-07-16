@@ -8,42 +8,47 @@ import Button from "../ui/Button";
 import { Eye, EyeOff } from "lucide-react";
 import { useAppDispatch } from "../../redux/store";
 import { setAuthView } from "../../redux/slices/authSlice";
+import { loginSchema, type LoginData } from "../../schemas/authSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 function LoginForm() {
   const dispatch = useAppDispatch();
 
-  const [data, setData] = useState({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<LoginData>({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-    // clearError(name as keyof typeof data);
-  };
-
   const isLoading = false;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: LoginData) => {
+    console.log(data);
 
-    //if (!validateAll()) return;
+    reset();
   };
 
   return (
     <>
-      <div className="w-full px-[15px] md:px-[30px] py-[40px] bg-white">
+      <div className="w-full px-[15px] md:px-[30px] sm:py-[60px] py-[40px] bg-white">
         <h1 className="relative text-center uppercase mb-6">Đăng nhập</h1>
 
-        <form className="space-y-[15px]" onSubmit={handleSubmit}>
+        <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-[5px]">
             <Label htmlFor="email" required>
               Email
@@ -51,16 +56,15 @@ function LoginForm() {
             <Input
               type="email"
               id="email"
-              name="email"
-              value={data.email}
-              onChange={handleChange}
               placeholder="Nhập email"
-              className="block w-full px-3 py-2 border border-gray-300"
+              className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+              error={errors.email?.message}
+              {...register("email")}
             />
-            <FieldError message={""} />
+            <FieldError message={errors.email?.message} />
           </div>
 
-          <div className="space-y-[5px]">
+          <div>
             <Label htmlFor="password" required>
               Mật khẩu
             </Label>
@@ -69,12 +73,10 @@ function LoginForm() {
               <Input
                 type={!showPassword ? "password" : "text"}
                 id="password"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
                 placeholder="Nhập mật khẩu"
-                className="block w-full px-3 pr-12 py-2 border border-gray-300"
-                error={"errors.password"}
+                className="block w-full px-3 pr-12 py-2 border border-gray-300 focus:border-primary"
+                {...register("password")}
+                error={errors.password?.message}
               />
 
               <Button
@@ -86,7 +88,7 @@ function LoginForm() {
               </Button>
             </div>
 
-            <FieldError message={"errors.password"} />
+            <FieldError message={errors.password?.message} />
           </div>
 
           <Button
@@ -104,7 +106,7 @@ function LoginForm() {
               type="button"
               className="text-primary font-medium"
             >
-              Đăng kí
+              Đăng ký
             </Button>
           </p>
         </form>

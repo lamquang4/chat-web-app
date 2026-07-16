@@ -4,7 +4,6 @@
 @theme {
   --color-primary: #0866ff;
   --color-secondary: #ebf5ff;
-
   --color-success: #74c69d;
   --color-info: #076ffe;
   --color-danger: #d9534f;
@@ -53,7 +52,8 @@
   select,
   textarea,
   button,
-  label {
+  label,
+  a {
     @apply text-[0.9rem];
   }
 
@@ -72,4 +72,7 @@
   .custom-scroll::-webkit-scrollbar {
     width: 0px;
   }
+}
+
+@layer utilities {
 }

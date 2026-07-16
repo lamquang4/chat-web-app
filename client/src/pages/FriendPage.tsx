@@ -1,4 +1,4 @@
-import FriendContainer from "../components/chat/friend/FriendContainer";
+import FriendContainer from "../components/friend/FriendContainer";
 import Layout from "../components/layout/Layout";
 
 function FriendPage() {

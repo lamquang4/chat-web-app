@@ -4,7 +4,7 @@ import Loading from "../ui/Loading";
 import Overplay from "../ui/Overplay";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
-import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constant/otp";
+import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constants/otp";
 import {
   validateOtp,
   validateOtpDigit,
@@ -119,6 +119,8 @@ function OtpForm() {
       toast.error("OTP không hợp lệ");
       return;
     }
+
+    reset();
   };
 
   return (
@@ -167,8 +169,8 @@ function OtpForm() {
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
                 className={`w-[45px] h-[45px] text-center text-[1rem] font-semibold border rounded-md transition-colors
-                          ${digit ? "border-success text-success" : "border-gray-300"}
-                          focus:border-success`}
+                          ${digit ? "border-primary text-primary" : "border-gray-300"}
+                          focus:border-primary`}
               />
             ))}
           </div>
@@ -202,7 +204,7 @@ function OtpForm() {
               timeLeft <= 0
             }
             type="submit"
-            className="w-full hover-scale bg-success text-white font-semibold rounded-sm px-5 py-2.5 text-center"
+            className="w-full hover-scale bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center"
           >
             Xác nhận
           </Button>

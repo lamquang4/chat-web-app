@@ -18,7 +18,7 @@ function SearchInput() {
         className="flex items-stretch w-full overflow-hidden duration-200 bg-gray-100 rounded-lg font-medium"
       >
         <div className="px-2 flex items-center">
-          <Search size={20} />
+          <Search size={20} strokeWidth={1.5} />
         </div>
 
         <Input

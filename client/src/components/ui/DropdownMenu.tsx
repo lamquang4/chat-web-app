@@ -13,12 +13,28 @@ interface DropdownMenuItem {
 
 interface Props {
   items: DropdownMenuItem[];
+  horizontal?: "left" | "right";
+  vertical?: "top" | "bottom";
 }
 
-function DropdownMenu({ items }: Props) {
+function DropdownMenu({
+  items,
+  horizontal = "right",
+  vertical = "bottom",
+}: Props) {
+  const horizontalClass = {
+    left: "left-0",
+    right: "right-0",
+  };
+
+  const verticalClass = {
+    top: "bottom-full mb-2",
+    bottom: "top-full mt-2",
+  };
+
   return (
     <div
-      className={`absolute top-full right-0 w-max bg-white shadow-md rounded-sm z-20`}
+      className={`absolute inline-flex flex-col ${horizontalClass[horizontal]} ${verticalClass[vertical]} w-max bg-white shadow-md rounded-sm z-20`}
     >
       {items.map((item, index) =>
         item.href ? (
@@ -26,10 +42,12 @@ function DropdownMenu({ items }: Props) {
             key={index}
             to={item.href}
             target={item.target}
-            className="px-2.5 py-3.5 hover:bg-gray-100 w-full"
+            className="block px-2.5 py-3.5 hover:bg-gray-100 w-full"
           >
             <div
-              className={`flex items-center gap-2 font-medium ${item.textColor ? item.textColor : "text-neutral"}`}
+              className={`flex items-center gap-2 font-medium ${
+                item.textColor ?? "text-neutral"
+              }`}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -38,14 +56,14 @@ function DropdownMenu({ items }: Props) {
         ) : (
           <Button
             key={index}
-            onClick={() => {
-              item.onClick?.();
-            }}
+            onClick={item.onClick}
             disabled={item.disabled}
-            className={`px-2.5 py-3.5 hover:bg-gray-100 w-full`}
+            className="px-2.5 py-3.5 hover:bg-gray-100 w-full"
           >
             <div
-              className={`flex items-center gap-2 font-medium ${item.textColor ? item.textColor : "text-neutral"}`}
+              className={`flex items-center gap-2 font-medium ${
+                item.textColor ?? "text-neutral"
+              }`}
             >
               {item.icon}
               <span>{item.label}</span>
