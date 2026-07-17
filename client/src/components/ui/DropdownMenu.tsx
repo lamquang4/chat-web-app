@@ -28,8 +28,8 @@ function DropdownMenu({
   };
 
   const verticalClass = {
-    top: "bottom-full mb-2",
-    bottom: "top-full mt-2",
+    top: "bottom-full",
+    bottom: "top-full",
   };
 
   return (

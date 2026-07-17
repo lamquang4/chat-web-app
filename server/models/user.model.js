@@ -39,7 +39,6 @@ const userSchema = new mongoose.Schema(
     password_hash: {
       type: String,
       required: true,
-      minlength: [6, "Mật khẩu tối thiểu 6 ký tự"],
     },
     avatar_url: { type: String, default: null },
     status: { type: String, enum: ["online", "offline"], default: "offline" },

@@ -50,7 +50,7 @@ function ProfileMenu() {
         </p>
       </div>
 
-      {dropDownOpen && <DropdownMenu items={menuItems} />}
+      {dropDownOpen && <DropdownMenu items={menuItems} vertical="bottom" />}
     </div>
   );
 }

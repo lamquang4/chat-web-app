@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { validatePassword } from "../utils/validation/validatePassword";
+import { validatePhone } from "../utils/validation/validatePhone";
 
 export const loginSchema = z.object({
   email: z
@@ -34,16 +36,18 @@ export const registerSchema = z.object({
     .string()
     .trim()
     .min(1, "Số điện thoại không để trống")
-    .regex(
-      /^(03[2-9]|05[689]|07[06-9]|08[0-689]|09[0-46-9])[0-9]{7}$/,
-      "Số điện thoại không hợp lệ",
-    ),
+    .refine(validatePhone, {
+      message: "Số điện thoại không hợp lệ",
+    }),
 
   password: z
     .string()
     .min(1, "Mật khẩu không để trống")
-    .min(6, "Mật khẩu tối thiểu 6 ký tự")
-    .max(100, "Mật khẩu tối đa 100 ký tự"),
+    .max(100, "Mật khẩu tối đa 100 ký tự")
+    .refine(validatePassword, {
+      message:
+        "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+    }),
 });
 
 export type RegisterData = z.infer<typeof registerSchema>;

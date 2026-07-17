@@ -7,10 +7,13 @@ import Button from "../../ui/Button";
 import type { PreviewFile } from "./preview/PreviewList";
 import { formatFileSize, formatImageSize } from "../../../utils/formatters";
 import toast from "react-hot-toast";
+import { useAudioRecorder } from "../../../hooks/useAudioRecorder";
+import AudioPreview from "./preview/AudioPreview";
 
 function ChatFooter() {
   const [message, setMessage] = useState<string>("");
   const [previews, setPreviews] = useState<PreviewFile[]>([]);
+  const recorder = useAudioRecorder();
 
   useEffect(() => {
     return () => {
@@ -50,10 +53,21 @@ function ChatFooter() {
     });
   };
 
-  const handleSend = () => {
+  const handleMicClick = async () => {
+    try {
+      await recorder.start();
+    } catch {
+      toast.error("Không thể truy cập micro");
+    }
+  };
+
+  const handleSend = async () => {
     if (!message.trim() && previews.length === 0) return;
     setMessage("");
     setPreviews([]);
+
+    console.log("send audio blob", recorder.audioBlob);
+    recorder.reset();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -63,33 +77,50 @@ function ChatFooter() {
     }
   };
 
-  const canSend = !!message.trim() || previews.length > 0;
+  const canSend =
+    !!message.trim() ||
+    previews.length > 0 ||
+    recorder.audioUrl ||
+    recorder.isRecording;
 
   return (
-    <div className="flex items-end gap-2 px-4 py-3 border-t border-gray-200">
-      {!previews.length && (
+    <div
+      className={`flex items-center gap-2 px-4 py-3 border-t border-gray-200`}
+    >
+      {!previews.length && !recorder.isRecording && !recorder.audioUrl && (
         <FooterAction
           onImageSelect={(files) => handleAddPreview(files, true)}
           onFileSelect={(files) => handleAddPreview(files, false)}
-          onMicClick={() => console.log("mic")}
+          onMicClick={handleMicClick}
         />
       )}
 
-      <MessageInput
-        value={message}
-        onChange={setMessage}
-        onKeyDown={handleKeyDown}
-        previews={previews}
-        onRemovePreview={handleRemovePreview}
-        onAddPreview={handleAddPreview}
-      />
+      {recorder.isRecording || recorder.audioUrl ? (
+        <AudioPreview
+          isRecording={recorder.isRecording}
+          elapsed={recorder.elapsed}
+          audioUrl={recorder.audioUrl}
+          onCancel={recorder.cancel}
+          onStop={recorder.stopRecording}
+          onDelete={recorder.reset}
+        />
+      ) : (
+        <MessageInput
+          value={message}
+          onChange={setMessage}
+          onKeyDown={handleKeyDown}
+          previews={previews}
+          onRemovePreview={handleRemovePreview}
+          onAddPreview={handleAddPreview}
+        />
+      )}
 
       <Button
         onClick={handleSend}
         disabled={!canSend}
-        className={`p-2 rounded-full ${canSend ? "bg-secondary text-primary" : "text-neutral bg-gray-100"}`}
+        className={`p-1.5 rounded-full ${canSend ? "bg-primary text-white" : "text-neutral bg-gray-100"}`}
       >
-        <SendHorizontal size={22} />
+        <SendHorizontal size={20} />
       </Button>
     </div>
   );
