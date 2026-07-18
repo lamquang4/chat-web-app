@@ -1,4 +1,4 @@
-import { Info, Phone, Video } from "lucide-react";
+import { Phone, Video } from "lucide-react";
 import Button from "../ui/Button";
 import Image from "../ui/Image";
 
@@ -34,10 +34,6 @@ function ChatHeader({ avatar_url, is_online, name }: Props) {
 
         <Button className="text-primary">
           <Video size={22} />
-        </Button>
-
-        <Button className="text-primary">
-          <Info size={22} />
         </Button>
       </div>
     </div>
