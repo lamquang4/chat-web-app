@@ -41,7 +41,7 @@ function SideMenu() {
     setDropDownOpen((prev) => !prev);
   };
 
-  const handleOpenCreateGroupModal = () => {
+  const handleCloseCreateGroupModal = () => {
     setCreateGroupOpen(false);
   };
 
@@ -119,8 +119,8 @@ function SideMenu() {
       )}
 
       {createGroupOpen && (
-        <ModalLayout title="Tạo nhóm" onClose={handleOpenCreateGroupModal}>
-          <CreateGroupForm onClose={handleOpenCreateGroupModal} />
+        <ModalLayout title="Tạo nhóm" onClose={handleCloseCreateGroupModal}>
+          <CreateGroupForm onClose={handleCloseCreateGroupModal} />
         </ModalLayout>
       )}
     </>
