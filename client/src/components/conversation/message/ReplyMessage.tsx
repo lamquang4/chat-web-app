@@ -14,13 +14,11 @@ function ReplyMessage({ reply, isMe }: Props) {
         className={`w-0.5 self-stretch rounded-full shrink-0 ${isMe ? "bg-primary" : "bg-neutral"}`}
       />
       <div className="min-w-0">
-        <p
-          className={`font-medium truncate ${isMe ? "text-primary" : "text-neutral"}`}
-        >
+        <p className={`font-medium ${isMe ? "text-primary" : "text-neutral"}`}>
           {reply.sender_name}
         </p>
-        <p className="text-gray-400 truncate">
-          {reply.content ?? (reply.attachments?.length ? "File đính kèm" : "")}
+        <p className="text-neutral">
+          {reply.content ?? (reply.attachments?.length && "File đính kèm")}
         </p>
       </div>
     </div>

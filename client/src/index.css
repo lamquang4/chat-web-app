@@ -31,19 +31,19 @@
   }
 
   h1 {
-    @apply text-[1.8rem] font-bold;
+    @apply text-[1.8rem];
   }
   h2 {
-    @apply text-[1.6rem] font-bold;
+    @apply text-[1.6rem];
   }
   h3 {
-    @apply text-[1.4rem] font-bold;
+    @apply text-[1.4rem];
   }
   h4 {
-    @apply text-[1.2rem] font-bold;
+    @apply text-[1.2rem];
   }
   h5 {
-    @apply text-[1rem] font-semibold;
+    @apply text-[1rem];
   }
 
   p,

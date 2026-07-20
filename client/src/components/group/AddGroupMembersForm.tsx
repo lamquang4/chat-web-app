@@ -1,21 +1,18 @@
-import { Camera, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { mockFriendList } from "../../mocks/mockFriendList";
 import type { FriendResponse } from "../../types/types";
 import Image from "../ui/Image";
 import Button from "../ui/Button";
-import Input from "../ui/Input";
-import Label from "../ui/Label";
 import SearchInput from "../ui/SearchInput";
 import UserSelectItem from "../ui/UserSelectItem";
 
 type Props = {
   onClose: () => void;
+  conversationId: string;
 };
 
-function CreateGroupForm({ onClose }: Props) {
-  const [groupName, setGroupName] = useState<string>("");
-  const [avatarPreview, setAvatarPreview] = useState<string>("");
+function AddGroupMembersForm({ onClose, conversationId }: Props) {
   const [selected, setSelected] = useState<FriendResponse[]>([]);
 
   const friends = mockFriendList;
@@ -35,52 +32,17 @@ function CreateGroupForm({ onClose }: Props) {
     setSelected((prev) => prev.filter((s) => s.user_id !== userId));
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setAvatarPreview(URL.createObjectURL(file));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    console.log(conversationId);
+
     onClose();
   };
-
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div className="flex-1 overflow-y-auto custom-scroll">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col items-center gap-4 w-full">
-            <Label className="relative w-25 h-25 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden hover:bg-gray-200 transition-colors group cursor-pointer">
-              <Image
-                src={avatarPreview || "/assets/group.png"}
-                alt="Ảnh nhóm"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-full transition-opacity flex items-center justify-center">
-                <Camera size={24} className="text-white" />
-              </div>
-              <Input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleAvatarChange}
-              />
-            </Label>
-
-            <div className="space-y-[8px] w-full">
-              <Label>Tên nhóm</Label>
-              <Input
-                type="text"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
-                placeholder="Nhập tên nhóm..."
-                maxLength={50}
-                className="w-full font-medium bg-transparent border-b border-gray-200 focus:border-primary py-2 transition-colors"
-              />
-            </div>
-          </div>
-
           {selected.length > 0 && (
             <div className="flex flex-col gap-2">
               <p>Đã chọn ({selected.length})</p>
@@ -139,11 +101,11 @@ function CreateGroupForm({ onClose }: Props) {
           onClick={handleSubmit}
           className="px-2 py-2.5 font-medium rounded-lg bg-success text-white"
         >
-          Tạo nhóm
+          Thêm vào nhóm
         </Button>
       </div>
     </div>
   );
 }
 
-export default CreateGroupForm;
+export default AddGroupMembersForm;

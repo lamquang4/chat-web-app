@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { useAudioRecorder } from "../../../hooks/useAudioRecorder";
 import AudioPreview from "./preview/AudioPreview";
 
-function ChatFooter() {
+function ConversationFooter() {
   const [message, setMessage] = useState<string>("");
   const [previews, setPreviews] = useState<PreviewFile[]>([]);
   const recorder = useAudioRecorder();
@@ -126,4 +126,4 @@ function ChatFooter() {
   );
 }
 
-export default ChatFooter;
+export default ConversationFooter;

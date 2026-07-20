@@ -137,9 +137,7 @@ function OtpForm() {
             </Button>
           </div>
 
-          <h1 className="text-xl font-semibold text-center uppercase">
-            Xác thực OTP
-          </h1>
+          <h1 className="font-bold text-center uppercase">Xác thực OTP</h1>
         </div>
 
         <div>
@@ -214,7 +212,9 @@ function OtpForm() {
       {isLoadingVerify && (
         <Overplay>
           <Loading height={0} size={55} color="white" thickness={8} />
-          <h4 className="text-white">Vui lòng chờ trong giây lát ...</h4>
+          <h4 className="text-white font-bold">
+            Vui lòng chờ trong giây lát ...
+          </h4>
         </Overplay>
       )}
     </>

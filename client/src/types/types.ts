@@ -1,4 +1,8 @@
-// request
+export type ConversationType = "private" | "group";
+export type AttachmentType = "image" | "document" | "audio";
+export type MemberRole = "owner" | "admin" | "member";
+
+// ============ Request ============
 export interface LoginRequest {
   email: string;
   password: string;
@@ -29,7 +33,7 @@ export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
-// response
+// ============ Response ============
 export interface PageResponse<T> {
   content: T[];
   page: number;
@@ -59,9 +63,10 @@ export interface AccountResponse {
   avatar_url?: string;
 }
 
+// cần phân trang
 export interface ConversationListResponse {
   conversation_id: string;
-  type: "private" | "group";
+  type: ConversationType;
   name: string;
   avatar_url?: string;
   last_message: string;
@@ -72,24 +77,12 @@ export interface ConversationListResponse {
 
 export interface ConversationDetailResponse {
   conversation_id: string;
-  type: "private" | "group";
+  type: ConversationType;
   name: string; // tên group hoặc tên mình
   avatar_url?: string; // avatar group hoặc của mình
   is_online: boolean; // group online có ít nhất 1 member online trừ bản thân
-  members: ConversationMemberResponse[];
-  messages: PageResponse<MessageResponse>;
+  messages: PageResponse<MessageResponse>; // phân trang
   created_at: string;
-}
-
-export interface ConversationMemberResponse {
-  member_id: string;
-  user_id: string;
-  first_name: string;
-  last_name: string;
-  avatar_url?: string;
-  status: "online" | "offline";
-  role: "owner" | "admin" | "member"; // private thì cả 2 đều là member
-  joined_at: string;
 }
 
 export interface MessageResponse {
@@ -117,7 +110,7 @@ export interface MessageSeenResponse {
 
 export interface MessageAttachmentResponse {
   attachment_id: string;
-  type: "image" | "document" | "audio";
+  type: AttachmentType;
   url: string;
   file_name: string;
   file_size: number;
@@ -129,6 +122,21 @@ export interface ReplyMessageResponse {
   sender_name: string;
   content?: string;
   attachments?: MessageAttachmentResponse[];
+}
+
+// Không cần phân trang
+export interface ConversationMembersGroupResponse {
+  conversation_id: string;
+  members: ConversationMemberResponse[];
+}
+
+export interface ConversationMemberResponse {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  avatar_url?: string;
+  role: MemberRole; // private thì cả 2 đều là member
+  joined_at: string;
 }
 
 export interface FriendResponse {
@@ -150,7 +158,7 @@ export interface FriendRequestResponse {
   created_at: string;
 }
 
-// token
+// ============ Token ============
 export interface AccessTokenPayload {
   sub: string; // userId
   sessionId: string;

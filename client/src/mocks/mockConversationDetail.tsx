@@ -1,6 +1,6 @@
 import type { ConversationDetailResponse } from "../types/types";
 
-// --- private chat (cv-001) ---
+// private chat
 export const mockConversationDetailPrivate: ConversationDetailResponse = {
   conversation_id: "cv-001",
   type: "private",
@@ -8,31 +8,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
   avatar_url: "https://i.pravatar.cc/150?img=5",
   is_online: true,
   created_at: "2024-11-01T08:00:00Z",
-  members: [
-    {
-      member_id: "mb-001",
-      user_id: "u-001",
-      first_name: "Minh",
-      last_name: "Nguyễn",
-      avatar_url: "https://i.pravatar.cc/150?img=12",
-      status: "online",
-      role: "member",
-      joined_at: "2024-11-01T08:00:00Z",
-    },
-    {
-      member_id: "mb-002",
-      user_id: "u-002",
-      first_name: "Lan",
-      last_name: "Trần Thị",
-      avatar_url: "https://i.pravatar.cc/150?img=5",
-      status: "online",
-      role: "member",
-      joined_at: "2024-11-01T08:00:00Z",
-    },
-  ],
   messages: {
     content: [
-      // text đơn giản
       {
         message_id: "msg-001",
         conversation_id: "cv-001",
@@ -262,7 +239,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
   },
 };
 
-// --- group chat (cv-002) ---
+// group chat
 export const mockConversationDetailGroup: ConversationDetailResponse = {
   conversation_id: "cv-002",
   type: "group",
@@ -270,38 +247,6 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
   avatar_url: "https://i.pravatar.cc/150?img=68",
   is_online: false,
   created_at: "2025-01-10T07:30:00Z",
-  members: [
-    {
-      member_id: "mb-010",
-      user_id: "u-001",
-      first_name: "Minh",
-      last_name: "Nguyễn",
-      avatar_url: "https://i.pravatar.cc/150?img=12",
-      status: "online",
-      role: "admin",
-      joined_at: "2025-01-10T07:30:00Z",
-    },
-    {
-      member_id: "mb-011",
-      user_id: "u-003",
-      first_name: "Hoàng",
-      last_name: "Lê Văn",
-      avatar_url: "https://i.pravatar.cc/150?img=15",
-      status: "offline",
-      role: "owner",
-      joined_at: "2025-01-10T07:30:00Z",
-    },
-    {
-      member_id: "mb-012",
-      user_id: "u-004",
-      first_name: "Hà",
-      last_name: "Ngô Thị",
-      avatar_url: "https://i.pravatar.cc/150?img=44",
-      status: "offline",
-      role: "member",
-      joined_at: "2025-01-12T09:00:00Z",
-    },
-  ],
   messages: {
     content: [
       // text đơn

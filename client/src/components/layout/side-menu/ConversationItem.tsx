@@ -15,7 +15,7 @@ function ConversationItem({
   is_last_message_me = false,
 }: Props) {
   return (
-    <Link to={`/chat/${conversation_id}`} className="block w-full">
+    <Link to={`/messages/${conversation_id}`} className="block w-full">
       <div
         className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-gray-100 w-full`}
       >
@@ -34,7 +34,7 @@ function ConversationItem({
         </div>
 
         <div className="flex-1 min-w-0">
-          <h5 className={`truncate font-semibold`}>{name}</h5>
+          <h5 className={`font-semibold`}>{name}</h5>
 
           <p
             className={`truncate ${is_last_message_seen ? "font-medium" : "text-neutral"}`}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Button from "./Button";
 
-interface DropdownMenuItem {
+export interface DropdownMenuItem {
   label: string;
   icon: React.ReactNode;
   onClick?: () => void;
@@ -41,6 +41,7 @@ function DropdownMenu({
           <Link
             key={index}
             to={item.href}
+            onClick={item.onClick}
             target={item.target}
             className="block px-2.5 py-3.5 hover:bg-gray-100 w-full"
           >

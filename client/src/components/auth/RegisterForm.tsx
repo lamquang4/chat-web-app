@@ -59,7 +59,9 @@ function RegisterForm() {
   return (
     <>
       <div className="w-full px-[15px] md:px-[30px] sm:py-[60px] py-[40px] bg-white">
-        <h1 className="relative text-center uppercase mb-6">Đăng ký</h1>
+        <h1 className="relative text-center font-bold uppercase mb-6">
+          Đăng ký
+        </h1>
 
         <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex gap-[15px] sm:flex-row flex-col">

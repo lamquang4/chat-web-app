@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import Button from "../../ui/Button";
 import DropdownMenu from "../../ui/DropdownMenu";
-import CreateGroupModal from "../../group/CreateGroupModal";
+import CreateGroupForm from "../../group/CreateGroupForm";
+import ModalLayout from "../../ui/ModalLayout";
 
 function SideMenu() {
   const dispatch = useAppDispatch();
@@ -38,6 +39,10 @@ function SideMenu() {
     e.stopPropagation();
     e.preventDefault();
     setDropDownOpen((prev) => !prev);
+  };
+
+  const handleOpenCreateGroupModal = () => {
+    setCreateGroupOpen(false);
   };
 
   const sideMenuOpen = useAppSelector((state) => state.ui.sideMenuOpen);
@@ -67,11 +72,11 @@ function SideMenu() {
   return (
     <>
       <aside
-        className={`fixed top-0 left-0 h-full w-full max-w-[400px] bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-50 flex flex-col ${sideMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:sticky lg:translate-x-0 lg:z-auto`}
+        className={`fixed top-0 left-0 h-full w-full max-w-[380px] bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-50 flex flex-col ${sideMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:sticky lg:translate-x-0 lg:z-auto`}
       >
         <div className="flex flex-col min-h-0 gap-6 px-[15px] py-4">
           <div className="flex justify-between items-center">
-            <h3>Đoạn chat</h3>
+            <h3 className="font-bold">Đoạn chat</h3>
 
             <div className="flex gap-2 items-center">
               <div className="relative" ref={containerRef}>
@@ -114,7 +119,9 @@ function SideMenu() {
       )}
 
       {createGroupOpen && (
-        <CreateGroupModal onClose={() => setCreateGroupOpen(false)} />
+        <ModalLayout title="Tạo nhóm" onClose={handleOpenCreateGroupModal}>
+          <CreateGroupForm onClose={handleOpenCreateGroupModal} />
+        </ModalLayout>
       )}
     </>
   );

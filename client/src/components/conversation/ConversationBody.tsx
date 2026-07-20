@@ -6,7 +6,7 @@ type Props = {
   messages: MessageResponse[];
 };
 
-function ChatBody({ messages }: Props) {
+function ConversationBody({ messages }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,4 +23,4 @@ function ChatBody({ messages }: Props) {
   );
 }
 
-export default ChatBody;
+export default ConversationBody;
