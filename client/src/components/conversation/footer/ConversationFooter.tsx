@@ -10,7 +10,15 @@ import toast from "react-hot-toast";
 import { useAudioRecorder } from "../../../hooks/useAudioRecorder";
 import AudioPreview from "./preview/AudioPreview";
 
-function ConversationFooter() {
+import type { ReplyMessageResponse } from "../../../types/types";
+import ReplyPreview from "./preview/ReplyPreview";
+
+type Props = {
+  replyTo: ReplyMessageResponse | null;
+  onCancelReply: () => void;
+};
+
+function ConversationFooter({ replyTo, onCancelReply }: Props) {
   const [message, setMessage] = useState<string>("");
   const [previews, setPreviews] = useState<PreviewFile[]>([]);
   const recorder = useAudioRecorder();
@@ -63,11 +71,14 @@ function ConversationFooter() {
 
   const handleSend = async () => {
     if (!message.trim() && previews.length === 0) return;
+
+    console.log("reply to", replyTo?.message_id);
+    console.log("send audio blob", recorder.audioBlob);
+
     setMessage("");
     setPreviews([]);
-
-    console.log("send audio blob", recorder.audioBlob);
     recorder.reset();
+    onCancelReply();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -84,44 +95,46 @@ function ConversationFooter() {
     recorder.isRecording;
 
   return (
-    <div
-      className={`flex items-center gap-2 px-4 py-3 border-t border-gray-200`}
-    >
-      {!previews.length && !recorder.isRecording && !recorder.audioUrl && (
-        <FooterAction
-          onImageSelect={(files) => handleAddPreview(files, true)}
-          onFileSelect={(files) => handleAddPreview(files, false)}
-          onMicClick={handleMicClick}
-        />
-      )}
+    <div className="flex flex-col border-t border-gray-200">
+      {replyTo && <ReplyPreview replyTo={replyTo} onCancel={onCancelReply} />}
 
-      {recorder.isRecording || recorder.audioUrl ? (
-        <AudioPreview
-          isRecording={recorder.isRecording}
-          elapsed={recorder.elapsed}
-          audioUrl={recorder.audioUrl}
-          onCancel={recorder.cancel}
-          onStop={recorder.stopRecording}
-          onDelete={recorder.reset}
-        />
-      ) : (
-        <MessageInput
-          value={message}
-          onChange={setMessage}
-          onKeyDown={handleKeyDown}
-          previews={previews}
-          onRemovePreview={handleRemovePreview}
-          onAddPreview={handleAddPreview}
-        />
-      )}
+      <div className="flex items-center gap-2 px-4 py-3">
+        {!previews.length && !recorder.isRecording && !recorder.audioUrl && (
+          <FooterAction
+            onImageSelect={(files) => handleAddPreview(files, true)}
+            onFileSelect={(files) => handleAddPreview(files, false)}
+            onMicClick={handleMicClick}
+          />
+        )}
 
-      <Button
-        onClick={handleSend}
-        disabled={!canSend}
-        className={`p-1.5 rounded-full ${canSend ? "bg-primary text-white" : "text-neutral bg-gray-100"}`}
-      >
-        <SendHorizontal size={20} />
-      </Button>
+        {recorder.isRecording || recorder.audioUrl ? (
+          <AudioPreview
+            isRecording={recorder.isRecording}
+            elapsed={recorder.elapsed}
+            audioUrl={recorder.audioUrl}
+            onCancel={recorder.cancel}
+            onStop={recorder.stopRecording}
+            onDelete={recorder.reset}
+          />
+        ) : (
+          <MessageInput
+            value={message}
+            onChange={setMessage}
+            onKeyDown={handleKeyDown}
+            previews={previews}
+            onRemovePreview={handleRemovePreview}
+            onAddPreview={handleAddPreview}
+          />
+        )}
+
+        <Button
+          onClick={handleSend}
+          disabled={!canSend}
+          className={`p-1.5 rounded-full ${canSend ? "bg-primary text-white" : "text-neutral bg-gray-100"}`}
+        >
+          <SendHorizontal size={20} />
+        </Button>
+      </div>
     </div>
   );
 }
