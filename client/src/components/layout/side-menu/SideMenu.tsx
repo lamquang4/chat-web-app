@@ -14,8 +14,7 @@ import {
 } from "lucide-react";
 import Button from "../../ui/Button";
 import DropdownMenu from "../../ui/DropdownMenu";
-import CreateGroupForm from "../../group/CreateGroupForm";
-import ModalLayout from "../../ui/ModalLayout";
+import CreateGroupModal from "../../group/CreateGroupModal";
 
 function SideMenu() {
   const dispatch = useAppDispatch();
@@ -119,9 +118,7 @@ function SideMenu() {
       )}
 
       {createGroupOpen && (
-        <ModalLayout title="Tạo nhóm" onClose={handleCloseCreateGroupModal}>
-          <CreateGroupForm onClose={handleCloseCreateGroupModal} />
-        </ModalLayout>
+        <CreateGroupModal onClose={handleCloseCreateGroupModal} />
       )}
     </>
   );

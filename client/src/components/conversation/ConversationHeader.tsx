@@ -3,25 +3,32 @@ import Button from "../ui/Button";
 import Image from "../ui/Image";
 import { useState } from "react";
 import type { ConversationType } from "../../types/types";
-import ModalLayout from "../ui/ModalLayout";
-import EditGroupForm from "../group/EditGroupForm";
+import EditGroupModal from "../group/EditGroupModal";
 
 type Props = {
   avatar_url?: string;
+  conversationId: string;
   is_online: boolean;
   type: ConversationType;
   name: string;
 };
 
-function ConversationHeader({ avatar_url, is_online, type, name }: Props) {
+function ConversationHeader({
+  avatar_url,
+  conversationId,
+  is_online,
+  type,
+  name,
+}: Props) {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {
-    if (type === "private") {
-      return;
-    }
+    if (type === "private") return;
+    setOpenModal(true);
+  };
 
-    setOpenModal((prev) => !prev);
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
   return (
     <>
@@ -32,9 +39,8 @@ function ConversationHeader({ avatar_url, is_online, type, name }: Props) {
         >
           <Image
             src={
-              avatar_url || type === "group"
-                ? "/assets/group.png"
-                : "/assets/user.png"
+              avatar_url ??
+              (type === "group" ? "/assets/group.png" : "/assets/user.png")
             }
             alt={name}
             className="w-10 h-10 rounded-full object-cover"
@@ -61,13 +67,12 @@ function ConversationHeader({ avatar_url, is_online, type, name }: Props) {
       </div>
 
       {openModal && type === "group" && (
-        <ModalLayout title="Thông tin nhóm" onClose={handleOpenModal}>
-          <EditGroupForm
-            onClose={handleOpenModal}
-            name={name}
-            avatar_url={avatar_url}
-          />
-        </ModalLayout>
+        <EditGroupModal
+          onClose={handleCloseModal}
+          conversationId={conversationId}
+          name={name}
+          avatar_url={avatar_url}
+        />
       )}
     </>
   );

@@ -126,7 +126,7 @@ export interface ReplyMessageResponse {
 
 // Không cần phân trang
 export interface ConversationMembersGroupResponse {
-  conversation_id: string;
+  conversation_id: string; // kiểm tra lấy đúng conversation không
   members: ConversationMemberResponse[];
 }
 
