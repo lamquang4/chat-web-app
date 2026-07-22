@@ -1,5 +1,5 @@
 import { Camera, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { mockFriendList } from "../../mocks/mockFriendList";
 import type { FriendResponse } from "../../types/types";
 import Image from "../ui/Image";
@@ -20,6 +20,14 @@ function CreateGroupForm({ onClose }: Props) {
   const [selected, setSelected] = useState<FriendResponse[]>([]);
 
   const friends = mockFriendList;
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
 
   const isSelected = (userId: string) =>
     selected.some((s) => s.user_id === userId);

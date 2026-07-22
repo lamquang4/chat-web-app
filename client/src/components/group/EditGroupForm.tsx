@@ -7,7 +7,7 @@ import {
   UserRoundX,
   UserRoundMinus,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "../ui/Image";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
@@ -54,6 +54,14 @@ function EditGroupForm({
     members: memberList.members,
     currentUserId: mockAccount.user_id,
   });
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
 
   const handleDeleteGroup = async () => {
     if (!canDeleteGroup) return;

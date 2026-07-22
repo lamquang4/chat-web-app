@@ -4,7 +4,7 @@ import { mockAccount } from "../mocks/mockAccount";
 import Image from "./ui/Image";
 import { Camera } from "lucide-react";
 import Button from "./ui/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FieldError from "./ui/FieldError";
 import { updateUserSchema, type UpdateUserData } from "../schemas/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,14 @@ function AccountForm() {
     account.avatar_url ?? "/assets/user.png",
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
