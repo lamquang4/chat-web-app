@@ -1,21 +1,20 @@
 import { useEffect, useRef } from "react";
-import type { MessageResponse, ReplyMessageResponse } from "../../types/types";
+import type { MessageResponse } from "../../types/types";
 import MessageItem from "./message/MessageItem";
 
 type Props = {
   messages: MessageResponse[];
   onReply: (message: MessageResponse) => void;
   onRecall: (messageId: string) => void;
-  replyTo: ReplyMessageResponse | null;
 };
 
-function ConversationBody({ messages, onReply, onRecall, replyTo }: Props) {
+function ConversationBody({ messages, onReply, onRecall }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const replyMessageRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, replyTo]);
+  }, [messages]);
 
   const scrollToReplyMessage = (messageId: string) => {
     const el = replyMessageRefs.current[messageId];

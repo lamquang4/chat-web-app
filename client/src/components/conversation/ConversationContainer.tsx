@@ -41,7 +41,7 @@ function ConversationContainer() {
   };
 
   return (
-    <div className="flex flex-col flex-1 overflow-visible bg-white">
+    <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white">
       <ConversationHeader
         conversationId={conversation.conversation_id}
         type={conversation.type}
@@ -53,7 +53,6 @@ function ConversationContainer() {
         messages={conversation.messages.content}
         onReply={handleReply}
         onRecall={handleRecall}
-        replyTo={replyTo}
       />
 
       <ConversationFooter

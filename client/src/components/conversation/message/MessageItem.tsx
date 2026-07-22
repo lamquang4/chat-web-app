@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import type { MessageResponse } from "../../../types/types";
@@ -11,12 +12,12 @@ import SeenIndicator from "./SeenIndicator";
 import { Copy, Reply, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
-type Props = {
+interface Props {
   message: MessageResponse;
   onReply?: (message: MessageResponse) => void;
   onRecall?: (messageId: string) => void;
   onJumpToReplyMessage?: (messageId: string) => void;
-};
+}
 
 function MessageItem({
   message,
@@ -43,6 +44,75 @@ function MessageItem({
   const audios = attachments?.filter((a) => a.type === "audio") ?? [];
   const documents = attachments?.filter((a) => a.type === "document") ?? [];
 
+  const [showActions, setShowActions] = useState<boolean>(false);
+  const itemRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startPosRef = useRef<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (!showActions) return;
+
+    const handler = (e: MouseEvent | TouchEvent) => {
+      if (!itemRef.current?.contains(e.target as Node)) {
+        setShowActions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [showActions]);
+
+  const clearLongPressTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const handlePressStart = (x: number, y: number) => {
+    startPosRef.current = { x, y };
+
+    timerRef.current = setTimeout(() => {
+      setShowActions(true);
+      if (navigator.vibrate) navigator.vibrate(30);
+    }, 450);
+  };
+
+  const handlePressMove = (x: number, y: number) => {
+    if (!startPosRef.current) return;
+    const dx = Math.abs(x - startPosRef.current.x);
+    const dy = Math.abs(y - startPosRef.current.y);
+    if (dx > 10 || dy > 10) {
+      clearLongPressTimer();
+    }
+  };
+
+  const handlePressEnd = () => {
+    clearLongPressTimer();
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    handlePressStart(touch.clientX, touch.clientY);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    handlePressMove(touch.clientX, touch.clientY);
+  };
+
+  const onTouchEnd = () => {
+    handlePressEnd();
+  };
+
+  const onContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
   const actions = [
     {
       label: "Trả lời",
@@ -68,8 +138,15 @@ function MessageItem({
   const actions1 = actions.filter((a) => a.label !== "Sao chép");
 
   return (
-    <div className={`flex ${is_me ? "justify-end" : "justify-start"}`}>
-      <div className="max-w-[85%] sm:max-w-[75%] w-full flex flex-col gap-2">
+    <div
+      ref={itemRef}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      onContextMenu={onContextMenu}
+      className={`relative group flex ${is_me ? "justify-end" : "justify-start"}`}
+    >
+      <div className="max-w-[85%] sm:max-w-[75%] w-full flex flex-col gap-2 select-none">
         {!is_me && <span className="text-neutral">{sender_name}</span>}
 
         <div
@@ -84,7 +161,7 @@ function MessageItem({
           )}
 
           <div
-            className={`relative flex flex-col gap-2 group ${is_me ? "items-end" : "items-start"}`}
+            className={`relative flex flex-col gap-2 ${is_me ? "items-end" : "items-start"}`}
           >
             {reply_message && (
               <ReplyMessage
@@ -140,8 +217,6 @@ function MessageItem({
               </div>
             )}
 
-            <MessageAction actions={content ? actions : actions1} />
-
             <div
               className={`flex items-center gap-1 ${is_me ? "flex-row-reverse" : "flex-row"}`}
             >
@@ -151,6 +226,12 @@ function MessageItem({
           </div>
         </div>
       </div>
+
+      <MessageAction
+        actions={content ? actions : actions1}
+        forceVisible={showActions}
+        onActionDone={() => setShowActions(false)}
+      />
     </div>
   );
 }
