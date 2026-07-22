@@ -4,13 +4,18 @@ import ConversationFooter from "./footer/ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
 import type { MessageResponse, ReplyMessageResponse } from "../../types/types";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 function ConversationContainer() {
-  const conversation = mockConversationDetailGroup;
-
   const [replyTo, setReplyTo] = useState<ReplyMessageResponse | null>(null);
 
+  const conversation = mockConversationDetailGroup;
+
   const handleReply = (message: MessageResponse) => {
+    if (!message) {
+      return;
+    }
+
     setReplyTo({
       message_id: message.message_id,
       sender_name: message.sender_name,
@@ -19,8 +24,20 @@ function ConversationContainer() {
     });
   };
 
-  const handleRecall = (messageId: string) => {
-    console.log(messageId);
+  const handleRecall = async (messageId: string) => {
+    const result = await Swal.fire({
+      title: "Thu hồi tin nhắn?",
+      text: "Bạn có chắc chắn muốn thu hồi tin nhắn này?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      confirmButtonColor: "#076ffe",
+      cancelButtonColor: "#d9534f",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed || !messageId) return;
   };
 
   return (

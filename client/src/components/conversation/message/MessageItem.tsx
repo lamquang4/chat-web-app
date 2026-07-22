@@ -15,9 +15,15 @@ type Props = {
   message: MessageResponse;
   onReply?: (message: MessageResponse) => void;
   onRecall?: (messageId: string) => void;
+  onJumpToReplyMessage?: (messageId: string) => void;
 };
 
-function MessageItem({ message, onReply, onRecall }: Props) {
+function MessageItem({
+  message,
+  onReply,
+  onRecall,
+  onJumpToReplyMessage,
+}: Props) {
   const {
     is_me,
     sender_name,
@@ -36,33 +42,6 @@ function MessageItem({ message, onReply, onRecall }: Props) {
   const images = attachments?.filter((a) => a.type === "image") ?? [];
   const audios = attachments?.filter((a) => a.type === "audio") ?? [];
   const documents = attachments?.filter((a) => a.type === "document") ?? [];
-
-  const avatar = (
-    <Image
-      src={sender_avatar_url ?? "/assets/user.png"}
-      alt={sender_name}
-      className="w-7 h-7 rounded-full object-cover shrink-0"
-    />
-  );
-
-  if (is_recalled) {
-    return (
-      <div className={`flex gap-2 ${is_me ? "flex-row-reverse" : "flex-row"}`}>
-        <div className="flex items-center">{avatar}</div>
-        <div
-          className={`flex flex-col gap-0.5 ${is_me ? "items-end" : "items-start"}`}
-        >
-          {!is_me && (
-            <span className="text-neutral font-medium">{sender_name}</span>
-          )}
-          <p className="italic border border-dashed border-gray-100 px-4 py-2 rounded-2xl text-neutral">
-            Tin nhắn đã bị thu hồi
-          </p>
-          <span className="text-neutral">{timeStr}</span>
-        </div>
-      </div>
-    );
-  }
 
   const actions = [
     {
@@ -90,23 +69,38 @@ function MessageItem({ message, onReply, onRecall }: Props) {
 
   return (
     <div className={`flex ${is_me ? "justify-end" : "justify-start"}`}>
-      <div className="max-w-[85%] sm:max-w-[75%] w-full space-y-2">
-        {!is_me && (
-          <div>
-            <span className="text-neutral">{sender_name}</span>
-          </div>
-        )}
+      <div className="max-w-[85%] sm:max-w-[75%] w-full flex flex-col gap-2">
+        {!is_me && <span className="text-neutral">{sender_name}</span>}
 
         <div
           className={`flex items-start gap-2 ${is_me ? "flex-row-reverse" : "flex-row"}`}
         >
-          {!is_me && avatar}
+          {!is_me && (
+            <Image
+              src={sender_avatar_url ?? "/assets/user.png"}
+              alt={sender_name}
+              className="w-7 h-7 rounded-full object-cover shrink-0"
+            />
+          )}
 
           <div
             className={`relative flex flex-col gap-2 group ${is_me ? "items-end" : "items-start"}`}
           >
             {reply_message && (
-              <ReplyMessage reply={reply_message} isMe={is_me} />
+              <ReplyMessage
+                reply={reply_message}
+                isMe={is_me}
+                onClick={() => onJumpToReplyMessage?.(reply_message.message_id)}
+              />
+            )}
+
+            {is_recalled && (
+              <div
+                className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word italic
+        ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-100 rounded-bl-none"}`}
+              >
+                <p>Tin nhắn đã thu hồi</p>
+              </div>
             )}
 
             {images.length > 0 && (
@@ -137,7 +131,7 @@ function MessageItem({ message, onReply, onRecall }: Props) {
               </div>
             ))}
 
-            {content && (
+            {!is_recalled && content && (
               <div
                 className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word
         ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-100 rounded-bl-none"}`}

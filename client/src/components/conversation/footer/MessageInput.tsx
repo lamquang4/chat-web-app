@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import PreviewList, { type PreviewFile } from "./preview/PreviewList";
+import PreviewList, { type PreviewFile } from "../message/preview/PreviewList";
 import EmojiPicker from "emoji-picker-react";
 import { Smile } from "lucide-react";
 import Button from "../../ui/Button";

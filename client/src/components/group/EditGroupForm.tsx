@@ -35,9 +35,10 @@ function EditGroupForm({
   avatar_url,
 }: Props) {
   const [groupName, setGroupName] = useState(name);
-  const [avatarPreview, setAvatarPreview] = useState<string>(
+  const [avatarPreview, setAvatarPreview] = useState(
     avatar_url ?? "/assets/group.png",
   );
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const memberList = mockConversationMembersGroup;
 
@@ -58,7 +59,7 @@ function EditGroupForm({
     if (!canDeleteGroup) return;
 
     const result = await Swal.fire({
-      title: "Xóa nhóm?",
+      title: "Giải tán nhóm?",
       text: "Bạn có chắc chắn muốn giải tán nhóm này?",
       icon: "warning",
       showCancelButton: true,
@@ -76,6 +77,7 @@ function EditGroupForm({
     if (!canEditGroupInfo) return;
     const file = e.target.files?.[0];
     if (!file) return;
+    setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
 
@@ -87,6 +89,7 @@ function EditGroupForm({
       return;
     }
 
+    console.log(avatarFile);
     onClose();
   };
 

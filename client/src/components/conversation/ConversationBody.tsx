@@ -11,20 +11,35 @@ type Props = {
 
 function ConversationBody({ messages, onReply, onRecall, replyTo }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const replyMessageRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, replyTo]);
 
+  const scrollToReplyMessage = (messageId: string) => {
+    const el = replyMessageRefs.current[messageId];
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   return (
-    <div className="flex-1 overflow-y-auto px-[15px] py-8 flex flex-col gap-2">
+    <div className="flex-1 overflow-y-auto px-[15px] py-10 flex flex-col gap-2">
       {messages.map((message) => (
-        <MessageItem
+        <div
           key={message.message_id}
-          message={message}
-          onReply={onReply}
-          onRecall={onRecall}
-        />
+          ref={(el) => {
+            replyMessageRefs.current[message.message_id] = el;
+          }}
+        >
+          <MessageItem
+            message={message}
+            onReply={onReply}
+            onRecall={onRecall}
+            onJumpToReplyMessage={scrollToReplyMessage}
+          />
+        </div>
       ))}
       <div ref={bottomRef} />
     </div>

@@ -14,8 +14,8 @@ type Props = {
 
 function MessageAction({ actions }: Props) {
   return (
-    <div className="absolute -top-10 right-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-150 z-10">
-      <div className="flex items-center gap-0.5 bg-white border border-gray-100 rounded-md px-1 py-0.5">
+    <div className="absolute -top-12 right-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-150 z-10 shadow-md">
+      <div className="flex items-center gap-0.5 bg-white border border-gray-200 rounded-md px-1 py-0.5">
         {actions.map((action) => (
           <div key={action.label} className="relative group/tooltip">
             <Button

@@ -4,7 +4,7 @@ import { mockAccount } from "../mocks/mockAccount";
 import Image from "./ui/Image";
 import { Camera } from "lucide-react";
 import Button from "./ui/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FieldError from "./ui/FieldError";
 import { updateUserSchema, type UpdateUserData } from "../schemas/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,33 +16,21 @@ function AccountForm() {
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<UpdateUserData>({
     resolver: zodResolver(updateUserSchema),
     mode: "onBlur",
     defaultValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
+      first_name: account.first_name || "",
+      last_name: account.last_name || "",
+      phone: account.phone || "",
     },
   });
 
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    account.avatar_url ?? null,
+  const [avatarPreview, setAvatarPreview] = useState<string>(
+    account.avatar_url ?? "/assets/user.png",
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-
-  useEffect(() => {
-    if (!account) return;
-    reset({
-      first_name: account.first_name ?? "",
-      last_name: account.last_name ?? "",
-      email: account.email ?? "",
-      phone: account.phone ?? "",
-    });
-  }, [account, reset]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -127,21 +115,15 @@ function AccountForm() {
               <Label htmlFor="email" required>
                 Email
               </Label>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="email"
-                    id="email"
-                    placeholder="Nhập email"
-                    className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
-                    error={errors.email?.message}
-                  />
-                )}
+
+              <Input
+                type="email"
+                id="email"
+                readOnly
+                placeholder="Nhập email"
+                className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                value={account.email}
               />
-              <FieldError message={errors.email?.message} />
             </div>
 
             <div className="space-y-[5px] w-full">

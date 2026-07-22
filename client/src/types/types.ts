@@ -33,6 +33,30 @@ export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
+export interface CreateGroupRequest {
+  name: string;
+  member_ids: string[];
+  avatar?: File;
+}
+
+export interface UpdateGroupRequest {
+  name: string;
+  member_ids: string[];
+  avatar?: File;
+}
+
+export interface SendMessageRequest {
+  content?: string;
+  attachments?: File[];
+  reply_message_id?: string;
+}
+export interface UpdateAccountRequest {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  avatar?: File;
+}
+
 // ============ Response ============
 export interface PageResponse<T> {
   content: T[];

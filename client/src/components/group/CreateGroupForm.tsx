@@ -15,6 +15,7 @@ type Props = {
 
 function CreateGroupForm({ onClose }: Props) {
   const [groupName, setGroupName] = useState<string>("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
   const [selected, setSelected] = useState<FriendResponse[]>([]);
 
@@ -38,11 +39,13 @@ function CreateGroupForm({ onClose }: Props) {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(avatarFile);
     onClose();
   };
 

@@ -4,14 +4,14 @@ import { v4 as uuidv4 } from "uuid";
 import FooterAction from "./FooterAction";
 import MessageInput from "./MessageInput";
 import Button from "../../ui/Button";
-import type { PreviewFile } from "./preview/PreviewList";
+import type { PreviewFile } from "../message/preview/PreviewList";
 import { formatFileSize, formatImageSize } from "../../../utils/formatters";
 import toast from "react-hot-toast";
 import { useAudioRecorder } from "../../../hooks/useAudioRecorder";
-import AudioPreview from "./preview/AudioPreview";
+import AudioPreview from "../message/preview/AudioPreview";
 
 import type { ReplyMessageResponse } from "../../../types/types";
-import ReplyPreview from "./preview/ReplyPreview";
+import ReplyPreview from "../message/preview/ReplyPreview";
 
 type Props = {
   replyTo: ReplyMessageResponse | null;
