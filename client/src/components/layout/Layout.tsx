@@ -7,9 +7,9 @@ type Props = {
 
 function Layout({ children }: Props) {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-dvh">
       <Header />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         <SideMenu />
 
         {children}

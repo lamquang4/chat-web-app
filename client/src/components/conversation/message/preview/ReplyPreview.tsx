@@ -11,36 +11,58 @@ type Props = {
 function ReplyPreview({ replyTo, onCancel }: Props) {
   const attachment = replyTo.attachments?.[0];
 
-  const renderPreviewContent = () => {
-    if (replyTo.content) {
-      return <p className="truncate text-neutral">{replyTo.content}</p>;
-    }
+  const renderAttachmentLabel = () => {
+    if (!attachment) return null;
 
-    if (attachment?.type === "image") {
+    if (attachment.type === "image") {
       return (
-        <div className="flex items-center gap-1.5 text-neutral">
+        <div className="flex items-center gap-1.5 text-neutral shrink-0">
           <ImageIcon size={16} />
           <span>Hình ảnh</span>
         </div>
       );
     }
 
-    if (attachment?.type === "audio") {
+    if (attachment.type === "audio") {
       return (
-        <div className="flex items-center gap-1.5 text-neutral">
+        <div className="flex items-center gap-1.5 text-neutral shrink-0">
           <Mic size={16} />
           <span>Tin nhắn thoại</span>
         </div>
       );
     }
 
-    if (attachment?.type === "document") {
+    if (attachment.type === "document") {
       return (
-        <div className="flex items-center gap-1.5 text-neutral">
-          <FileText size={16} />
-          <span>{attachment.file_name}</span>
+        <div className="flex items-center gap-1.5 text-neutral min-w-0">
+          <FileText size={16} className="shrink-0" />
+          <span className="truncate">{attachment.file_name}</span>
         </div>
       );
+    }
+
+    return null;
+  };
+
+  const renderPreviewContent = () => {
+    // Có cả attachment lẫn content -> hiện icon + text cùng lúc
+    if (attachment && replyTo.content) {
+      return (
+        <div className="flex items-center gap-1.5 min-w-0">
+          {renderAttachmentLabel()}
+          <span className="truncate text-neutral">{replyTo.content}</span>
+        </div>
+      );
+    }
+
+    // Chỉ có attachment, không có text
+    if (attachment) {
+      return renderAttachmentLabel();
+    }
+
+    // Chỉ có text
+    if (replyTo.content) {
+      return <p className="truncate text-neutral">{replyTo.content}</p>;
     }
 
     return <p className="text-neutral">Tin nhắn</p>;
@@ -64,7 +86,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
       </div>
 
       <Button onClick={onCancel} className="text-neutral">
-        <X size={18} />
+        <X size={20} />
       </Button>
     </div>
   );

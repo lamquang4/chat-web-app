@@ -21,7 +21,7 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
       onTouchMove={(e) => e.stopPropagation()}
       onTouchEnd={(e) => e.stopPropagation()}
       className={`
-        absolute -top-10 transition-opacity duration-150 z-10 shadow-md
+        absolute -top-10 transition-opacity duration-150 z-10 shadow-md rounded-lg
         ${
           forceVisible
             ? "opacity-100"
@@ -29,7 +29,7 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
         }
       `}
     >
-      <div className="flex items-center gap-0.5 bg-white border border-gray-200 rounded-md">
+      <div className="flex items-center gap-0.5 bg-white border border-gray-200 rounded-lg">
         {actions.map((action) => (
           <div key={action.label} className="relative group/tooltip">
             <Button

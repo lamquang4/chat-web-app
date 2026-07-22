@@ -23,14 +23,14 @@ function Header() {
         <div className="flex sm:gap-[20px] gap-[15px] items-center">
           <Button
             onClick={() => dispatch(toggleSideMenu())}
-            className="w-8.5 h-8.5 rounded-lg border border-gray-300 justify-center items-center flex lg:hidden"
+            className="bg-gray-100 w-8.5 h-8.5 rounded-lg justify-center items-center flex lg:hidden"
           >
             <Menu size={18} />
           </Button>
 
           <Button
             onClick={handleFullscreen}
-            className="w-8.5 h-8.5 rounded-lg border border-gray-300 justify-center items-center flex relative"
+            className="bg-gray-100 w-8.5 h-8.5 rounded-lg justify-center items-center flex"
           >
             <Maximize size={18} />
           </Button>
