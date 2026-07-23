@@ -1,7 +1,8 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement>;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 function Button({ children, className, ...props }: Props) {
   return (

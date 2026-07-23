@@ -40,6 +40,7 @@ export const mockConversationMembersGroup: ConversationMembersGroupResponse = {
       first_name: "Vy",
       last_name: "Nguyễn Thảo",
       role: "member",
+      avatar_url: null,
       joined_at: "2025-01-13T10:20:00Z",
     },
     {

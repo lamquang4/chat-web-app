@@ -7,10 +7,10 @@ import Button from "../ui/Button";
 import SearchInput from "../ui/SearchInput";
 import UserSelectItem from "../ui/UserSelectItem";
 
-type Props = {
+interface Props {
   onClose: () => void;
   conversationId: string;
-};
+}
 
 function AddGroupMembersForm({ onClose, conversationId }: Props) {
   const [selected, setSelected] = useState<FriendResponse[]>([]);

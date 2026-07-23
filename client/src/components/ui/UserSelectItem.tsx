@@ -3,7 +3,7 @@ import Button from "../ui/Button";
 import Image from "../ui/Image";
 
 interface Props {
-  avatarUrl?: string;
+  avatarUrl: string | null;
   avatarSize?: string;
   title: string;
   isOnline?: boolean;
@@ -13,7 +13,7 @@ interface Props {
 
 function UserSelectItem({
   avatarUrl,
-  avatarSize = "w-14 h-14",
+  avatarSize = "w-12 h-12",
   title,
   isOnline,
   selected,

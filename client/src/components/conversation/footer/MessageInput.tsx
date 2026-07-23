@@ -4,7 +4,7 @@ import EmojiPicker from "emoji-picker-react";
 import { Smile } from "lucide-react";
 import Button from "../../ui/Button";
 
-type Props = {
+interface Props {
   value: string;
   onChange: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;

@@ -3,12 +3,12 @@ import ModalLayout from "../ui/ModalLayout";
 import EditGroupForm from "./EditGroupForm";
 import AddGroupMembersForm from "./AddGroupMembersForm";
 
-type Props = {
+interface Props {
   onClose: () => void;
   conversationId: string;
   name: string;
-  avatar_url?: string;
-};
+  avatar_url: string | null;
+}
 
 function EditGroupModal({ onClose, conversationId, name, avatar_url }: Props) {
   const [showAddMembers, setShowAddMembers] = useState<boolean>(false);

@@ -1,20 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Play, Pause, Square } from "lucide-react";
 import Button from "../../../ui/Button";
+import { formatDuration } from "../../../../utils/formatters";
 
-type Props = {
+interface Props {
   isRecording: boolean;
   elapsed: number;
   audioUrl: string | null;
   onCancel: () => void;
   onStop: () => void;
   onDelete: () => void;
-};
-
-function formatTime(sec: number) {
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
 function AudioPreview({
@@ -26,10 +21,10 @@ function AudioPreview({
   onDelete,
 }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [currentTime, setCurrentTime] = useState<number>(0);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -119,7 +114,7 @@ function AudioPreview({
         </div>
 
         <span className="text-primary font-medium bg-white px-2 py-0.5 rounded-full shrink-0">
-          {formatTime(displayTime)}
+          {formatDuration(displayTime)}
         </span>
       </div>
 

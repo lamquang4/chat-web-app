@@ -1,7 +1,7 @@
 import { X, FileText } from "lucide-react";
 import Button from "../../../ui/Button";
 
-type Props = {
+interface Props {
   name: string;
   onRemove: () => void;
 };

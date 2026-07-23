@@ -42,6 +42,7 @@ export const mockFriendList: FriendResponse[] = [
     conversation_id: "c-1006",
     first_name: "Vy",
     last_name: "Nguyễn Thảo",
+    avatar_url: null,
     is_online: false,
     updated_at: "2025-02-20T11:00:00Z",
   },

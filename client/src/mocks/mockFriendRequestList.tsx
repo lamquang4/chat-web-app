@@ -38,6 +38,7 @@ export const mockFriendRequestList: FriendRequestResponse[] = [
     requester_id: "u-014",
     first_name: "Hùng",
     last_name: "Võ Văn",
+    avatar_url: null,
     created_at: "2025-05-23T11:45:00Z",
   },
   {

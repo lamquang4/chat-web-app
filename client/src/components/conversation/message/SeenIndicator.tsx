@@ -3,7 +3,7 @@ import type { MessageSeenResponse } from "../../../types/types";
 import Image from "../../ui/Image";
 import Tooltip from "../../ui/Tooltip";
 
-type Props = {
+interface Props {
   is_seen: boolean;
   seen_by?: MessageSeenResponse[];
 };

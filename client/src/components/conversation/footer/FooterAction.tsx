@@ -4,7 +4,7 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import DropdownMenu from "../../ui/DropdownMenu";
 
-type Props = {
+interface Props {
   onImageSelect: (files: FileList) => void;
   onFileSelect: (files: FileList) => void;
   onMicClick?: () => void;

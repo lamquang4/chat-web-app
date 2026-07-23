@@ -1,14 +1,9 @@
 import { FileText } from "lucide-react";
 import type { MessageAttachmentResponse } from "../../../../types/types";
+import { formatFileSize } from "../../../../utils/formatters";
 
-type Props = {
+interface Props {
   att: MessageAttachmentResponse;
-};
-
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function FileAttachment({ att }: Props) {
@@ -34,7 +29,7 @@ function FileAttachment({ att }: Props) {
         <p className="font-semibold truncate leading-snug max-w-[180px]">
           {att.file_name}
         </p>
-        <p>{formatSize(att.file_size)}</p>
+        <p>{formatFileSize(att.file_size)}</p>
       </div>
     </div>
   );

@@ -2,18 +2,21 @@ import { Link } from "react-router-dom";
 import type { ConversationListResponse } from "../../../types/types";
 import Image from "../../ui/Image";
 
-type Props = ConversationListResponse;
+interface Props {
+  conversation: ConversationListResponse;
+}
 
-function ConversationItem({
-  conversation_id,
-  avatar_url,
-  type,
-  name,
-  last_message,
-  is_online = false,
-  is_last_message_seen = false,
-  is_last_message_me = false,
-}: Props) {
+function ConversationItem({ conversation }: Props) {
+  const {
+    conversation_id,
+    avatar_url,
+    type,
+    name,
+    last_message,
+    is_online,
+    is_last_message_seen,
+    is_last_message_me,
+  } = conversation;
   return (
     <Link to={`/messages/${conversation_id}`} className="block w-full">
       <div
@@ -26,7 +29,7 @@ function ConversationItem({
               (type === "group" ? "/assets/group.png" : "/assets/user.png")
             }
             alt={name}
-            className="w-14 h-14 rounded-full object-contain"
+            className="w-12 h-12 rounded-full object-contain"
           />
           {is_online && (
             <span className="absolute bottom-0 right-0 w-4 h-4 bg-success border-2 border-white rounded-full" />

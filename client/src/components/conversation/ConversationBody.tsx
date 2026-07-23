@@ -2,11 +2,11 @@ import { useEffect, useRef } from "react";
 import type { MessageResponse } from "../../types/types";
 import MessageItem from "./message/MessageItem";
 
-type Props = {
+interface Props {
   messages: MessageResponse[];
   onReply: (message: MessageResponse) => void;
   onRecall: (messageId: string) => void;
-};
+}
 
 function ConversationBody({ messages, onReply, onRecall }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);

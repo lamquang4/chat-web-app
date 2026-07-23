@@ -3,7 +3,7 @@ import type { ReplyMessageResponse } from "../../../../types/types";
 import Button from "../../../ui/Button";
 import Image from "../../../ui/Image";
 
-type Props = {
+interface Props {
   replyTo: ReplyMessageResponse;
   onCancel: () => void;
 };

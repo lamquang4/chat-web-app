@@ -18,13 +18,15 @@ import { mockAccount } from "../../mocks/mockAccount";
 import { useGroupPermission } from "../../hooks/useGroupPermission";
 import Swal from "sweetalert2";
 import { MEMBER_ROLE_LABEL } from "../../constants/memberRole";
+import { imageSchema } from "../../schemas/uploadSchema";
+import toast from "react-hot-toast";
 
 interface Props {
   onClose: () => void;
   onOpenAddMembers: () => void;
   conversationId: string;
   name: string;
-  avatar_url?: string;
+  avatar_url: string | null;
 }
 
 function EditGroupForm({
@@ -85,6 +87,14 @@ function EditGroupForm({
     if (!canEditGroupInfo) return;
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const result = imageSchema.safeParse(file);
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message);
+      e.target.value = "";
+      return;
+    }
+
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };

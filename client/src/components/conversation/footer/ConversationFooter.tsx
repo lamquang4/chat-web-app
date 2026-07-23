@@ -5,18 +5,17 @@ import FooterAction from "./FooterAction";
 import MessageInput from "./MessageInput";
 import Button from "../../ui/Button";
 import type { PreviewFile } from "../message/preview/PreviewList";
-import { formatFileSize, formatImageSize } from "../../../utils/formatters";
 import toast from "react-hot-toast";
 import { useAudioRecorder } from "../../../hooks/useAudioRecorder";
 import AudioPreview from "../message/preview/AudioPreview";
-
 import type { ReplyMessageResponse } from "../../../types/types";
 import ReplyPreview from "../message/preview/ReplyPreview";
+import { fileSchema, imageSchema } from "../../../schemas/uploadSchema";
 
-type Props = {
+interface Props {
   replyTo: ReplyMessageResponse | null;
   onCancelReply: () => void;
-};
+}
 
 function ConversationFooter({ replyTo, onCancelReply }: Props) {
   const [message, setMessage] = useState<string>("");
@@ -32,13 +31,13 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
   }, [previews]);
 
   const handleAddPreview = (files: FileList, isImage: boolean) => {
-    const validFiles = Array.from(files).filter((file) => {
-      const error = isImage
-        ? formatImageSize(file.size)
-        : formatFileSize(file.size);
+    const schema = isImage ? imageSchema : fileSchema;
 
-      if (error) {
-        toast.error(error);
+    const validFiles = Array.from(files).filter((file) => {
+      const result = schema.safeParse(file);
+
+      if (!result.success) {
+        toast.error(result.error.issues[0]?.message ?? "File không hợp lệ");
         return false;
       }
       return true;

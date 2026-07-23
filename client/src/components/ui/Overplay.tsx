@@ -1,4 +1,4 @@
-type Props = {
+interface Props {
   onClose?: () => void;
   children?: React.ReactNode;
   className?: string;

@@ -9,6 +9,8 @@ import FieldError from "./ui/FieldError";
 import { updateUserSchema, type UpdateUserData } from "../schemas/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { imageSchema } from "../schemas/uploadSchema";
+import toast from "react-hot-toast";
 
 function AccountForm() {
   const account = mockAccount;
@@ -43,6 +45,14 @@ function AccountForm() {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const result = imageSchema.safeParse(file);
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message);
+      e.target.value = "";
+      return;
+    }
+
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };

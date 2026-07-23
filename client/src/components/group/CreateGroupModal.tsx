@@ -1,7 +1,7 @@
 import ModalLayout from "../ui/ModalLayout";
 import CreateGroupForm from "./CreateGroupForm";
 
-type Props = {
+interface Props {
   onClose: () => void;
 };
 

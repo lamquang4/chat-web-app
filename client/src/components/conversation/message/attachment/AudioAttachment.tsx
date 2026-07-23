@@ -4,17 +4,15 @@ import type { MessageAttachmentResponse } from "../../../../types/types";
 import Button from "../../../ui/Button";
 import { formatDuration } from "../../../../utils/formatters";
 
-type Props = {
+interface Props {
   att: MessageAttachmentResponse;
-};
-
-const BAR_COUNT = 24;
+}
 
 function AudioAttachment({ att }: Props) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const toggle = () => {
@@ -81,9 +79,9 @@ function AudioAttachment({ att }: Props) {
     };
   }, []);
 
-  const bars = Array.from({ length: BAR_COUNT }, (_, i) => ({
+  const bars = Array.from({ length: 24 }, (_, i) => ({
     height: 30 + Math.abs(Math.sin(i * 0.8 + 1.2)) * 70,
-    filled: (i / BAR_COUNT) * 100 <= progress,
+    filled: (i / 24) * 100 <= progress,
   }));
 
   const displayTime =

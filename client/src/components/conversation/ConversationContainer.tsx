@@ -47,6 +47,7 @@ function ConversationContainer() {
         type={conversation.type}
         name={conversation.name}
         is_online={conversation.is_online}
+        avatar_url={conversation.avatar_url}
       />
 
       <ConversationBody

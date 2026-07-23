@@ -17,6 +17,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
         content: "Ê Minh ơi, hôm nay mày có rảnh không?",
+        attachments: [],
+        reply_message: null,
         seen_by: [
           {
             user_id: "u-001",
@@ -38,6 +40,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Có đó, buổi chiều tao free nè. Có gì không?",
+        attachments: [],
+        reply_message: null,
         seen_by: [
           {
             user_id: "u-002",
@@ -69,6 +73,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             mime_type: "image/jpeg",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -81,6 +87,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-001",
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
+        content: null,
         attachments: [
           {
             attachment_id: "att-002",
@@ -107,6 +114,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             mime_type: "image/jpeg",
           },
         ],
+        reply_message: null,
         seen_by: [
           {
             user_id: "u-002",
@@ -128,11 +136,14 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Okk mình hiểu rồi, cảm ơn bạn nha!",
+        attachments: [],
         reply_message: {
           message_id: "msg-003",
           sender_name: "Trần Thị Lan",
           content: "Nhìn cái này nè, đẹp không?",
+          attachments: [],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -156,6 +167,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             mime_type: "application/pdf",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -168,6 +181,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-002",
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
+        content: null,
         attachments: [
           {
             attachment_id: "att-006",
@@ -178,6 +192,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             mime_type: "audio/mpeg",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -190,6 +206,10 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-001",
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
+        content: null,
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: true,
         is_me: true,
         is_seen: false,
@@ -203,6 +223,9 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Oke bạn nhé, hẹn chiều gặp!",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -215,6 +238,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
         content: "Ừ cái ảnh lúc nãy tao chụp ở quán cà phê đó",
+        attachments: [],
         reply_message: {
           message_id: "msg-003",
           sender_name: "Trần Thị Lan",
@@ -230,6 +254,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -242,6 +267,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Tao xem tài liệu rồi, ổn đó, cảm ơn mày",
+        attachments: [],
         reply_message: {
           message_id: "msg-006",
           sender_name: "Trần Thị Lan",
@@ -257,6 +283,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -268,6 +295,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-001",
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
+        content: null,
         reply_message: {
           message_id: "msg-003",
           sender_name: "Trần Thị Lan",
@@ -283,6 +311,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         attachments: [
           {
             attachment_id: "att-007",
@@ -304,6 +333,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-002",
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
+        content: null,
         reply_message: {
           message_id: "msg-006",
           sender_name: "Trần Thị Lan",
@@ -319,6 +349,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         attachments: [
           {
             attachment_id: "att-008",
@@ -342,6 +373,10 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-002",
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
+        content: null,
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: true,
         is_me: false,
         is_seen: false,
@@ -356,11 +391,14 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Ơ mày nói gì thế, sao thu hồi rồi?",
+        attachments: [],
         reply_message: {
           message_id: "msg-014",
           sender_name: "Trần Thị Lan",
           content: "Bí mật này đừng nói ai nha",
+          attachments: [],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -373,9 +411,11 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Voice message hay đó, để tao nghe lại",
+        attachments: [],
         reply_message: {
           message_id: "msg-007",
           sender_name: "Trần Thị Lan",
+          content: null,
           attachments: [
             {
               attachment_id: "att-006",
@@ -387,12 +427,12 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
         created_at: "2025-05-30T09:35:00Z",
       },
-
       // ==== Cụm tin nhắn gửi liên tiếp trong cùng khung giờ (test group theo Messenger) ====
       {
         message_id: "msg-017",
@@ -401,6 +441,9 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "À quên nữa",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -413,6 +456,9 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Tao gửi thêm mấy tấm hình lúc nãy nè",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -424,6 +470,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-001",
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
+        content: null,
         attachments: [
           {
             attachment_id: "att-009",
@@ -442,6 +489,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             mime_type: "image/jpeg",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -453,6 +502,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_id: "u-001",
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
+        content: null,
         attachments: [
           {
             attachment_id: "att-011",
@@ -463,6 +513,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             mime_type: "application/pdf",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -475,6 +527,8 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Xong rồi đó, mày xem giúp tao nha",
+        attachments: [],
+        reply_message: null,
         seen_by: [
           {
             user_id: "u-002",
@@ -496,6 +550,9 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
         content: "Ok để tao xem",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -508,6 +565,9 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
         content: "File pdf này đúng cái tao cần luôn, cảm ơn nha",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -522,6 +582,9 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
         content: "abcv",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -534,6 +597,9 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         sender_name: "Trần Thị Lan",
         sender_avatar_url: "https://i.pravatar.cc/150?img=5",
         content: "xyz",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -565,6 +631,8 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Lê Văn Hoàng",
         sender_avatar_url: "https://i.pravatar.cc/150?img=15",
         content: "Mọi người review PR #42 giúp mình với nhé!",
+        attachments: [],
+        reply_message: null,
         seen_by: [
           {
             user_id: "u-001",
@@ -602,6 +670,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             mime_type: "image/png",
           },
         ],
+        reply_message: null,
         seen_by: [
           {
             user_id: "u-003",
@@ -647,7 +716,8 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             mime_type: "image/png",
           },
         ],
-
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -671,7 +741,8 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             mime_type: "audio/mpeg",
           },
         ],
-
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -685,11 +756,14 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Nghe rồi, mình sẽ fix theo ý kiến nhé",
+        attachments: [],
         reply_message: {
           message_id: "msg-104",
           sender_name: "Lê Văn Hoàng",
           content: "Record lại buổi họp hôm qua",
+          attachments: [],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -702,6 +776,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_id: "u-004",
         sender_name: "Ngô Thị Hà",
         sender_avatar_url: "https://i.pravatar.cc/150?img=44",
+        content: null,
         attachments: [
           {
             attachment_id: "att-105",
@@ -713,6 +788,8 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
               "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -736,6 +813,8 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             mime_type: "application/zip",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
@@ -748,6 +827,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Lê Văn Hoàng",
         sender_avatar_url: "https://i.pravatar.cc/150?img=15",
         content: "Mình thích bản v2 hơn, màu sắc hài hoà hơn",
+        attachments: [],
         reply_message: {
           message_id: "msg-103",
           sender_name: "Ngô Thị Hà",
@@ -771,6 +851,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -783,9 +864,11 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Mình xem plan rồi, tuần sau chốt lại nhé",
+        attachments: [],
         reply_message: {
           message_id: "msg-106",
           sender_name: "Ngô Thị Hà",
+          content: null,
           attachments: [
             {
               attachment_id: "att-105",
@@ -798,18 +881,19 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
         created_at: "2025-05-30T09:14:00Z",
       },
-
       {
         message_id: "msg-110",
         conversation_id: "cv-002",
         sender_id: "u-001",
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
+        content: null,
         reply_message: {
           message_id: "msg-103",
           sender_name: "Ngô Thị Hà",
@@ -833,6 +917,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         attachments: [
           {
             attachment_id: "att-107",
@@ -848,18 +933,17 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:16:00Z",
       },
-
       {
         message_id: "msg-111",
         conversation_id: "cv-002",
         sender_id: "u-004",
         sender_name: "Ngô Thị Hà",
         sender_avatar_url: "https://i.pravatar.cc/150?img=44",
-
+        content: null,
         reply_message: {
           message_id: "msg-106",
           sender_name: "Ngô Thị Hà",
-
+          content: null,
           attachments: [
             {
               attachment_id: "att-105",
@@ -872,6 +956,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         attachments: [
           {
             attachment_id: "att-108",
@@ -888,22 +973,21 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:18:00Z",
       },
-
-      // ✅ tin nhắn bị thu hồi: API KHÔNG trả về content
       {
         message_id: "msg-112",
         conversation_id: "cv-002",
         sender_id: "u-003",
         sender_name: "Lê Văn Hoàng",
         sender_avatar_url: "https://i.pravatar.cc/150?img=15",
+        content: null,
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: true,
         is_me: false,
         is_seen: false,
         created_at: "2025-05-30T09:20:00Z",
       },
-
-      // reply vào tin đã thu hồi (msg-112): reply_message vẫn giữ content vì đây là
-      // snapshot được lưu tại thời điểm gửi reply, độc lập với trạng thái hiện tại của tin gốc
       {
         message_id: "msg-113",
         conversation_id: "cv-002",
@@ -911,18 +995,19 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Ngô Thị Hà",
         sender_avatar_url: "https://i.pravatar.cc/150?img=44",
         content: "Link gì vậy anh, thu hồi rồi kìa",
+        attachments: [],
         reply_message: {
           message_id: "msg-112",
           sender_name: "Lê Văn Hoàng",
           content: "Ê t gửi nhầm link rồi",
+          attachments: [],
         },
-
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
         created_at: "2025-05-30T09:21:00Z",
       },
-
       {
         message_id: "msg-114",
         conversation_id: "cv-002",
@@ -930,6 +1015,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Ngô Thị Hà",
         sender_avatar_url: "https://i.pravatar.cc/150?img=44",
         content: "Để em nghe lại file ghi âm này",
+        attachments: [],
         reply_message: {
           message_id: "msg-104",
           sender_name: "Lê Văn Hoàng",
@@ -945,13 +1031,12 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             },
           ],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
         created_at: "2025-05-30T09:22:00Z",
       },
-      // reply vào tin đã thu hồi mà reply_message chỉ còn sender_name (không có content) —
-      // vẫn là case hợp lệ tuỳ cách backend implement (không phải mọi reply đều lưu snapshot đầy đủ)
       {
         message_id: "msg-115",
         conversation_id: "cv-002",
@@ -959,16 +1044,19 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
         content: "Ủa tin nhắn đó là gì vậy?",
+        attachments: [],
         reply_message: {
           message_id: "msg-112",
           sender_name: "Lê Văn Hoàng",
+          content: null,
+          attachments: [],
         },
+        seen_by: [],
         is_recalled: false,
         is_me: true,
         is_seen: false,
         created_at: "2025-05-30T09:23:00Z",
       },
-
       // ==== Cụm tin nhắn cùng khung giờ trong group chat ====
       {
         message_id: "msg-116",
@@ -977,6 +1065,9 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Lê Văn Hoàng",
         sender_avatar_url: "https://i.pravatar.cc/150?img=15",
         content: "Mọi người ơi cho hỏi thêm chút",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -989,6 +1080,9 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Lê Văn Hoàng",
         sender_avatar_url: "https://i.pravatar.cc/150?img=15",
         content: "Deadline PR #42 là bao giờ vậy?",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -1000,6 +1094,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_id: "u-003",
         sender_name: "Lê Văn Hoàng",
         sender_avatar_url: "https://i.pravatar.cc/150?img=15",
+        content: null,
         attachments: [
           {
             attachment_id: "att-109",
@@ -1010,6 +1105,8 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             mime_type: "image/png",
           },
         ],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -1022,12 +1119,14 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Lê Văn Hoàng",
         sender_avatar_url: "https://i.pravatar.cc/150?img=15",
         content: "Gặp lỗi này khi build, ai biết fix không?",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
         created_at: "2025-05-30T09:50:22Z",
       },
-      // ✅ MỚI: 2 tin nhắn text gửi liên tiếp cách nhau vài giây, cùng 1 người gửi
       {
         message_id: "msg-120",
         conversation_id: "cv-002",
@@ -1035,6 +1134,9 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Ngô Thị Hà",
         sender_avatar_url: "https://i.pravatar.cc/150?img=44",
         content: "abcv",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,
@@ -1047,6 +1149,9 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         sender_name: "Ngô Thị Hà",
         sender_avatar_url: "https://i.pravatar.cc/150?img=44",
         content: "xyz",
+        attachments: [],
+        reply_message: null,
+        seen_by: [],
         is_recalled: false,
         is_me: false,
         is_seen: false,

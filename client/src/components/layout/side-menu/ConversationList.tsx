@@ -7,8 +7,8 @@ function ConversationList() {
     <div className="overflow-y-auto">
       {conversations.map((conversation) => (
         <ConversationItem
+          conversation={conversation}
           key={conversation.conversation_id}
-          {...conversation}
         />
       ))}
     </div>

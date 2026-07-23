@@ -3,9 +3,9 @@ import type { FriendRequestResponse } from "../../types/types";
 import UserItem from "../ui/UserItem";
 import Button from "../ui/Button";
 
-type Props = {
+interface Props {
   friendRequests: FriendRequestResponse[];
-};
+}
 
 function FriendRequestList({ friendRequests }: Props) {
   return (

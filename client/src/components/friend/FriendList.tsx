@@ -2,9 +2,9 @@ import { MessageCircleMore, UserRoundX } from "lucide-react";
 import type { FriendResponse } from "../../types/types";
 import UserItem from "../ui/UserItem";
 
-type Props = {
+interface Props {
   friends: FriendResponse[];
-};
+}
 
 function FriendList({ friends }: Props) {
   return (

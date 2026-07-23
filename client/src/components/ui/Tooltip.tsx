@@ -1,6 +1,6 @@
 import { memo, useLayoutEffect, useRef, useState } from "react";
 
-type Props = {
+interface Props {
   text: string;
 };
 

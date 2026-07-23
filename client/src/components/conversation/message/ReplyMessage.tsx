@@ -1,6 +1,6 @@
 import type { ReplyMessageResponse } from "../../../types/types";
 
-type Props = {
+interface Props {
   reply: ReplyMessageResponse;
   isMe: boolean;
   onClick?: () => void;

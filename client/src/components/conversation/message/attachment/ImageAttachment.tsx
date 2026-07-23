@@ -3,18 +3,26 @@ import type { MessageAttachmentResponse } from "../../../../types/types";
 import Image from "../../../ui/Image";
 import ImageViewer from "../../../ui/ImageViewer";
 
-type Props = {
+interface Props {
   att: MessageAttachmentResponse;
-};
+}
 
 function ImageAttachment({ att }: Props) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleOpenViewer = () => {
+    setOpen(true);
+  };
+
+  const handleCloseViewer = () => {
+    setOpen(false);
+  };
 
   return (
     <>
       <div
         className="relative overflow-hidden rounded-2xl cursor-pointer max-w-[280px] max-h-[320px]"
-        onClick={() => setOpen(true)}
+        onClick={handleOpenViewer}
       >
         <Image
           src={att.url}
@@ -24,11 +32,7 @@ function ImageAttachment({ att }: Props) {
       </div>
 
       {open && (
-        <ImageViewer
-          image={att.url}
-          open={open}
-          onClose={() => setOpen(false)}
-        />
+        <ImageViewer image={att.url} open={open} onClose={handleCloseViewer} />
       )}
     </>
   );

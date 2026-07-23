@@ -5,13 +5,13 @@ import { useState } from "react";
 import type { ConversationType } from "../../types/types";
 import EditGroupModal from "../group/EditGroupModal";
 
-type Props = {
-  avatar_url?: string;
+interface Props {
+  avatar_url: string | null;
   conversationId: string;
   is_online: boolean;
   type: ConversationType;
   name: string;
-};
+}
 
 function ConversationHeader({
   avatar_url,

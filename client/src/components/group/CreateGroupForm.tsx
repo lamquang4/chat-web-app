@@ -8,10 +8,12 @@ import Input from "../ui/Input";
 import Label from "../ui/Label";
 import SearchInput from "../ui/SearchInput";
 import UserSelectItem from "../ui/UserSelectItem";
+import { imageSchema } from "../../schemas/uploadSchema";
+import toast from "react-hot-toast";
 
-type Props = {
+interface Props {
   onClose: () => void;
-};
+}
 
 function CreateGroupForm({ onClose }: Props) {
   const [groupName, setGroupName] = useState<string>("");
@@ -47,6 +49,14 @@ function CreateGroupForm({ onClose }: Props) {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const result = imageSchema.safeParse(file);
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message);
+      e.target.value = "";
+      return;
+    }
+
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };

@@ -7,7 +7,7 @@ import DropdownMenu, { type DropdownMenuItem } from "./DropdownMenu";
 type TitleTag = "h3" | "h4" | "h5" | "h6" | "p" | "span";
 
 interface Props {
-  avatarUrl?: string;
+  avatarUrl: string | null;
   avatarSize?: string;
   title: string;
   titleAs?: TitleTag;
@@ -21,7 +21,7 @@ interface Props {
 
 function UserItem({
   avatarUrl,
-  avatarSize = "w-14 h-14",
+  avatarSize = "w-12 h-12",
   title,
   titleAs: TitleTag = "p",
   titleClassName = "font-medium",

@@ -5,17 +5,17 @@ import Input from "../../../ui/Input";
 import Button from "../../../ui/Button";
 import { Plus } from "lucide-react";
 
-export type PreviewFile = {
+export interface PreviewFile {
   id: string;
   file: File;
   previewUrl?: string;
-};
+}
 
-type Props = {
+interface Props {
   previews: PreviewFile[];
   onRemove: (id: string) => void;
   onAdd: (files: FileList, isImage: boolean) => void;
-};
+}
 
 function PreviewList({ previews, onRemove, onAdd }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);

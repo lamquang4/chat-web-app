@@ -1,9 +1,9 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
-type Props = React.LabelHTMLAttributes<HTMLLabelElement> & {
+interface Props extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
-};
+}
 
 function Label({ children, required, className, ...props }: Props) {
   return (

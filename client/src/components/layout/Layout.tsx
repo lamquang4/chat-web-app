@@ -1,7 +1,7 @@
 import Header from "./header/Header";
 import SideMenu from "./side-menu/SideMenu";
 
-type Props = {
+interface Props {
   children: React.ReactNode;
 };
 

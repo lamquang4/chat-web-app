@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import Button from "../../../ui/Button";
 import Image from "../../../ui/Image";
 
-type Props = {
+interface Props {
   previewUrl: string;
   name: string;
   onRemove: () => void;
