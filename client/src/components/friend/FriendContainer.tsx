@@ -15,7 +15,7 @@ function FriendContainer() {
   const friendRequests = mockFriendRequestList;
 
   return (
-    <div className="space-y-6 px-[15px] py-4 flex-1 h-full min-h-0 overflow-y-auto">
+    <div className="flex flex-col gap-6 flex-1 h-full min-h-0 px-[15px] py-4">
       <h3 className="font-bold">
         {isAddFriendPage ? "Lời mời kết bạn" : "Danh sách bạn bè"} (
         {isAddFriendPage ? friendRequests.length : friends.length})

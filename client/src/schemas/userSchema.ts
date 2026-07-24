@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validatePhone } from "../utils/validation/validatePhone";
+import { validatePhone } from "../utils/validators";
 
 export const updateUserSchema = z.object({
   first_name: z

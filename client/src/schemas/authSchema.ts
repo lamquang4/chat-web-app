@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { validatePassword } from "../utils/validation/validatePassword";
-import { validatePhone } from "../utils/validation/validatePhone";
+import { validatePassword, validatePhone } from "../utils/validators";
+
 
 export const loginSchema = z.object({
   email: z

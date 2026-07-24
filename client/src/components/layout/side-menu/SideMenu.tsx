@@ -19,7 +19,7 @@ import CreateGroupModal from "../../group/CreateGroupModal";
 function SideMenu() {
   const dispatch = useAppDispatch();
 
-  const [createGroupOpen, setCreateGroupOpen] = useState(false);
+  const [createGroupOpen, setCreateGroupOpen] = useState<boolean>(false);
   const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -46,15 +46,17 @@ function SideMenu() {
 
   const sideMenuOpen = useAppSelector((state) => state.ui.sideMenuOpen);
 
-  const menuItems = [
+  const items = [
     {
       label: "Danh sách bạn bè",
       icon: <UserRoundCheck size={20} />,
+      onClick: () => dispatch(closeSideMenu()),
       href: "/friend",
     },
     {
       label: "Lời mời kết bạn",
       icon: <UserRoundPlus size={20} />,
+      onClick: () => dispatch(closeSideMenu()),
       href: "/friend/add",
     },
     {
@@ -88,7 +90,7 @@ function SideMenu() {
 
                 {dropDownOpen && (
                   <DropdownMenu
-                    items={menuItems}
+                    items={items}
                     horizontal="right"
                     vertical="bottom"
                   />

@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
 import type { ConversationListResponse } from "../../../types/types";
 import Image from "../../ui/Image";
+import { useAppDispatch } from "../../../redux/store";
+import { closeSideMenu } from "../../../redux/slices/uiSlice";
 
 interface Props {
   conversation: ConversationListResponse;
 }
 
 function ConversationItem({ conversation }: Props) {
+  const dispatch = useAppDispatch();
+
   const {
     conversation_id,
     avatar_url,
@@ -18,7 +22,11 @@ function ConversationItem({ conversation }: Props) {
     is_last_message_me,
   } = conversation;
   return (
-    <Link to={`/messages/${conversation_id}`} className="block w-full">
+    <Link
+      to={`/messages/${conversation_id}`}
+      className="block w-full"
+      onClick={() => dispatch(closeSideMenu())}
+    >
       <div
         className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-gray-100 w-full`}
       >

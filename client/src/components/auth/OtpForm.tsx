@@ -5,13 +5,10 @@ import Overplay from "../ui/Overplay";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
 import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constants/otp";
-import {
-  validateOtp,
-  validateOtpDigit,
-} from "../../utils/validation/validateOtp";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { setAuthView } from "../../redux/slices/authSlice";
 import { MoveLeft } from "lucide-react";
+import { validateOtp, validateOtpDigit } from "../../utils/validators";
 
 function OtpForm() {
   const dispatch = useAppDispatch();
