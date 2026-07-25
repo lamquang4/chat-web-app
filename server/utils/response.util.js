@@ -1,18 +1,37 @@
-// Api response
 const success = (
   res,
-  { message = "Thành công", data, totalPages, total, status = 200 } = {},
+  { message = "Thành công", data = null, status = 200 } = {},
 ) => {
-  const body = { message };
-
-  if (data !== undefined) body.data = data;
-  if (totalPages !== undefined) body.totalPages = totalPages;
-  if (total !== undefined) body.total = total;
-
-  return res.status(status).json(body);
+  return res.status(status).json({
+    message,
+    data,
+  });
 };
 
-// Error response
+const successPage = (
+  res,
+  {
+    message = "Thành công",
+    content = [],
+    page = 0,
+    size = 10,
+    totalElements = 0,
+    status = 200,
+  } = {},
+) => {
+  return res.status(status).json({
+    message,
+    data: {
+      content,
+      page,
+      size,
+      totalElements,
+      totalPages: Math.ceil(totalElements / size),
+    },
+  });
+};
+
+// Response lỗi
 const error = (res, { status = 500, message = "Lỗi server", path } = {}) => {
   return res.status(status).json({
     status,
@@ -22,4 +41,4 @@ const error = (res, { status = 500, message = "Lỗi server", path } = {}) => {
   });
 };
 
-module.exports = { success, error };
+module.exports = { success, successPage, error };

@@ -16,7 +16,7 @@ export const fileSchema = z
 export const imageSchema = z
   .instanceof(File)
   .refine((file) => file.size <= 5 * 1024 * 1024, {
-    message: "Ảnh không được vượt quá 5MB",
+    message: "Hình không được vượt quá 5MB",
   })
   .refine((file) => ALLOWED_IMAGE_MIME_TYPES.includes(file.type), {
     message: "Chỉ hỗ trợ JPG, PNG, WEBP",

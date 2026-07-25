@@ -1,10 +1,10 @@
 class AppError extends Error {
-  constructor(errorCode) {
-    super(errorCode.message);
+  constructor(errorCode, overrideMessage) {
+    super(overrideMessage || errorCode.message);
     this.status = errorCode.status;
-    this.code = Object.keys(require("./error.code")).find(
-      (key) => require("./error.code")[key] === errorCode,
-    );
+    this.code = errorCode.code;
+
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
