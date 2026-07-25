@@ -62,13 +62,13 @@ function AccountForm() {
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 py-4 overflow-y-auto">
+    <div className="flex flex-col flex-1 gap-6 py-4 overflow-y-auto">
       <h3 className="px-[15px] font-bold">Tài khoản</h3>
 
       <div className="w-full flex justify-center items-center">
-        <div className="bg-white rounded-lg shadow-md max-w-[480px] w-full px-[15px] md:px-[30px] sm:py-[60px] py-[40px]">
+        <div className="bg-white rounded-lg shadow-md max-w-[480px] w-full px-[15px] md:px-[30px] py-[40px]">
           <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
-            <Label className="relative w-25 h-25 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden hover:bg-gray-200 transition-colors group cursor-pointer mx-auto">
+            <Label className="relative w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden hover:bg-gray-200 transition-colors group cursor-pointer mx-auto">
               <Image
                 src={avatarPreview ?? "/assets/user.png"}
                 alt="Ảnh đại diện"
