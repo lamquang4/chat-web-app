@@ -62,7 +62,7 @@ function AccountForm() {
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 py-4">
+    <div className="flex flex-col flex-1 h-full min-h-0 py-4 overflow-y-auto">
       <h3 className="px-[15px] font-bold">Tài khoản</h3>
 
       <div className="w-full flex justify-center items-center">

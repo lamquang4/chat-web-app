@@ -22,9 +22,9 @@ function ModalLayout({
 
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
         <div
-          className={`pointer-events-auto relative bg-white rounded-lg w-full ${maxWidth} max-h-screen flex flex-col gap-4 overflow-hidden px-[15px] py-4`}
+          className={`pointer-events-auto relative bg-white rounded-lg w-full ${maxWidth} max-h-full flex flex-col gap-4 overflow-hidden px-[15px] py-4`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between shrink-0">
             <h4 className="font-bold">{title}</h4>
 
             <Button onClick={onClose}>
