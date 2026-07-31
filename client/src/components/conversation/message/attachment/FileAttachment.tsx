@@ -1,19 +1,28 @@
 import { FileText } from "lucide-react";
 import type { MessageAttachmentResponse } from "../../../../types/types";
 import { formatFileSize } from "../../../../utils/formatters";
+import toast from "react-hot-toast";
 
 interface Props {
   att: MessageAttachmentResponse;
 }
 
 function FileAttachment({ att }: Props) {
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    a.href = att.url;
-    a.download = att.file_name;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    a.click();
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(att.url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = att.file_name;
+      a.click();
+
+      URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      toast.error(`Tải file thất bại: ${err}`);
+    }
   };
 
   return (

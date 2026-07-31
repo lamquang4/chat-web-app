@@ -71,6 +71,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "anh_dep.jpg",
             file_size: 204800,
             mime_type: "image/jpeg",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -96,6 +97,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "hinh1.jpg",
             file_size: 180000,
             mime_type: "image/jpeg",
+            duration: null,
           },
           {
             attachment_id: "att-003",
@@ -104,6 +106,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "hinh2.jpg",
             file_size: 220000,
             mime_type: "image/jpeg",
+            duration: null,
           },
           {
             attachment_id: "att-004",
@@ -112,6 +115,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "hinh3.jpg",
             file_size: 195000,
             mime_type: "image/jpeg",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -149,7 +153,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:10:00Z",
       },
-      // text + file
+      // text + file (PDF thật, tải được)
       {
         message_id: "msg-006",
         conversation_id: "cv-001",
@@ -161,10 +165,11 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
           {
             attachment_id: "att-005",
             type: "document",
-            url: "https://example.com/files/tailieu.pdf",
+            url: "https://file-examples.com/wp-content/uploads/2020/04/file-sample_150kB.pdf",
             file_name: "tailieu_thang5.pdf",
             file_size: 204800,
             mime_type: "application/pdf",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -174,7 +179,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:15:00Z",
       },
-      // audio
+      // audio (mp3 thật, có duration)
       {
         message_id: "msg-007",
         conversation_id: "cv-001",
@@ -190,6 +195,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "voice_lan.mp3",
             file_size: 320000,
             mime_type: "audio/mpeg",
+            duration: 15,
           },
         ],
         reply_message: null,
@@ -251,6 +257,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
               file_name: "anh_dep.jpg",
               file_size: 204800,
               mime_type: "image/jpeg",
+              duration: null,
             },
           ],
         },
@@ -276,10 +283,11 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             {
               attachment_id: "att-005",
               type: "document",
-              url: "https://example.com/files/tailieu.pdf",
+              url: "https://file-examples.com/wp-content/uploads/2020/04/file-sample_150kB.pdf",
               file_name: "tailieu_thang5.pdf",
               file_size: 204800,
               mime_type: "application/pdf",
+              duration: null,
             },
           ],
         },
@@ -308,6 +316,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
               file_name: "anh_dep.jpg",
               file_size: 204800,
               mime_type: "image/jpeg",
+              duration: null,
             },
           ],
         },
@@ -320,6 +329,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "anh_tra_loi.jpg",
             file_size: 210000,
             mime_type: "image/jpeg",
+            duration: null,
           },
         ],
         is_recalled: false,
@@ -327,6 +337,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:28:00Z",
       },
+      // file docx thật, tải được
       {
         message_id: "msg-013",
         conversation_id: "cv-001",
@@ -342,10 +353,11 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             {
               attachment_id: "att-005",
               type: "document",
-              url: "https://example.com/files/tailieu.pdf",
+              url: "https://file-examples.com/wp-content/uploads/2020/04/file-sample_150kB.pdf",
               file_name: "tailieu_thang5.pdf",
               file_size: 204800,
               mime_type: "application/pdf",
+              duration: null,
             },
           ],
         },
@@ -354,11 +366,12 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
           {
             attachment_id: "att-008",
             type: "document",
-            url: "https://example.com/files/tailieu_bansua.docx",
+            url: "https://filesamples.com/samples/document/docx/sample2.docx",
             file_name: "tailieu_bansua.docx",
-            file_size: 153600,
+            file_size: 120514,
             mime_type:
               "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            duration: null,
           },
         ],
         is_recalled: false,
@@ -424,6 +437,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
               file_name: "voice_lan.mp3",
               file_size: 320000,
               mime_type: "audio/mpeg",
+              duration: 15,
             },
           ],
         },
@@ -479,6 +493,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "burst1.jpg",
             file_size: 190000,
             mime_type: "image/jpeg",
+            duration: null,
           },
           {
             attachment_id: "att-010",
@@ -487,6 +502,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
             file_name: "burst2.jpg",
             file_size: 175000,
             mime_type: "image/jpeg",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -496,6 +512,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:40:12Z",
       },
+      // file pdf thật, kèm 1 file excel để test riêng luôn
       {
         message_id: "msg-020",
         conversation_id: "cv-001",
@@ -507,10 +524,21 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
           {
             attachment_id: "att-011",
             type: "document",
-            url: "https://example.com/files/note_them.pdf",
+            url: "https://file-examples.com/wp-content/uploads/2020/04/file-sample_150kB.pdf",
             file_name: "note_them.pdf",
             file_size: 87000,
             mime_type: "application/pdf",
+            duration: null,
+          },
+          {
+            attachment_id: "att-012",
+            type: "document",
+            url: "https://filesamples.com/samples/document/xlsx/sample3.xlsx",
+            file_name: "bao_cao_doanh_thu.xlsx",
+            file_size: 13251,
+            mime_type:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -573,8 +601,7 @@ export const mockConversationDetailPrivate: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:41:08Z",
       },
-      // ✅ MỚI: 2 tin nhắn text gửi liên tiếp cách nhau vài giây, cùng 1 người gửi
-      // (tin 1: "abcv" -> vài giây sau tin 2: "xyz", test UI gộp nhóm tin nhắn liên tiếp)
+      // 2 tin nhắn text gửi liên tiếp cách nhau vài giây, cùng 1 người gửi
       {
         message_id: "msg-024",
         conversation_id: "cv-001",
@@ -668,6 +695,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             file_name: "screenshot_ui.png",
             file_size: 512000,
             mime_type: "image/png",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -706,6 +734,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             file_name: "design_v1.png",
             file_size: 300000,
             mime_type: "image/png",
+            duration: null,
           },
           {
             attachment_id: "att-103",
@@ -714,6 +743,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             file_name: "design_v2.png",
             file_size: 280000,
             mime_type: "image/png",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -723,7 +753,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T08:50:00Z",
       },
-      // audio
+      // audio (mp3 thật, có duration)
       {
         message_id: "msg-104",
         conversation_id: "cv-002",
@@ -739,6 +769,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             file_name: "hop_nhom_29_05.mp3",
             file_size: 860000,
             mime_type: "audio/mpeg",
+            duration: 210,
           },
         ],
         reply_message: null,
@@ -769,7 +800,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:05:00Z",
       },
-      // file docx
+      // file docx thật
       {
         message_id: "msg-106",
         conversation_id: "cv-002",
@@ -781,11 +812,12 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
           {
             attachment_id: "att-105",
             type: "document",
-            url: "https://example.com/files/plan.docx",
+            url: "https://filesamples.com/samples/document/docx/sample1.docx",
             file_name: "sprint_plan_jun.docx",
-            file_size: 98304,
+            file_size: 1310720,
             mime_type:
               "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -795,22 +827,24 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:08:00Z",
       },
-      // file zip của mình, chưa seen
+      // file excel thật, của mình, chưa seen
       {
         message_id: "msg-107",
         conversation_id: "cv-002",
         sender_id: "u-001",
         sender_name: "Minh Nguyễn",
         sender_avatar_url: "https://i.pravatar.cc/150?img=12",
-        content: "Build mới đây mọi người test giúp nhé",
+        content: "Build mới đây mọi người test giúp nhé, kèm bảng số liệu",
         attachments: [
           {
             attachment_id: "att-106",
             type: "document",
-            url: "https://example.com/files/source.zip",
-            file_name: "build_v1.2.zip",
-            file_size: 3145728,
-            mime_type: "application/zip",
+            url: "https://filesamples.com/samples/document/xlsx/sample2.xlsx",
+            file_name: "so_lieu_build_v1.2.xlsx",
+            file_size: 32922,
+            mime_type:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            duration: null,
           },
         ],
         reply_message: null,
@@ -840,6 +874,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
               file_name: "design_v1.png",
               file_size: 300000,
               mime_type: "image/png",
+              duration: null,
             },
             {
               attachment_id: "att-103",
@@ -848,6 +883,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
               file_name: "design_v2.png",
               file_size: 280000,
               mime_type: "image/png",
+              duration: null,
             },
           ],
         },
@@ -873,11 +909,12 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             {
               attachment_id: "att-105",
               type: "document",
-              url: "https://example.com/files/plan.docx",
+              url: "https://filesamples.com/samples/document/docx/sample1.docx",
               file_name: "sprint_plan_jun.docx",
-              file_size: 98304,
+              file_size: 1310720,
               mime_type:
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              duration: null,
             },
           ],
         },
@@ -906,6 +943,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
               file_name: "design_v1.png",
               file_size: 300000,
               mime_type: "image/png",
+              duration: null,
             },
             {
               attachment_id: "att-103",
@@ -914,6 +952,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
               file_name: "design_v2.png",
               file_size: 280000,
               mime_type: "image/png",
+              duration: null,
             },
           ],
         },
@@ -926,6 +965,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             file_name: "gop_y_design.png",
             file_size: 260000,
             mime_type: "image/png",
+            duration: null,
           },
         ],
         is_recalled: false,
@@ -933,6 +973,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
         is_seen: false,
         created_at: "2025-05-30T09:16:00Z",
       },
+      // file docx v2 thật
       {
         message_id: "msg-111",
         conversation_id: "cv-002",
@@ -948,11 +989,12 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             {
               attachment_id: "att-105",
               type: "document",
-              url: "https://example.com/files/plan.docx",
+              url: "https://filesamples.com/samples/document/docx/sample1.docx",
               file_name: "sprint_plan_jun.docx",
-              file_size: 98304,
+              file_size: 1310720,
               mime_type:
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              duration: null,
             },
           ],
         },
@@ -961,11 +1003,12 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
           {
             attachment_id: "att-108",
             type: "document",
-            url: "https://example.com/files/plan_v2.docx",
+            url: "https://filesamples.com/samples/document/docx/sample3.docx",
             file_name: "sprint_plan_jun_v2.docx",
-            file_size: 102400,
+            file_size: 34375,
             mime_type:
               "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            duration: null,
           },
         ],
         is_recalled: false,
@@ -1028,6 +1071,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
               file_name: "hop_nhom_29_05.mp3",
               file_size: 860000,
               mime_type: "audio/mpeg",
+              duration: 210,
             },
           ],
         },
@@ -1103,6 +1147,7 @@ export const mockConversationDetailGroup: ConversationDetailResponse = {
             file_name: "screenshot_error.png",
             file_size: 240000,
             mime_type: "image/png",
+            duration: null,
           },
         ],
         reply_message: null,

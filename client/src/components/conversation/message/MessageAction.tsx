@@ -19,8 +19,7 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
       onTouchStart={(e) => e.stopPropagation()}
       onTouchMove={(e) => e.stopPropagation()}
       onTouchEnd={(e) => e.stopPropagation()}
-      className={`
-        absolute -top-10 transition-opacity duration-150 z-10 shadow-md rounded-lg
+      className={`absolute -top-10 transition-opacity duration-150 z-10 shadow-md rounded-lg
         ${
           forceVisible
             ? "opacity-100"

@@ -139,6 +139,7 @@ export interface MessageAttachmentResponse {
   file_name: string;
   file_size: number;
   mime_type: string;
+  duration: number | null;
 }
 
 export interface ReplyMessageResponse {
