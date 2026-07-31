@@ -22,6 +22,7 @@ const messageAttachmentSchema = new mongoose.Schema({
   file_name: { type: String, default: null },
   file_size: { type: Number, default: null },
   mime_type: { type: String, default: null },
+  duration: { type: Number, default: null },
   created_at: { type: Date, default: Date.now },
 });
 
