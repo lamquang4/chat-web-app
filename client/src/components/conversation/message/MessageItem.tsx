@@ -4,7 +4,7 @@ import { vi } from "date-fns/locale";
 import type { MessageResponse } from "../../../types/types";
 import ImageAttachment from "./attachment/ImageAttachment";
 import AudioAttachment from "./attachment/AudioAttachment";
-import FileAttachment from "./attachment/FileAttachment";
+import DocumentAttachment from "./attachment/DocumentAttachment";
 import Image from "../../ui/Image";
 import ReplyMessage from "./ReplyMessage";
 import MessageAction from "./MessageAction";
@@ -204,7 +204,7 @@ function MessageItem({
                 key={att.attachment_id}
                 className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-100 text-neutral"}`}
               >
-                <FileAttachment att={att} />
+                <DocumentAttachment att={att} />
               </div>
             ))}
 

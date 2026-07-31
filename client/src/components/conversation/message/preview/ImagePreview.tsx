@@ -6,7 +6,7 @@ interface Props {
   previewUrl: string;
   name: string;
   onRemove: () => void;
-};
+}
 
 function ImagePreview({ previewUrl, name, onRemove }: Props) {
   return (
@@ -14,14 +14,14 @@ function ImagePreview({ previewUrl, name, onRemove }: Props) {
       <Image
         src={previewUrl}
         alt={name}
-        className="w-16 h-16 object-cover rounded-xl"
+        className="w-18 h-18 object-cover rounded-xl"
       />
 
       <Button
         onClick={onRemove}
-        className="absolute top-0 -right-1 w-5 h-5 bg-danger text-white rounded-full flex items-center justify-center"
+        className="absolute -top-2 -right-1 w-6 h-6 bg-danger text-white rounded-full flex items-center justify-center"
       >
-        <X size={14} />
+        <X size={15} />
       </Button>
     </div>
   );

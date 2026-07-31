@@ -1,8 +1,22 @@
 # WEB CHAT APP
 
-## Role trong group trò chuyện0
+## Chức năng chính
 
-| Chức năng          | Owner | Admin | Member |
+| Mã  | Chức năng                 | Mô tả                                                                                                                |
+| --- | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| F01 | Nhắn tin riêng tư (1-1)   | Cho phép 2 người dùng trao đổi tin nhắn trực tiếp với nhau                                                           |
+| F02 | Nhắn tin nhóm             | Cho phép nhiều người dùng trò chuyện chung trong một nhóm                                                            |
+| F03 | Gửi tệp đính kèm          | Cho phép gửi kèm hình ảnh, tài liệu, hoặc ghi âm/gửi file audio (mp3/mp4) trong tin nhắn                             |
+| F04 | Trả lời tin nhắn          | Cho phép phản hồi trực tiếp một tin nhắn cụ thể (của bản thân hoặc người khác), giữ ngữ cảnh hội thoại               |
+| F05 | Thu hồi tin nhắn          | Cho phép người dùng thu hồi (gỡ) tin nhắn đã gửi                                                                     |
+| F06 | Trạng thái online/offline | Hiển thị trạng thái kết nối hiện tại của người dùng (đang hoạt động/ngoại tuyến) theo thời gian thực                 |
+| F07 | Gửi lời mời kết bạn       | Cho phép người dùng gửi yêu cầu kết bạn đến người dùng khác, người được mời có thể đồng ý hoặc từ chối               |
+| F08 | Hủy kết bạn               | Cho phép người dùng gỡ bỏ mối quan hệ bạn bè đã thiết lập trước đó với người khác                                    |
+| F09 | Quản lý nhóm trò chuyện   | Cho phép tạo nhóm mới, chỉnh sửa thông tin nhóm, quản lý thành viên và phân quyền theo chức vụ trong nhóm trò chuyện |
+
+## Chức vụ trong nhóm trò chuyện
+
+| Hành động          | Owner | Admin | Member |
 | ------------------ | :---: | :---: | :----: |
 | Đổi tên nhóm       |  ✅   |  ✅   |   ❌   |
 | Đổi ảnh nhóm       |  ✅   |  ✅   |   ❌   |

@@ -7,10 +7,11 @@ import Button from "../../ui/Button";
 import type { PreviewFile } from "../message/preview/PreviewList";
 import toast from "react-hot-toast";
 import { useAudioRecorder } from "../../../hooks/useAudioRecorder";
-import AudioPreview from "../message/preview/AudioPreview";
+import VoiceRecordingPreview from "../message/preview/VoiceRecordingPreview";
 import type { ReplyMessageResponse } from "../../../types/types";
 import ReplyPreview from "../message/preview/ReplyPreview";
 import { fileSchema, imageSchema } from "../../../schemas/uploadSchema";
+import { ALLOWED_IMAGE_MIME_TYPES } from "../../../constants/mimeTypes";
 
 interface Props {
   replyTo: ReplyMessageResponse | null;
@@ -30,24 +31,25 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
     };
   }, [previews]);
 
-  const handleAddPreview = (files: FileList, isImage: boolean) => {
-    const schema = isImage ? imageSchema : fileSchema;
+  const handleAddPreview = (files: FileList) => {
+    const newPreviews: PreviewFile[] = [];
 
-    const validFiles = Array.from(files).filter((file) => {
+    Array.from(files).forEach((file) => {
+      const isImage = ALLOWED_IMAGE_MIME_TYPES.includes(file.type);
+      const schema = isImage ? imageSchema : fileSchema;
+
       const result = schema.safeParse(file);
-
       if (!result.success) {
         toast.error(result.error.issues[0]?.message ?? "File không hợp lệ");
-        return false;
+        return;
       }
-      return true;
-    });
 
-    const newPreviews: PreviewFile[] = validFiles.map((file) => ({
-      id: uuidv4(),
-      file,
-      previewUrl: isImage ? URL.createObjectURL(file) : undefined,
-    }));
+      newPreviews.push({
+        id: uuidv4(),
+        file,
+        previewUrl: isImage ? URL.createObjectURL(file) : undefined,
+      });
+    });
 
     setPreviews((prev) => [...prev, ...newPreviews]);
   };
@@ -100,14 +102,14 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
       <div className="flex items-center gap-2 px-4 py-3">
         {!previews.length && !recorder.isRecording && !recorder.audioUrl && (
           <FooterAction
-            onImageSelect={(files) => handleAddPreview(files, true)}
-            onFileSelect={(files) => handleAddPreview(files, false)}
+            onImageSelect={(files) => handleAddPreview(files)}
+            onFileSelect={(files) => handleAddPreview(files)}
             onMicClick={handleMicClick}
           />
         )}
 
         {recorder.isRecording || recorder.audioUrl ? (
-          <AudioPreview
+          <VoiceRecordingPreview
             isRecording={recorder.isRecording}
             elapsed={recorder.elapsed}
             audioUrl={recorder.audioUrl}

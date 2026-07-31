@@ -96,10 +96,11 @@ const ErrorCode = {
     status: 400,
     message: "Hình không được vượt quá 5MB",
   },
-  INVALID_DOC_TYPE: {
-    code: "INVALID_DOC_TYPE",
+  INVALID_FILE_TYPE: {
+    code: "INVALID_FILE_TYPE",
     status: 400,
-    message: "File chỉ hỗ trợ file PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX",
+    message:
+      "Chỉ hỗ trợ file PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, MP3, MP4, WEBM, OGG, WAV",
   },
   INVALID_IMAGE_TYPE: {
     code: "INVALID_IMAGE_TYPE",

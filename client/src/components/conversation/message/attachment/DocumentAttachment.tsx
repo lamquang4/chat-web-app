@@ -7,7 +7,7 @@ interface Props {
   att: MessageAttachmentResponse;
 }
 
-function FileAttachment({ att }: Props) {
+function DocumentAttachment({ att }: Props) {
   const handleDownload = async () => {
     try {
       const response = await fetch(att.url);
@@ -44,4 +44,4 @@ function FileAttachment({ att }: Props) {
   );
 }
 
-export default FileAttachment;
+export default DocumentAttachment;

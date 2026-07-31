@@ -3,12 +3,16 @@ import { Image, Mic, Paperclip, Plus } from "lucide-react";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import DropdownMenu from "../../ui/DropdownMenu";
+import {
+  ALLOWED_FILE_MIME_TYPES,
+  ALLOWED_IMAGE_MIME_TYPES,
+} from "../../../constants/mimeTypes";
 
 interface Props {
   onImageSelect: (files: FileList) => void;
   onFileSelect: (files: FileList) => void;
   onMicClick?: () => void;
-};
+}
 
 function FooterAction({ onImageSelect, onFileSelect, onMicClick }: Props) {
   const imageRef = useRef<HTMLInputElement>(null);
@@ -36,7 +40,7 @@ function FooterAction({ onImageSelect, onFileSelect, onMicClick }: Props) {
 
   const menuItems = [
     {
-      label: "Gửi âm thanh",
+      label: "Ghi âm",
       icon: <Mic size={18} />,
       onClick: () => {
         onMicClick?.();
@@ -77,7 +81,7 @@ function FooterAction({ onImageSelect, onFileSelect, onMicClick }: Props) {
       <Input
         ref={imageRef}
         type="file"
-        accept="image/*"
+        accept={ALLOWED_IMAGE_MIME_TYPES.join(",")}
         multiple
         className="hidden"
         onChange={(e) => e.target.files && onImageSelect(e.target.files)}
@@ -86,7 +90,7 @@ function FooterAction({ onImageSelect, onFileSelect, onMicClick }: Props) {
       <Input
         ref={fileRef}
         type="file"
-        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+        accept={ALLOWED_FILE_MIME_TYPES.join(",")}
         multiple
         className="hidden"
         onChange={(e) => e.target.files && onFileSelect(e.target.files)}

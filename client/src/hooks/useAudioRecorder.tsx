@@ -1,5 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 
+const RECORDING_MIME_TYPE = "audio/mp4";
+
 export function useAudioRecorder() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -36,7 +38,10 @@ export function useAudioRecorder() {
   const start = useCallback(async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     streamRef.current = stream;
-    const recorder = new MediaRecorder(stream);
+
+    const recorder = new MediaRecorder(stream, {
+      mimeType: RECORDING_MIME_TYPE,
+    });
     chunksRef.current = [];
 
     recorder.ondataavailable = (e) => {
@@ -78,7 +83,9 @@ export function useAudioRecorder() {
       const recorder = mediaRecorderRef.current;
       if (!recorder) return resolve();
       recorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const blob = new Blob(chunksRef.current, {
+          type: RECORDING_MIME_TYPE,
+        });
         const url = URL.createObjectURL(blob);
         setAudioBlob(blob);
         setAudioUrl(url);

@@ -15,7 +15,7 @@ const authMiddleware = (req, res, next) => {
   try {
     const decoded = jwtUtil.verifyAccessToken(token);
     req.user = {
-      id: jwtUtil.extractUserId(decoded), // đúng: decoded.sub, không phải decoded.id
+      id: jwtUtil.extractUserId(decoded),
     };
     next();
   } catch (err) {

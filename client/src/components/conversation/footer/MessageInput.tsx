@@ -11,7 +11,7 @@ interface Props {
   previews: PreviewFile[];
   onRemovePreview: (id: string) => void;
   onAddPreview: (files: FileList, isImage: boolean) => void;
-};
+}
 function MessageInput({
   value,
   onChange,
@@ -45,14 +45,14 @@ function MessageInput({
 
   return (
     <div className="relative flex-1 min-w-0">
-      <div className="bg-gray-100 rounded-2xl px-4 py-2 flex flex-col gap-2">
+      <div className="bg-gray-100 flex flex-col gap-2">
         <PreviewList
           previews={previews}
           onRemove={onRemovePreview}
           onAdd={onAddPreview}
         />
 
-        <div className="flex justify-between items-end gap-2">
+        <div className="rounded-xl px-4 py-2 flex justify-between items-end gap-2">
           <textarea
             ref={ref}
             rows={1}

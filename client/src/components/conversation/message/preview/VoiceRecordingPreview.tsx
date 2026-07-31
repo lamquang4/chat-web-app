@@ -12,7 +12,7 @@ interface Props {
   onDelete: () => void;
 }
 
-function AudioPreview({
+function VoiceRecordingPreview({
   isRecording,
   elapsed,
   audioUrl,
@@ -125,4 +125,4 @@ function AudioPreview({
   );
 }
 
-export default AudioPreview;
+export default VoiceRecordingPreview;

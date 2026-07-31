@@ -3,7 +3,8 @@ const AppError = require("../utils/app.error");
 const ErrorCode = require("../utils/error.code");
 
 const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const ALLOWED_DOC_MIME_TYPES = [
+
+const ALLOWED_FILE_MIME_TYPES = [
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // docx
@@ -11,6 +12,11 @@ const ALLOWED_DOC_MIME_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // xlsx
   "application/vnd.ms-powerpoint",
   "application/vnd.openxmlformats-officedocument.presentationml.presentation", // pptx
+  "audio/mpeg", // mp3
+  "audio/mp4", // mp4 (audio) / ghi âm
+  "audio/webm",
+  "audio/ogg",
+  "audio/wav",
 ];
 
 const storage = multer.memoryStorage();
@@ -27,16 +33,16 @@ const uploadImage = multer({
   },
 });
 
-// Upload file — giới hạn 10MB
-const uploadDoc = multer({
+// Upload file — document + audio, giới hạn 10MB, cho phép nhiều file cùng lúc
+const uploadFile = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
-    if (!ALLOWED_DOC_MIME_TYPES.includes(file.mimetype)) {
-      return cb(new AppError(ErrorCode.INVALID_DOC_TYPE));
+    if (!ALLOWED_FILE_MIME_TYPES.includes(file.mimetype)) {
+      return cb(new AppError(ErrorCode.INVALID_FILE_TYPE));
     }
     cb(null, true);
   },
 });
 
-module.exports = { uploadImage, uploadDoc };
+module.exports = { uploadImage, uploadFile };
