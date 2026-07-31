@@ -100,7 +100,7 @@ function ConversationBody({ messages, onReply, onRecall }: Props) {
       <div ref={bottomRef} />
 
       {!isAtBottom && (
-        <div className="sticky bottom-2 flex justify-center pointer-events-none">
+        <div className="sticky bottom-1 flex justify-center pointer-events-none">
           <Button
             type="button"
             onClick={() => scrollToBottom(true)}
