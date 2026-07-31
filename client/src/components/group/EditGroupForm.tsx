@@ -236,12 +236,10 @@ function EditGroupForm({
                 <Button
                   onClick={onOpenAddMembers}
                   type="button"
-                  className="text-success font-semibold px-3 py-2"
+                  className="text-success flex items-center gap-2 font-semibold px-3 py-2"
                 >
-                  <div className="flex items-center gap-2">
-                    <span>Thêm người</span>
-                    <UserRoundPlus size={20} />
-                  </div>
+                  <span>Thêm người</span>
+                  <UserRoundPlus size={20} />
                 </Button>
               </div>
             )}

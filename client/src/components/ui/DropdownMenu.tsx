@@ -59,16 +59,12 @@ function DropdownMenu({
             key={index}
             onClick={item.onClick}
             disabled={item.disabled}
-            className="px-2.5 py-3.5 hover:bg-gray-100 w-full"
+            className={`px-2.5 py-3.5 hover:bg-gray-100 w-full flex items-center gap-2 font-medium ${
+              item.textColor ?? "text-neutral"
+            }`}
           >
-            <div
-              className={`flex items-center gap-2 font-medium ${
-                item.textColor ?? "text-neutral"
-              }`}
-            >
-              {item.icon}
-              <span>{item.label}</span>
-            </div>
+            {item.icon}
+            <span>{item.label}</span>
           </Button>
         ),
       )}

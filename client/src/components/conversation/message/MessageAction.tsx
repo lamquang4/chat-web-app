@@ -1,5 +1,4 @@
 import Button from "../../ui/Button";
-import Tooltip from "../../ui/Tooltip";
 
 interface MessageActionItem {
   label: string;
@@ -29,23 +28,21 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
         }
       `}
     >
-      <div className="flex items-center gap-0.5 bg-white border border-gray-200 rounded-lg">
+      <div className="flex items-center bg-white border border-gray-200 rounded-lg">
         {actions.map((action) => (
-          <div key={action.label} className="relative group/tooltip">
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                action.onClick();
-                onActionDone?.();
-              }}
-              type="button"
-              className={`w-9.5 h-9.5 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 ${action.className ?? "text-neutral"}`}
-            >
-              {action.icon}
-            </Button>
-
-            <Tooltip text={action.label} />
-          </div>
+          <Button
+            key={action.label}
+            onClick={(e) => {
+              e.stopPropagation();
+              action.onClick();
+              onActionDone?.();
+            }}
+            type="button"
+            className={`flex items-center justify-center gap-1.5 px-3 h-9.5 whitespace-nowrap hover:bg-gray-100 active:bg-gray-100 ${action.className ?? "text-neutral"}`}
+          >
+            {action.icon}
+            <span>{action.label}</span>
+          </Button>
         ))}
       </div>
     </div>

@@ -128,7 +128,7 @@ function MessageItem({
       },
     },
     {
-      label: "Thu hồi",
+      label: `${is_me ? "Thu hồi" : "Gỡ"}`,
       icon: <Trash2 size={18} />,
       onClick: () => onRecall?.(message.message_id),
       className: "text-danger",
