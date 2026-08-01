@@ -27,7 +27,7 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
         }
       `}
     >
-      <div className="flex items-center bg-white border border-gray-200 rounded-lg">
+      <div className="flex items-center bg-white border border-gray-300 rounded-lg">
         {actions.map((action) => (
           <Button
             key={action.label}
@@ -35,6 +35,7 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
               e.stopPropagation();
               action.onClick();
               onActionDone?.();
+              (e.currentTarget as HTMLButtonElement).blur();
             }}
             type="button"
             className={`flex items-center justify-center gap-1.5 px-3 h-9.5 whitespace-nowrap hover:bg-gray-100 active:bg-gray-100 ${action.className ?? "text-neutral"}`}
