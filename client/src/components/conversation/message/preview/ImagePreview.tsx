@@ -21,7 +21,7 @@ function ImagePreview({ previewUrl, name, onRemove }: Props) {
         onClick={onRemove}
         className="absolute -top-2 -right-1 w-6 h-6 bg-danger text-white rounded-full flex items-center justify-center"
       >
-        <X size={15} />
+        <X size={15} strokeWidth={2.5} />
       </Button>
     </div>
   );
