@@ -10,7 +10,6 @@ interface Props {
   onRecall: (messageId: string) => void;
 }
 
-// Sai số cho phép khi coi là "đang ở đáy" (px)
 const BOTTOM_THRESHOLD = 80;
 
 function ConversationBody({ messages, onReply, onRecall }: Props) {

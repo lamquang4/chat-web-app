@@ -70,7 +70,7 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
     }
   };
 
-  const handleSend = async () => {
+  const handleSendMessage = async () => {
     if (!message.trim() && previews.length === 0) return;
 
     console.log("reply to", replyTo?.message_id);
@@ -85,7 +85,7 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      handleSendMessage();
     }
   };
 
@@ -129,7 +129,7 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
         )}
 
         <Button
-          onClick={handleSend}
+          onClick={handleSendMessage}
           disabled={!canSend}
           className={`p-1.5 rounded-full ${canSend ? "bg-primary text-white" : "text-neutral bg-gray-100"}`}
         >

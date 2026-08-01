@@ -10,7 +10,7 @@ interface Props {
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   previews: PreviewFile[];
   onRemovePreview: (id: string) => void;
-  onAddPreview: (files: FileList, isImage: boolean) => void;
+  onAddPreview: (files: FileList) => void;
 }
 function MessageInput({
   value,
