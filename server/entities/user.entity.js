@@ -46,7 +46,7 @@ User.init(
       },
     },
     password_hash: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     avatar_url: {

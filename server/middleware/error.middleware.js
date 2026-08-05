@@ -4,7 +4,7 @@ const AppError = require("../utils/app.error");
 const ErrorCode = require("../utils/error.code");
 
 const errorMiddleware = (err, req, res, next) => {
-  // Multer errors
+  // đồng bộ lỗi multer định nghĩa vào hệ thống xử lý lỗi tập trung
   if (err instanceof multer.MulterError) {
     let ec = ErrorCode.UPLOAD_FAILED;
 
@@ -12,8 +12,11 @@ const errorMiddleware = (err, req, res, next) => {
       case "LIMIT_FILE_SIZE":
         ec = ErrorCode.FILE_TOO_LARGE;
         break;
+      case "LIMIT_FILE_COUNT":
+        ec = ErrorCode.TOO_MANY_ATTACHMENTS;
+        break;
       case "LIMIT_UNEXPECTED_FILE":
-        ec = ErrorCode.INVALID_IMAGE_TYPE;
+        ec = ErrorCode.INVALID_ATTACHMENT_TYPE;
         break;
     }
 
@@ -35,9 +38,8 @@ const errorMiddleware = (err, req, res, next) => {
 
   // Lỗi không lường trước
   console.error("[UNEXPECTED ERROR]", err);
-
   return response.error(res, {
-    status: 500,
+    status: ErrorCode.INTERNAL_ERROR.status,
     message: ErrorCode.INTERNAL_ERROR.message,
     path: req.originalUrl,
   });

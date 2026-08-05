@@ -8,7 +8,7 @@ const conversationSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    name: { type: String, default: null },
+    name: { type: String, default: null, maxLength: 50 },
     avatar_url: { type: String, default: null },
     created_by: {
       type: mongoose.Schema.Types.ObjectId,

@@ -15,7 +15,7 @@ Otp.init(
       allowNull: false,
     },
     otp_code_hash: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(60),
       allowNull: false,
     },
     expires_at: {

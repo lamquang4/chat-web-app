@@ -1,48 +1,71 @@
 const multer = require("multer");
+const {
+  ALLOWED_IMAGE_MIME_TYPES,
+  ALLOWED_FILE_MIME_TYPES,
+  MAX_IMAGE_SIZE,
+  MAX_FILE_SIZE,
+  MAX_UPLOAD,
+} = require("../constants/limit");
 const AppError = require("../utils/app.error");
 const ErrorCode = require("../utils/error.code");
 
-const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
-
-const ALLOWED_FILE_MIME_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // docx
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // xlsx
-  "application/vnd.ms-powerpoint",
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation", // pptx
-  "audio/mpeg", // mp3
-  "audio/mp4", // mp4 (audio) / ghi âm
-  "audio/webm",
-  "audio/ogg",
-  "audio/wav",
-];
-
 const storage = multer.memoryStorage();
 
-// Upload hình — giới hạn 5MB
+const isImageType = (mimetype) => ALLOWED_IMAGE_MIME_TYPES.includes(mimetype);
+const isFileType = (mimetype) => ALLOWED_FILE_MIME_TYPES.includes(mimetype);
+
 const uploadImage = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: {
+    files: 1,
+    fileSize: Math.max(MAX_IMAGE_SIZE, MAX_FILE_SIZE),
+  },
   fileFilter: (req, file, cb) => {
-    if (!ALLOWED_IMAGE_MIME_TYPES.includes(file.mimetype)) {
+    if (!isImageType(file.mimetype)) {
       return cb(new AppError(ErrorCode.INVALID_IMAGE_TYPE));
     }
     cb(null, true);
   },
 });
 
-// Upload file — document + audio, giới hạn 10MB, cho phép nhiều file cùng lúc
-const uploadFile = multer({
+const validateImageSize = (req, res, next) => {
+  if (req.file && req.file.size > MAX_IMAGE_SIZE) {
+    return next(new AppError(ErrorCode.IMAGE_TOO_LARGE));
+  }
+  next();
+};
+
+const uploadAttachments = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: {
+    files: MAX_UPLOAD,
+    fileSize: Math.max(MAX_IMAGE_SIZE, MAX_FILE_SIZE), // Giới hạn cứng bảo vệ server
+  },
   fileFilter: (req, file, cb) => {
-    if (!ALLOWED_FILE_MIME_TYPES.includes(file.mimetype)) {
-      return cb(new AppError(ErrorCode.INVALID_FILE_TYPE));
-    }
-    cb(null, true);
+    if (isImageType(file.mimetype)) return cb(null, true);
+    if (isFileType(file.mimetype)) return cb(null, true);
+    return cb(new AppError(ErrorCode.INVALID_ATTACHMENT_TYPE));
   },
 });
 
-module.exports = { uploadImage, uploadFile };
+const validateAttachmentSize = (req, res, next) => {
+  const attachments = req.files || [];
+
+  for (const file of attachments) {
+    if (isImageType(file.mimetype) && file.size > MAX_IMAGE_SIZE) {
+      return next(new AppError(ErrorCode.IMAGE_TOO_LARGE));
+    }
+    if (isFileType(file.mimetype) && file.size > MAX_FILE_SIZE) {
+      return next(new AppError(ErrorCode.FILE_TOO_LARGE));
+    }
+  }
+
+  next();
+};
+
+module.exports = {
+  uploadImage: uploadImage.single("avatar"),
+  validateImageSize,
+  uploadAttachments: uploadAttachments.array("attachments", MAX_UPLOAD),
+  validateAttachmentSize,
+};

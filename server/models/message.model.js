@@ -13,7 +13,7 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    content: { type: String, default: null },
+    content: { type: String, default: null, maxlength: 5000 },
     reply_msg_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
