@@ -29,3 +29,7 @@ export const MAX_FIRST_NAME_LENGTH = 50;
 export const MAX_LAST_NAME_LENGTH = 50;
 export const MAX_PASSWORD_LENGTH = 100;
 export const RECORDING_MIME_TYPE = "audio/mp4";
+
+// otp
+export const OTP_LENGTH = 6;
+export const OTP_EXPIRE_SECONDS = 5 * 60; // 5 phút

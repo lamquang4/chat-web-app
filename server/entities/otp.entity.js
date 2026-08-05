@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require("sequelize");
-const { sequelize } = require("../config/mysql.config");
+const { sequelize } = require("../config/database/mysql.config");
 
 class Otp extends Model {}
 

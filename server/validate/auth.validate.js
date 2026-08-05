@@ -1,4 +1,8 @@
-import { MAX_FIRST_NAME_LENGTH, MAX_LAST_NAME_LENGTH, MAX_PASSWORD_LENGTH } from "../constants/limit";
+import {
+  MAX_FIRST_NAME_LENGTH,
+  MAX_LAST_NAME_LENGTH,
+  MAX_PASSWORD_LENGTH,
+} from "../constants/limit";
 
 const { z } = require("zod");
 const ErrorCode = require("../utils/error.code");
@@ -7,7 +11,7 @@ const {
   validatePassword,
   validatePhone,
 } = require("../utils/validators");
-const { OTP_LENGTH } = require("../constants/otp");
+const { OTP_LENGTH } = require("../constants/limit");
 
 const loginSchema = z.object({
   email: z

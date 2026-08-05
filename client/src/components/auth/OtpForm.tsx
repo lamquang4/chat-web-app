@@ -4,7 +4,7 @@ import Loading from "../ui/Loading";
 import Overplay from "../ui/Overplay";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
-import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constants/otp";
+import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constants/limit";
 import { useAppDispatch } from "../../redux/store";
 import { setAuthView } from "../../redux/slices/authViewSlice";
 import { MoveLeft } from "lucide-react";

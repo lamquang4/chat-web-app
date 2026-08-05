@@ -1,4 +1,4 @@
-import { sequelize } from "../config/mysql.config";
+import { sequelize } from "../config/database/mysql.config";
 const { DataTypes, Model } = require("sequelize");
 const { validatePhone } = require("../utils/validators");
 

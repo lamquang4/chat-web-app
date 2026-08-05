@@ -4,7 +4,7 @@ import {
   validatePassword,
   validatePhone,
 } from "../utils/validators";
-import { OTP_LENGTH } from "../constants/otp";
+import { OTP_LENGTH } from "../constants/limit";
 import { MAX_PASSWORD_LENGTH } from "../constants/limit";
 
 export const loginSchema = z.object({

@@ -8,8 +8,9 @@ const {
   MAX_GROUP_MEMBERS,
   MAX_CONTENT_LENGTH,
   MAX_PASSWORD_LENGTH,
+  OTP_LENGTH,
+  OTP_EXPIRE_SECONDS,
 } = require("../constants/limit");
-const { OTP_LENGTH } = require("../constants/otp");
 
 const ErrorCode = {
   // System
@@ -196,6 +197,11 @@ const ErrorCode = {
     code: "OTP_LENGTH_INVALID",
     status: 400,
     message: `Mã OTP gồm ${OTP_LENGTH} chữ số`,
+  },
+  OTP_RESEND_TOO_SOON: {
+    code: "OTP_RESEND_TOO_SOON",
+    status: 429,
+    message: `Vui lòng chờ ${OTP_EXPIRE_SECONDS / 60} phút trước khi yêu cầu mã OTP mới`,
   },
 
   GROUP_NAME_REQUIRED: {

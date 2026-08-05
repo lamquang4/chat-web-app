@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require("sequelize");
-const { sequelize } = require("../config/mysql.config");
+const { sequelize } = require("../config/database/mysql.config");
 const User = require("./user.entity");
 
 class Session extends Model {}

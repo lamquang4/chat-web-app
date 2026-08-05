@@ -26,6 +26,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "mysql2": "^3.23.1",
     "nodemailer": "^8.0.8",
+    "redis": "^6.2.0",
     "sequelize": "^6.37.8",
     "socket.io": "^4.8.3",
     "zod": "^4.4.3"
