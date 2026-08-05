@@ -3,6 +3,7 @@ import PreviewList, { type PreviewFile } from "../message/preview/PreviewList";
 import EmojiPicker from "emoji-picker-react";
 import { Smile } from "lucide-react";
 import Button from "../../ui/Button";
+import { MAX_CONTENT_LENGTH } from "../../../constants/limit";
 
 interface Props {
   value: string;
@@ -57,6 +58,7 @@ function MessageInput({
             ref={ref}
             rows={1}
             value={value}
+            maxLength={MAX_CONTENT_LENGTH}
             onChange={handleChange}
             onKeyDown={onKeyDown}
             placeholder="Aa"

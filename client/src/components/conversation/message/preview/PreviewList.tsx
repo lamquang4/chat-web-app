@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import {
   ALLOWED_FILE_MIME_TYPES,
   ALLOWED_IMAGE_MIME_TYPES,
-} from "../../../../constants/mimeTypes";
+} from "../../../../constants/limit";
 
 export interface PreviewFile {
   id: string;

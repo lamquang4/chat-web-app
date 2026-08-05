@@ -2,12 +2,14 @@ import z from "zod";
 import {
   ALLOWED_FILE_MIME_TYPES,
   ALLOWED_IMAGE_MIME_TYPES,
-} from "../constants/mimeTypes";
+  MAX_IMAGE_SIZE,
+  MAX_FILE_SIZE,
+} from "../constants/limit";
 
 export const imageSchema = z
   .instanceof(File)
-  .refine((file) => file.size <= 5 * 1024 * 1024, {
-    message: "Hình không được vượt quá 5MB",
+  .refine((file) => file.size <= MAX_IMAGE_SIZE, {
+    message: `Hình không được vượt quá ${MAX_IMAGE_SIZE / (1024 * 1024)}MB`,
   })
   .refine((file) => ALLOWED_IMAGE_MIME_TYPES.includes(file.type), {
     message: "Chỉ hỗ trợ JPG, PNG, WEBP",
@@ -15,8 +17,8 @@ export const imageSchema = z
 
 export const fileSchema = z
   .instanceof(File)
-  .refine((file) => file.size <= 10 * 1024 * 1024, {
-    message: "File không được vượt quá 10MB",
+  .refine((file) => file.size <= MAX_FILE_SIZE, {
+    message: `File không được vượt quá ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
   })
   .refine((file) => ALLOWED_FILE_MIME_TYPES.includes(file.type), {
     message:

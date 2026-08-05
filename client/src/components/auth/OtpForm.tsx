@@ -5,12 +5,18 @@ import Overplay from "../ui/Overplay";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
 import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constants/otp";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { setAuthView } from "../../redux/slices/authSlice";
+import { useAppDispatch } from "../../redux/store";
+import { setAuthView } from "../../redux/slices/authViewSlice";
 import { MoveLeft } from "lucide-react";
 import { validateOtp, validateOtpDigit } from "../../utils/validators";
+import { sendOtpSchema, verifyOtpSchema } from "../../schemas/authSchema";
+import { formatDuration } from "../../utils/formatters";
 
-function OtpForm() {
+interface Props {
+  email: string;
+}
+
+function OtpForm({ email }: Props) {
   const dispatch = useAppDispatch();
 
   const [isTimerActive, setIsTimerActive] = useState<boolean>(true);
@@ -21,7 +27,7 @@ function OtpForm() {
   const [timeLeft, setTimeLeft] = useState<number>(OTP_EXPIRE_SECONDS);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const pendingEmail = useAppSelector((state) => state.register.data?.email);
+  const pendingEmail = email;
 
   const isLoadingResend = false;
   const isLoadingVerify = false;
@@ -58,14 +64,6 @@ function OtpForm() {
     inputRefs.current[0]?.focus();
   }, []);
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = (seconds % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
-
   const handleChange = (index: number, value: string) => {
     if (!validateOtpDigit(value)) return; // chỉ nhận số
 
@@ -98,7 +96,7 @@ function OtpForm() {
       .replace(/\D/g, "")
       .slice(0, OTP_LENGTH);
 
-    if (!validateOtp(pasted, OTP_LENGTH)) return;
+    if (!validateOtp(pasted)) return;
 
     const newOtp = pasted.split("");
     setOtp(newOtp);
@@ -106,18 +104,36 @@ function OtpForm() {
     inputRefs.current[OTP_LENGTH - 1]?.focus();
   };
 
-  const handleResendOtp = () => {};
+  const handleResendOtp = () => {
+    const result = sendOtpSchema.safeParse({ email: pendingEmail || "" });
+
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message);
+      return;
+    }
+
+    const { email } = result.data;
+    console.log(email);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const otpValue = otp.join("");
 
-    if (!validateOtp(otpValue, OTP_LENGTH)) {
-      toast.error("OTP không hợp lệ");
+    const result = verifyOtpSchema.safeParse({
+      email: pendingEmail,
+      otp_code: otpValue,
+    });
+
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message);
       return;
     }
 
+    console.log(result.data);
+
     reset();
+    dispatch(setAuthView("login"));
   };
 
   return (
@@ -130,7 +146,7 @@ function OtpForm() {
               type="button"
               className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-300 hover:border-gray-400 transition-all"
             >
-              <MoveLeft size={24} />
+              <MoveLeft size={22} />
             </Button>
           </div>
 
@@ -184,7 +200,7 @@ function OtpForm() {
               <span className="text-neutral">
                 Mã sẽ hết hạn trong{" "}
                 <span className="text-danger font-medium">
-                  {formatTime(timeLeft)}
+                  {formatDuration(timeLeft)}
                 </span>
               </span>
             ) : (
@@ -194,9 +210,7 @@ function OtpForm() {
 
           <Button
             disabled={
-              isLoadingVerify ||
-              !validateOtp(otp.join(""), OTP_LENGTH) ||
-              timeLeft <= 0
+              isLoadingVerify || !validateOtp(otp.join("")) || timeLeft <= 0
             }
             type="submit"
             className="w-full hover-scale bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center"

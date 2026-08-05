@@ -4,14 +4,12 @@ import {
   useSelector,
   type TypedUseSelectorHook,
 } from "react-redux";
-import authReducer from "./slices/authSlice";
-import registerReducer from "./slices/registerSlice";
+import authViewReducer from "./slices/authViewSlice";
 import uiReducer from "./slices/uiSlice";
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
-    register: registerReducer,
+    authView: authViewReducer,
     ui: uiReducer,
   },
 });

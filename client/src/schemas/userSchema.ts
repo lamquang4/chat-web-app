@@ -1,18 +1,22 @@
 import { z } from "zod";
 import { validatePhone } from "../utils/validators";
+import {
+  MAX_FIRST_NAME_LENGTH,
+  MAX_LAST_NAME_LENGTH,
+} from "../constants/limit";
 
 export const updateUserSchema = z.object({
   first_name: z
     .string()
     .trim()
     .min(1, "Họ không để trống")
-    .max(50, "Họ tối đa 50 ký tự"),
+    .max(MAX_FIRST_NAME_LENGTH, `Họ tối đa ${MAX_FIRST_NAME_LENGTH} ký tự`),
 
   last_name: z
     .string()
     .trim()
     .min(1, "Tên không để trống")
-    .max(50, "Tên tối đa 50 ký tự"),
+    .max(MAX_LAST_NAME_LENGTH, `Tên tối đa ${MAX_LAST_NAME_LENGTH} ký tự`),
 
   email: z
     .string()
@@ -26,7 +30,7 @@ export const updateUserSchema = z.object({
     .min(1, "Số điện thoại không để trống")
     .refine(validatePhone, "Số điện thoại không hợp lệ"),
 
-  avatar_url: z.string().trim().url("Đường dẫn ảnh không hợp lệ").nullable(),
+  avatar_url: z.string().trim().nullable(),
 });
 
 export type UpdateUserData = z.infer<typeof updateUserSchema>;

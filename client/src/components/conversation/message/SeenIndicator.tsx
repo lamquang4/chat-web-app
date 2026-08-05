@@ -13,7 +13,7 @@ function SeenIndicator({ is_seen, seen_by }: Props) {
     return (
       <div className="flex items-center gap-1">
         {seen_by.slice(0, 3).map((u) => (
-          <div className="relative group/tooltip">
+          <div className="relative group/tooltip" key={u.user_id}>
             <Image
               key={u.user_id}
               src={u.avatar_url ?? "/assets/user.png"}

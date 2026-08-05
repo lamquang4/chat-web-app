@@ -1,5 +1,7 @@
-export function validateOtp(otp: string, amount: number = 6): boolean {
-  const regex = new RegExp(`^\\d{${amount}}$`);
+import { OTP_LENGTH } from "../constants/otp";
+
+export function validateOtp(otp: string): boolean {
+  const regex = new RegExp(`^\\d{${OTP_LENGTH}}$`);
   return regex.test(otp.trim());
 }
 

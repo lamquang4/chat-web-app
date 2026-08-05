@@ -18,3 +18,14 @@ export const ALLOWED_FILE_MIME_TYPES = [
   "audio/ogg", // .ogg
   "audio/wav", // .wav
 ];
+
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const MAX_UPLOAD = 10;
+export const MAX_CONTENT_LENGTH = 5000;
+export const MAX_GROUP_MEMBERS = 20;
+export const MAX_GROUP_NAME_LENGTH = 50;
+export const MAX_FIRST_NAME_LENGTH = 50;
+export const MAX_LAST_NAME_LENGTH = 50;
+export const MAX_PASSWORD_LENGTH = 100;
+export const RECORDING_MIME_TYPE = "audio/mp4";

@@ -11,7 +11,12 @@ import VoiceRecordingPreview from "../message/preview/VoiceRecordingPreview";
 import type { ReplyMessageResponse } from "../../../types/types";
 import ReplyPreview from "../message/preview/ReplyPreview";
 import { fileSchema, imageSchema } from "../../../schemas/uploadSchema";
-import { ALLOWED_IMAGE_MIME_TYPES } from "../../../constants/mimeTypes";
+import {
+  ALLOWED_IMAGE_MIME_TYPES,
+  MAX_UPLOAD,
+  RECORDING_MIME_TYPE,
+} from "../../../constants/limit";
+import { sendMessageSchema } from "../../../schemas/messageSchema";
 
 interface Props {
   replyTo: ReplyMessageResponse | null;
@@ -32,6 +37,13 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
   }, [previews]);
 
   const handleAddPreview = (files: FileList) => {
+    const isMax = MAX_UPLOAD > previews.length;
+
+    if (isMax) {
+      toast.error(`Chỉ được gửi tối đa ${MAX_UPLOAD} file và hình`);
+      return;
+    }
+
     const newPreviews: PreviewFile[] = [];
 
     Array.from(files).forEach((file) => {
@@ -40,7 +52,7 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
 
       const result = schema.safeParse(file);
       if (!result.success) {
-        toast.error(result.error.issues[0]?.message ?? "File không hợp lệ");
+        toast.error(result.error.issues[0]?.message);
         return;
       }
 
@@ -71,10 +83,34 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
   };
 
   const handleSendMessage = async () => {
-    if (!message.trim() && previews.length === 0) return;
+    let audioBlob = recorder.audioBlob;
 
-    console.log("reply to", replyTo?.message_id);
-    console.log("send audio blob", recorder.audioBlob);
+    if (recorder.isRecording) {
+      audioBlob = await recorder.stopRecording();
+    }
+
+    const attachments = [...previews.map((p) => p.file)];
+
+    if (audioBlob) {
+      const audioFile = new File([audioBlob], `voice-${Date.now()}.mp4`, {
+        type: RECORDING_MIME_TYPE,
+      });
+      attachments.push(audioFile);
+    }
+
+    const result = sendMessageSchema.safeParse({
+      content: message,
+      attachments,
+      reply_message_id: replyTo?.message_id,
+    });
+
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message);
+      return;
+    }
+
+    const data = result.data;
+    console.log(data);
 
     setMessage("");
     setPreviews([]);

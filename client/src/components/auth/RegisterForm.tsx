@@ -7,18 +7,21 @@ import FieldError from "../ui/FieldError";
 import Button from "../ui/Button";
 import { Eye, EyeOff } from "lucide-react";
 import { useAppDispatch } from "../../redux/store";
-import { setAuthView } from "../../redux/slices/authSlice";
-import { setRegisterData } from "../../redux/slices/registerSlice";
+import { setAuthView } from "../../redux/slices/authViewSlice";
 import { registerSchema, type RegisterData } from "../../schemas/authSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-function RegisterForm() {
+
+interface Props {
+  onSuccess: (email: string) => void;
+}
+
+function RegisterForm({ onSuccess }: Props) {
   const dispatch = useAppDispatch();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<RegisterData>({
     resolver: zodResolver(registerSchema),
@@ -40,18 +43,13 @@ function RegisterForm() {
 
   const isLoading = false;
 
+  // khi đăng ký tài khoản mới -> gửi thông tin đăng ký
+  // BE lưu ở redis (sau 10 phút sẽ xóa)
+  // verify otp xong thì thông tin đăng ký sẽ lưu vào db mysql user
   const onSubmit = (data: RegisterData) => {
-    dispatch(
-      setRegisterData({
-        first_name: data.first_name,
-        last_name: data.last_name,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-      }),
-    );
+    console.log(data);
 
-    reset();
+    onSuccess(data.email);
 
     dispatch(setAuthView("otp"));
   };

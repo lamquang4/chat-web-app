@@ -1,6 +1,11 @@
 import { z } from "zod";
-import { validatePassword, validatePhone } from "../utils/validators";
-
+import {
+  validateOtp,
+  validatePassword,
+  validatePhone,
+} from "../utils/validators";
+import { OTP_LENGTH } from "../constants/otp";
+import { MAX_PASSWORD_LENGTH } from "../constants/limit";
 
 export const loginSchema = z.object({
   email: z
@@ -43,7 +48,7 @@ export const registerSchema = z.object({
   password: z
     .string()
     .min(1, "Mật khẩu không để trống")
-    .max(100, "Mật khẩu tối đa 100 ký tự")
+    .max(MAX_PASSWORD_LENGTH, `Mật khẩu tối đa ${MAX_PASSWORD_LENGTH} ký tự`)
     .refine(validatePassword, {
       message:
         "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
@@ -51,3 +56,28 @@ export const registerSchema = z.object({
 });
 
 export type RegisterData = z.infer<typeof registerSchema>;
+
+export const sendOtpSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email không để trống")
+    .email("Email không hợp lệ"),
+});
+
+export type SendOtpData = z.infer<typeof sendOtpSchema>;
+
+export const verifyOtpSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email không để trống")
+    .email("Email không hợp lệ"),
+  otp_code: z
+    .string()
+    .trim()
+    .length(OTP_LENGTH, `Mã OTP gồm ${OTP_LENGTH} chữ số`)
+    .refine(validateOtp, "Mã OTP không hợp lệ"),
+});
+
+export type VerifyOtpData = z.infer<typeof verifyOtpSchema>;

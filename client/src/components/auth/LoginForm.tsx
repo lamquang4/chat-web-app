@@ -7,7 +7,7 @@ import FieldError from "../ui/FieldError";
 import Button from "../ui/Button";
 import { Eye, EyeOff } from "lucide-react";
 import { useAppDispatch } from "../../redux/store";
-import { setAuthView } from "../../redux/slices/authSlice";
+import { setAuthView } from "../../redux/slices/authViewSlice";
 import { loginSchema, type LoginData } from "../../schemas/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";

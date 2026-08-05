@@ -30,7 +30,7 @@ export interface VerifyOtpRequest {
 }
 
 export interface RefreshTokenRequest {
-  refreshToken: string;
+  refresh_token: string;
 }
 
 export interface CreateGroupRequest {
@@ -50,7 +50,7 @@ export interface SendMessageRequest {
   attachments?: File[];
   reply_message_id?: string;
 }
-export interface UpdateAccountRequest {
+export interface UpdateUserRequest {
   first_name: string;
   last_name: string;
   phone: string;

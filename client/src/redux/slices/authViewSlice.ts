@@ -2,15 +2,15 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type AuthView = "login" | "register" | "otp";
 
-interface AuthState {
+interface AuthViewState {
   view: AuthView;
 }
 
-const initialState: AuthState = {
+const initialState: AuthViewState = {
   view: "login",
 };
 
-const authSlice = createSlice({
+const authViewSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -20,5 +20,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAuthView } = authSlice.actions;
-export default authSlice.reducer;
+export const { setAuthView } = authViewSlice.actions;
+export default authViewSlice.reducer;

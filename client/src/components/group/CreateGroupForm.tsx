@@ -1,6 +1,8 @@
 import { Camera, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { mockFriendList } from "../../mocks/mockFriendList";
+import { useForm, type FieldErrors } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { FriendResponse } from "../../types/types";
 import Image from "../ui/Image";
 import Button from "../ui/Button";
@@ -8,67 +10,78 @@ import Input from "../ui/Input";
 import Label from "../ui/Label";
 import SearchInput from "../ui/SearchInput";
 import UserSelectItem from "../ui/UserSelectItem";
-import { imageSchema } from "../../schemas/uploadSchema";
+import {
+  createGroupSchema,
+  type CreateGroupData,
+} from "../../schemas/conversationSchema";
+import { MAX_GROUP_NAME_LENGTH } from "../../constants/limit";
 import toast from "react-hot-toast";
-
 interface Props {
   onClose: () => void;
 }
 
 function CreateGroupForm({ onClose }: Props) {
-  const [groupName, setGroupName] = useState<string>("");
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string>("");
-  const [selected, setSelected] = useState<FriendResponse[]>([]);
+  const { register, handleSubmit, watch, setValue } = useForm<CreateGroupData>({
+    resolver: zodResolver(createGroupSchema),
+    defaultValues: { name: "", member_ids: [] },
+  });
 
   const friends = mockFriendList;
+  const avatarFile = watch("avatar");
+  const memberIds = watch("member_ids") ?? [];
+  const selected = friends.filter((f) => memberIds.includes(f.user_id));
+
+  const avatarPreview = avatarFile ? URL.createObjectURL(avatarFile) : "";
 
   useEffect(() => {
     return () => {
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
+      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
     };
   }, [avatarPreview]);
 
-  const isSelected = (userId: string) =>
-    selected.some((s) => s.user_id === userId);
+  const isSelected = (userId: string) => memberIds.includes(userId);
 
   const toggleSelect = (friend: FriendResponse) => {
-    setSelected((prev) =>
+    setValue(
+      "member_ids",
       isSelected(friend.user_id)
-        ? prev.filter((s) => s.user_id !== friend.user_id)
-        : [...prev, friend],
+        ? memberIds.filter((id) => id !== friend.user_id)
+        : [...memberIds, friend.user_id],
+      { shouldValidate: true },
     );
   };
 
   const removeSelected = (userId: string) => {
-    setSelected((prev) => prev.filter((s) => s.user_id !== userId));
+    setValue(
+      "member_ids",
+      memberIds.filter((id) => id !== userId),
+      { shouldValidate: true },
+    );
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const result = imageSchema.safeParse(file);
-    if (!result.success) {
-      toast.error(result.error.issues[0]?.message);
-      e.target.value = "";
-      return;
-    }
-
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
+    setValue("avatar", file, { shouldValidate: true });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(avatarFile);
+  const onSubmit = (data: CreateGroupData) => {
+    console.log(data);
+
     onClose();
   };
 
+  const onError = (formErrors: FieldErrors<CreateGroupData>) => {
+    const firstError = Object.values(formErrors)[0];
+    const message = firstError.message as string;
+    toast.error(message);
+  };
+
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      className="flex flex-col flex-1 min-h-0"
+    >
       <div className="flex-1 overflow-y-auto custom-scroll">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center gap-4 w-full">
@@ -90,13 +103,12 @@ function CreateGroupForm({ onClose }: Props) {
             </Label>
 
             <div className="space-y-[8px] w-full">
-              <Label>Tên nhóm</Label>
+              <Label required>Tên nhóm</Label>
               <Input
                 type="text"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
+                {...register("name")}
                 placeholder="Nhập tên nhóm..."
-                maxLength={50}
+                maxLength={MAX_GROUP_NAME_LENGTH}
                 className="w-full font-medium bg-transparent border-b border-gray-200 focus:border-primary py-2 transition-colors"
               />
             </div>
@@ -157,13 +169,13 @@ function CreateGroupForm({ onClose }: Props) {
 
       <div className="flex items-center justify-center pt-4">
         <Button
-          onClick={handleSubmit}
+          type="submit"
           className="px-2 py-2.5 font-medium rounded-lg bg-success text-white"
         >
           Tạo nhóm
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
 

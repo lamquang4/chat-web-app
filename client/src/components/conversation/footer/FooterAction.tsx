@@ -6,7 +6,7 @@ import DropdownMenu from "../../ui/DropdownMenu";
 import {
   ALLOWED_FILE_MIME_TYPES,
   ALLOWED_IMAGE_MIME_TYPES,
-} from "../../../constants/mimeTypes";
+} from "../../../constants/limit";
 
 interface Props {
   onImageSelect: (files: FileList) => void;

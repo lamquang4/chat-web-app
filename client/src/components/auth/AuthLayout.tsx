@@ -2,13 +2,19 @@ import OtpForm from "./OtpForm";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { useAppSelector } from "../../redux/store";
+import { useState } from "react";
 
 function AuthLayout() {
-  const view = useAppSelector((state) => state.auth.view);
+  const view = useAppSelector((state) => state.authView.view);
+  const [pendingEmail, setPendingEmail] = useState<string>("");
 
   const renderForm = () => {
-    if (view === "otp") return <OtpForm />;
-    if (view === "register") return <RegisterForm />;
+    if (view === "otp") {
+      return <OtpForm email={pendingEmail} />;
+    }
+    if (view === "register") {
+      return <RegisterForm onSuccess={setPendingEmail} />;
+    }
     return <LoginForm />;
   };
   return (

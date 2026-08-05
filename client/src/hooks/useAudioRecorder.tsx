@@ -1,6 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-
-const RECORDING_MIME_TYPE = "audio/mp4";
+import { RECORDING_MIME_TYPE } from "../constants/limit";
 
 export function useAudioRecorder() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -13,6 +12,7 @@ export function useAudioRecorder() {
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     return () => {
@@ -24,12 +24,17 @@ export function useAudioRecorder() {
         recorder.onstop = null;
         recorder.stop();
       }
+
+      if (audioUrlRef.current) {
+        URL.revokeObjectURL(audioUrlRef.current);
+      }
     };
   }, []);
 
   const startTimer = () => {
     timerRef.current = setInterval(() => setElapsed((e) => e + 1), 1000);
   };
+
   const stopTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = null;
@@ -78,15 +83,16 @@ export function useAudioRecorder() {
   };
 
   // Dừng hẳn ghi âm chuyển sang trạng thái preview
-  const stopRecording = useCallback((): Promise<void> => {
+  const stopRecording = useCallback((): Promise<Blob | null> => {
     return new Promise((resolve) => {
       const recorder = mediaRecorderRef.current;
-      if (!recorder) return resolve();
+      if (!recorder) return resolve(null);
       recorder.onstop = () => {
         const blob = new Blob(chunksRef.current, {
           type: RECORDING_MIME_TYPE,
         });
         const url = URL.createObjectURL(blob);
+
         setAudioBlob(blob);
         setAudioUrl(url);
         stopTimer();
@@ -94,7 +100,8 @@ export function useAudioRecorder() {
         setIsRecording(false);
         setIsPaused(false);
         mediaRecorderRef.current = null;
-        resolve();
+        audioUrlRef.current = url;
+        resolve(blob);
       };
       recorder.stop();
     });
@@ -110,6 +117,7 @@ export function useAudioRecorder() {
     stopTimer();
     releaseStream();
     if (audioUrl) URL.revokeObjectURL(audioUrl);
+    audioUrlRef.current = null;
     mediaRecorderRef.current = null;
     setIsRecording(false);
     setIsPaused(false);
@@ -122,6 +130,7 @@ export function useAudioRecorder() {
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioBlob(null);
     setAudioUrl(null);
+    audioUrlRef.current = null;
     setElapsed(0);
   }, [audioUrl]);
 

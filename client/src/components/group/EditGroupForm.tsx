@@ -7,7 +7,9 @@ import {
   UserRoundX,
   UserRoundMinus,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useForm, type FieldErrors } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "../ui/Image";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
@@ -18,9 +20,12 @@ import { mockAccount } from "../../mocks/mockAccount";
 import { useGroupPermission } from "../../hooks/useGroupPermission";
 import Swal from "sweetalert2";
 import { MEMBER_ROLE_LABEL } from "../../constants/memberRole";
-import { imageSchema } from "../../schemas/uploadSchema";
 import toast from "react-hot-toast";
-
+import {
+  updateGroupSchema,
+  type UpdateGroupData,
+} from "../../schemas/conversationSchema";
+import { MAX_GROUP_NAME_LENGTH } from "../../constants/limit";
 interface Props {
   onClose: () => void;
   onOpenAddMembers: () => void;
@@ -36,13 +41,15 @@ function EditGroupForm({
   name,
   avatar_url,
 }: Props) {
-  const [groupName, setGroupName] = useState(name);
-  const [avatarPreview, setAvatarPreview] = useState(
-    avatar_url ?? "/assets/group.png",
-  );
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-
   const memberList = mockConversationMembersGroup;
+
+  const { register, handleSubmit, watch, setValue } = useForm<UpdateGroupData>({
+    resolver: zodResolver(updateGroupSchema),
+    defaultValues: {
+      name,
+      member_ids: memberList.members.map((m) => m.user_id),
+    },
+  });
 
   const {
     currentUserRole,
@@ -57,11 +64,12 @@ function EditGroupForm({
     currentUserId: mockAccount.user_id,
   });
 
+  const avatarFile = watch("avatar");
+  const avatarPreview = avatarFile ? URL.createObjectURL(avatarFile) : "";
+
   useEffect(() => {
     return () => {
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
+      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
     };
   }, [avatarPreview]);
 
@@ -88,31 +96,28 @@ function EditGroupForm({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const result = imageSchema.safeParse(file);
-    if (!result.success) {
-      toast.error(result.error.issues[0]?.message);
-      e.target.value = "";
-      return;
-    }
-
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
+    setValue("avatar", file, { shouldValidate: true });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: UpdateGroupData) => {
     if (!canEditGroupInfo) return;
+    if (conversationId !== memberList.conversation_id) return;
 
-    if (conversationId !== memberList.conversation_id) {
-      return;
-    }
-
-    console.log(avatarFile);
+    console.log(data);
     onClose();
   };
 
+  const onError = (formErrors: FieldErrors<UpdateGroupData>) => {
+    const firstError = Object.values(formErrors)[0];
+    const message = firstError?.message as string;
+    if (message) toast.error(message);
+  };
+
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      className="flex flex-col flex-1 min-h-0"
+    >
       <div className="flex-1 overflow-y-auto custom-scroll">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center gap-4 w-full">
@@ -124,7 +129,7 @@ function EditGroupForm({
               }`}
             >
               <Image
-                src={avatarPreview || "/assets/group.png"}
+                src={avatarPreview || avatar_url || "/assets/group.png"}
                 alt="Ảnh nhóm"
                 className="w-full h-full object-cover"
               />
@@ -146,15 +151,12 @@ function EditGroupForm({
             </Label>
 
             <div className="space-y-[8px] w-full">
-              <Label>Tên nhóm</Label>
+              <Label required>Tên nhóm</Label>
               <Input
                 type="text"
-                value={groupName}
-                onChange={(e) =>
-                  canEditGroupInfo && setGroupName(e.target.value)
-                }
+                {...register("name")}
+                maxLength={MAX_GROUP_NAME_LENGTH}
                 placeholder="Nhập tên nhóm..."
-                maxLength={50}
                 readOnly={!canEditGroupInfo}
                 className={`w-full font-medium bg-transparent border-b border-gray-200 py-2 transition-colors ${
                   canEditGroupInfo
@@ -250,7 +252,7 @@ function EditGroupForm({
       {canEditGroupInfo && (
         <div className="flex items-center gap-4 justify-center pt-4">
           <Button
-            onClick={handleSubmit}
+            type="submit"
             className="px-2 py-2.5 font-medium rounded-lg bg-info text-white"
           >
             Cập nhật
@@ -267,7 +269,7 @@ function EditGroupForm({
           )}
         </div>
       )}
-    </div>
+    </form>
   );
 }
 
