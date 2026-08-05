@@ -37,7 +37,7 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
   }, [previews]);
 
   const handleAddPreview = (files: FileList) => {
-    const isMax = MAX_UPLOAD > previews.length;
+    const isMax = MAX_UPLOAD < previews.length;
 
     if (isMax) {
       toast.error(`Chỉ được gửi tối đa ${MAX_UPLOAD} file và hình`);
