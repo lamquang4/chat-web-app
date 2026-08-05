@@ -1,4 +1,4 @@
-import { OTP_LENGTH } from "../constants/otp";
+import { OTP_LENGTH } from "../constants/limit";
 
 export function validateOtp(otp: string): boolean {
   const regex = new RegExp(`^\\d{${OTP_LENGTH}}$`);
