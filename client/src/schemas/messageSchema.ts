@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { imageSchema, fileSchema } from "./uploadSchema";
-import { MAX_ATTACHMENTS, MAX_CONTENT_LENGTH } from "../constants/limit";
+import { MAX_UPLOAD, MAX_CONTENT_LENGTH } from "../constants/limit";
 
 const attachmentSchema = z.union([imageSchema, fileSchema]);
 
@@ -14,8 +14,8 @@ export const sendMessageSchema = z
     attachments: z
       .array(attachmentSchema)
       .max(
-        MAX_ATTACHMENTS,
-        `Tổng số tệp và hình ảnh không được vượt quá ${MAX_ATTACHMENTS}`,
+        MAX_UPLOAD,
+        `Tổng số tệp và hình ảnh không được vượt quá ${MAX_UPLOAD}`,
       )
       .optional(),
     reply_message_id: z.string().optional(),
