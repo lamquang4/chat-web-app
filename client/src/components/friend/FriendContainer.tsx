@@ -25,17 +25,15 @@ function FriendContainer() {
         <SearchInput />
 
         <Link
-          className="px-3 py-3 rounded-md text-[0.9rem] font-medium hover:bg-secondary text-primary "
+          className="px-3 py-3 rounded-md font-medium hover:bg-secondary text-primary flex items-center gap-2"
           to={isAddFriendPage ? "/friend" : "/friend/add"}
         >
-          <div className="flex items-center gap-2">
-            <span> {isAddFriendPage ? "Bạn bè" : "Lời mới kết bạn"} </span>
-            {isAddFriendPage ? (
-              <UserRoundCheck size={20} />
-            ) : (
-              <UserRoundPlus size={20} />
-            )}
-          </div>
+          <span> {isAddFriendPage ? "Bạn bè" : "Lời mới kết bạn"} </span>
+          {isAddFriendPage ? (
+            <UserRoundCheck size={20} />
+          ) : (
+            <UserRoundPlus size={20} />
+          )}
         </Link>
       </div>
 

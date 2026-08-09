@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 module.exports = {
   port: process.env.PORT || 3000,
 
@@ -18,14 +16,6 @@ module.exports = {
     connectionLimit: Number(process.env.MYSQL_CONNECTION_LIMIT) || 10,
   },
 
-  // Redis
-  redis: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: Number(process.env.REDIS_PORT) || 6379,
-    password: process.env.REDIS_PASSWORD || undefined,
-    database: Number(process.env.REDIS_DB) || 0,
-  },
-
   // Nodemailer
   nodemailer: {
     host: process.env.MAIL_HOST,
@@ -42,10 +32,16 @@ module.exports = {
     accessExpiration: process.env.JWT_ACCESS_EXPIRATION || "15m",
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     refreshExpiration: process.env.JWT_REFRESH_EXPIRATION || "7d",
+    sessionExpiration: process.env.SESSION_EXPIRATION || "7d",
   },
 
   // Bcrypt
   bcryptSaltRounds: 10,
+
+  secret: {
+    otpHashSecret: process.env.OTP_HASH_SECRET,
+    refreshTokenHashSecret: process.env.REFRESH_TOKEN_HASH_SECRET,
+  },
 
   // Cloudinary
   cloudinary: {

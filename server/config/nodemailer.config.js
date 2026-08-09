@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((err) => {
   if (err) {
-    console.error("[MAIL] Cấu hình SMTP lỗi:", err.message);
+    console.error("[MAIL] Lỗi:", err.message);
   } else {
     console.log("[MAIL] Sẵn sàng gửi email");
   }

@@ -4,7 +4,11 @@ import Loading from "../ui/Loading";
 import Overplay from "../ui/Overplay";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
-import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constants/limit";
+import {
+  OTP_EXPIRE_SECONDS,
+  OTP_RESEND_COOLDOWN_SECONDS,
+  OTP_LENGTH,
+} from "../../constants/limit";
 import { useAppDispatch } from "../../redux/store";
 import { setAuthView } from "../../redux/slices/authViewSlice";
 import { MoveLeft } from "lucide-react";
@@ -19,12 +23,20 @@ interface Props {
 function OtpForm({ email }: Props) {
   const dispatch = useAppDispatch();
 
-  const [isTimerActive, setIsTimerActive] = useState<boolean>(true);
-  const [endTime, setEndTime] = useState<number>(
+  const [isExpireTimerActive, setIsExpireTimerActive] = useState<boolean>(true);
+  const [expireEndTime, setExpireEndTime] = useState<number>(
     () => Date.now() + OTP_EXPIRE_SECONDS * 1000,
   );
-  const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(OTP_EXPIRE_SECONDS);
+  const [isCooldownActive, setIsCooldownActive] = useState<boolean>(true);
+  const [cooldownEndTime, setCooldownEndTime] = useState<number>(
+    () => Date.now() + OTP_RESEND_COOLDOWN_SECONDS * 1000,
+  );
+  const [cooldownLeft, setCooldownLeft] = useState<number>(
+    OTP_RESEND_COOLDOWN_SECONDS,
+  );
+
+  const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const pendingEmail = email;
@@ -33,24 +45,29 @@ function OtpForm({ email }: Props) {
   const isLoadingVerify = false;
 
   const reset = () => {
-    const newEndTime = Date.now() + OTP_EXPIRE_SECONDS * 1000;
-    setEndTime(newEndTime);
+    const now = Date.now();
+    setExpireEndTime(now + OTP_EXPIRE_SECONDS * 1000);
     setTimeLeft(OTP_EXPIRE_SECONDS);
+    setIsExpireTimerActive(true);
+
+    setCooldownEndTime(now + OTP_RESEND_COOLDOWN_SECONDS * 1000);
+    setCooldownLeft(OTP_RESEND_COOLDOWN_SECONDS);
+    setIsCooldownActive(true);
+
     setOtp(Array(OTP_LENGTH).fill(""));
-    setIsTimerActive(true);
   };
 
-  // Đếm ngược
+  // Đếm ngược hết hạn OTP
   useEffect(() => {
-    if (!isTimerActive) return;
+    if (!isExpireTimerActive) return;
 
     const timer = setInterval(() => {
-      const remaining = Math.round((endTime - Date.now()) / 1000);
+      const remaining = Math.round((expireEndTime - Date.now()) / 1000);
 
       if (remaining <= 0) {
         clearInterval(timer);
         setTimeLeft(0);
-        setIsTimerActive(false);
+        setIsExpireTimerActive(false);
         return;
       }
 
@@ -58,20 +75,39 @@ function OtpForm({ email }: Props) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isTimerActive, endTime]);
+  }, [isExpireTimerActive, expireEndTime]);
+
+  // Đếm ngược cooldown gửi lại otp
+  useEffect(() => {
+    if (!isCooldownActive) return;
+
+    const timer = setInterval(() => {
+      const remaining = Math.round((cooldownEndTime - Date.now()) / 1000);
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        setCooldownLeft(0);
+        setIsCooldownActive(false);
+        return;
+      }
+
+      setCooldownLeft(remaining);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isCooldownActive, cooldownEndTime]);
 
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
 
   const handleChange = (index: number, value: string) => {
-    if (!validateOtpDigit(value)) return; // chỉ nhận số
+    if (!validateOtpDigit(value)) return;
 
     const newOtp = [...otp];
-    newOtp[index] = value.slice(-1); // chỉ lấy 1 ký tự
+    newOtp[index] = value.slice(-1);
     setOtp(newOtp);
 
-    // Tự động focus ô tiếp theo
     if (value && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -114,6 +150,8 @@ function OtpForm({ email }: Props) {
 
     const { email } = result.data;
     console.log(email);
+
+    reset();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -132,7 +170,6 @@ function OtpForm({ email }: Props) {
 
     console.log(result.data);
 
-    reset();
     dispatch(setAuthView("login"));
   };
 
@@ -190,10 +227,12 @@ function OtpForm({ email }: Props) {
             <Button
               type="button"
               onClick={handleResendOtp}
-              disabled={timeLeft > 0 || isLoadingResend}
-              className={`font-medium ${timeLeft <= 0 ? "text-success" : "text-neutral"}`}
+              disabled={isCooldownActive || isLoadingResend}
+              className={`font-medium ${!isCooldownActive ? "text-primary" : "text-neutral"}`}
             >
-              Gửi lại mã
+              {isCooldownActive
+                ? `Gửi lại mã (${formatDuration(cooldownLeft)})`
+                : "Gửi lại mã"}
             </Button>
 
             {timeLeft > 0 ? (

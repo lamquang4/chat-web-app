@@ -1,4 +1,4 @@
-import { sequelize } from "../config/database/mysql.config";
+const { sequelize } = require("../config/database/mysql.config");
 const { DataTypes, Model } = require("sequelize");
 const { validatePhone } = require("../utils/validators");
 
@@ -62,6 +62,11 @@ User.init(
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
+    },
+    is_verified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {

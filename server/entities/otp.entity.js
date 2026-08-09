@@ -18,6 +18,11 @@ Otp.init(
       type: DataTypes.STRING(60),
       allowNull: false,
     },
+    attempts: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
     expires_at: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -30,10 +35,7 @@ Otp.init(
     underscored: true,
     createdAt: "created_at",
     updatedAt: false,
-    indexes: [
-      { fields: ["email"] },
-      { fields: ["expires_at"] }, // hỗ trợ query dọn OTP hết hạn nhanh hơn
-    ],
+    indexes: [{ fields: ["email"] }, { fields: ["expires_at"] }],
   },
 );
 

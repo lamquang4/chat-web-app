@@ -1,9 +1,8 @@
-import {
+const {
   MAX_FIRST_NAME_LENGTH,
   MAX_LAST_NAME_LENGTH,
   MAX_PASSWORD_LENGTH,
-} from "../constants/limit";
-
+} = require("../constants/limit");
 const { z } = require("zod");
 const ErrorCode = require("../utils/error.code");
 const {
@@ -50,7 +49,7 @@ const registerSchema = z.object({
     .refine(validatePassword, { message: ErrorCode.PASSWORD_WEAK.message }),
 });
 
-const sendOtpSchema = z.object({
+const sendRegisterOtpSchema = z.object({
   email: z
     .string()
     .trim()
@@ -58,7 +57,7 @@ const sendOtpSchema = z.object({
     .email(ErrorCode.EMAIL_INVALID.message),
 });
 
-const verifyOtpSchema = z.object({
+const verifyRegisterOtpSchema = z.object({
   email: z
     .string()
     .trim()
@@ -71,9 +70,14 @@ const verifyOtpSchema = z.object({
     .refine(validateOtp, { message: ErrorCode.OTP_INVALID.message }),
 });
 
+const refreshTokenSchema = z.object({
+  refresh_token: z.string().min(1, ErrorCode.INVALID_REFRESH_TOKEN?.message),
+});
+
 module.exports = {
   loginSchema,
   registerSchema,
-  sendOtpSchema,
-  verifyOtpSchema,
+  sendRegisterOtpSchema,
+  verifyRegisterOtpSchema,
+  refreshTokenSchema
 };

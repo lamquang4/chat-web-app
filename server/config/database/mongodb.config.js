@@ -7,19 +7,19 @@ const connectMongo = async () => {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
     });
-    console.log("MongoDB connected");
+    console.log("[MONGODB] MongoDB đã kết nối");
   } catch (error) {
-    console.error("MongoDB connection error:", error.message);
+    console.error("[MONGODB] Lỗi: ", error.message);
     throw error;
   }
 };
 
 mongoose.connection.on("error", (err) => {
-  console.error("MongoDB error:", err.message);
+  console.error("[MONGODB] Lỗi: ", err.message);
 });
 
 mongoose.connection.on("disconnected", () => {
-  console.warn("MongoDB disconnected");
+  console.warn("[MONGODB] MongoDB mất kết nối");
 });
 
 module.exports = { mongoose, connectMongo };

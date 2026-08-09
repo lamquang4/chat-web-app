@@ -9,7 +9,7 @@ const {
   MAX_CONTENT_LENGTH,
   MAX_PASSWORD_LENGTH,
   OTP_LENGTH,
-  OTP_EXPIRE_SECONDS,
+  OTP_RESEND_COOLDOWN_SECONDS,
 } = require("../constants/limit");
 
 const ErrorCode = {
@@ -46,6 +46,11 @@ const ErrorCode = {
     status: 409,
     message: "Số điện thoại đã tồn tại",
   },
+  REGISTRATION_SESSION_EXPIRED: {
+    code: "REGISTRATION_SESSION_EXPIRED",
+    status: 400,
+    message: "Phiên đăng ký đã hết hạn, vui lòng đăng ký lại",
+  },
   INVALID_CREDENTIALS: {
     code: "INVALID_CREDENTIALS",
     status: 401,
@@ -61,15 +66,45 @@ const ErrorCode = {
     status: 403,
     message: "Không có quyền thực hiện thao tác này",
   },
-  INVALID_TOKEN: {
-    code: "INVALID_TOKEN",
+  INVALID_ACCESS_TOKEN: {
+    code: "INVALID_ACCESS_TOKEN",
     status: 401,
-    message: "Token không hợp lệ",
+    message: "Access token không hợp lệ",
   },
-  TOKEN_EXPIRED: {
-    code: "TOKEN_EXPIRED",
+  ACCESS_TOKEN_EXPIRED: {
+    code: "ACCESS_TOKEN_EXPIRED",
     status: 401,
-    message: "Token đã hết hạn",
+    message: "Access token đã hết hạn",
+  },
+  INVALID_REFRESH_TOKEN: {
+    code: "INVALID_REFRESH_TOKEN",
+    status: 401,
+    message: "Refresh token không hợp lệ",
+  },
+  REFRESH_TOKEN_EXPIRED: {
+    code: "REFRESH_TOKEN_EXPIRED",
+    status: 401,
+    message: "Refresh token đã hết hạn",
+  },
+  EMAIL_NOT_VERIFIED: {
+    code: "EMAIL_NOT_VERIFIED",
+    status: 403,
+    message: "Email chưa được xác thực",
+  },
+  SESSION_REVOKED: {
+    code: "SESSION_REVOKED",
+    status: 401,
+    message: "Phiên đăng nhập đã bị thu hồi",
+  },
+  SESSION_EXPIRED: {
+    code: "SESSION_EXPIRED",
+    status: 401,
+    message: "Phiên đăng nhập đã hết hạn",
+  },
+  SESSION_NOT_FOUND: {
+    code: "SESSION_NOT_FOUND",
+    status: 404,
+    message: "Không tìm thấy phiên đăng nhập",
   },
 
   // User
@@ -201,7 +236,18 @@ const ErrorCode = {
   OTP_RESEND_TOO_SOON: {
     code: "OTP_RESEND_TOO_SOON",
     status: 429,
-    message: `Vui lòng chờ ${OTP_EXPIRE_SECONDS / 60} phút trước khi yêu cầu mã OTP mới`,
+    message: `Vui lòng chờ ${OTP_RESEND_COOLDOWN_SECONDS} giây trước khi yêu cầu mã OTP mới`,
+  },
+  OTP_MAX_ATTEMPTS_EXCEEDED: {
+    code: "OTP_MAX_ATTEMPTS_EXCEEDED",
+    status: 429,
+    message: "Bạn đã nhập sai mã OTP quá nhiều lần, vui lòng đăng ký lại",
+  },
+  REGISTRATION_ALREADY_PENDING: {
+    code: "REGISTRATION_ALREADY_PENDING",
+    status: 409,
+    message:
+      "Email này đã được đăng ký và đang chờ xác thực OTP, vui lòng kiểm tra email hoặc thử lại sau ít phút",
   },
 
   GROUP_NAME_REQUIRED: {

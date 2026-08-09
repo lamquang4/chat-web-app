@@ -2,7 +2,20 @@ export type ConversationType = "private" | "group";
 export type AttachmentType = "image" | "document" | "audio";
 export type MemberRole = "owner" | "admin" | "member";
 
-// ============ Request ============
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  message: string;
+}
+
+// Request
 export interface LoginRequest {
   email: string;
   password: string;
@@ -16,17 +29,13 @@ export interface RegisterRequest {
   password: string;
 }
 
-export interface LogoutRequest {
-  session_id: string;
-}
-
-export interface SendOtpRequest {
-  email: string;
-}
-
-export interface VerifyOtpRequest {
+export interface VerifyRegisterOtpRequest {
   email: string;
   otp_code: string;
+}
+
+export interface ResendRegisterOtpRequest {
+  email: string;
 }
 
 export interface RefreshTokenRequest {
@@ -57,25 +66,19 @@ export interface UpdateUserRequest {
   avatar?: File;
 }
 
-// ============ Response ============
-export interface PageResponse<T> {
-  content: T[];
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-  message: string;
-}
+// Response
 
 export interface LoginResponse {
+  user_id: string;
   access_token: string;
   refresh_token: string;
   expires_in: number;
   session_id: string;
+}
+
+export interface RefreshTokenResponse {
+  access_token: string;
+  expires_in: number;
 }
 
 export interface AccountResponse {
@@ -183,24 +186,26 @@ export interface FriendRequestResponse {
   created_at: string;
 }
 
-// ============ Token ============
+// JWT
 export interface AccessTokenPayload {
-  sub: string; // userId
-  sessionId: string;
+  sub: string; // user_id
+  session_id: string;
   iat: number;
   exp: number;
 }
 
 export interface RefreshTokenPayload {
-  sub: string; // userId
+  sub: string; // user_id
   iat: number;
   exp: number;
 }
 
 export interface CookieOptions {
-  expires?: number; // ngày
+  expires?: Date;
+  maxAge?: number;
   path?: string;
   domain?: string;
   secure?: boolean;
+  httpOnly?: boolean;
   sameSite?: "Strict" | "Lax" | "None";
 }
