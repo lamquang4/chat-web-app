@@ -1,6 +1,6 @@
-import type { AccountResponse } from "../types/types";
+import type { UserResponse } from "../types/types";
 
-export const mockAccount: AccountResponse = {
+export const mockAccount: UserResponse = {
   user_id: "u-001",
   first_name: "Minh",
   last_name: "Nguyễn",

@@ -19,12 +19,6 @@ const updateUserSchema = z.object({
     .min(1, ErrorCode.LAST_NAME_REQUIRED.message)
     .max(MAX_LAST_NAME_LENGTH, ErrorCode.LAST_NAME_TOO_LONG.message),
 
-  email: z
-    .string()
-    .trim()
-    .min(1, ErrorCode.EMAIL_REQUIRED.message)
-    .email(ErrorCode.EMAIL_INVALID.message),
-
   phone: z
     .string()
     .trim()

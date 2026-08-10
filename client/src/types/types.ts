@@ -45,13 +45,13 @@ export interface RefreshTokenRequest {
 export interface CreateGroupRequest {
   name: string;
   member_ids: string[];
-  avatar?: File;
+  avatar_url?: File;
 }
 
 export interface UpdateGroupRequest {
   name: string;
   member_ids: string[];
-  avatar?: File;
+  avatar_url?: File;
 }
 
 export interface SendMessageRequest {
@@ -81,12 +81,12 @@ export interface RefreshTokenResponse {
   expires_in: number;
 }
 
-export interface AccountResponse {
+export interface UserResponse {
   user_id: string;
   first_name: string;
   last_name: string;
-  email: string;
   phone: string;
+  email: string;
   avatar_url: string | null;
 }
 
