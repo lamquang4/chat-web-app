@@ -17,7 +17,10 @@ function FriendRequestList({ friendRequests }: Props) {
             title={`${friendRequest.first_name} ${friendRequest.last_name}`}
             titleAs="h5"
             titleClassName="font-semibold"
-            subtitle={format(new Date(friendRequest.created_at), "dd/MM/yyyy")}
+            subtitle={
+              "Ngày gửi: " +
+              format(new Date(friendRequest.created_at), "dd/MM/yyyy")
+            }
             extra={
               <div className="flex gap-4">
                 <Button className="py-1.5 w-full rounded-md font-medium bg-success text-white">

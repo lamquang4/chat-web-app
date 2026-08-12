@@ -106,6 +106,88 @@ const ErrorCode = {
     status: 404,
     message: "Không tìm thấy phiên đăng nhập",
   },
+  EMAIL_REQUIRED: {
+    code: "EMAIL_REQUIRED",
+    status: 400,
+    message: "Email không để trống",
+  },
+  EMAIL_INVALID: {
+    code: "EMAIL_INVALID",
+    status: 400,
+    message: "Email không hợp lệ",
+  },
+  PASSWORD_REQUIRED: {
+    code: "PASSWORD_REQUIRED",
+    status: 400,
+    message: "Mật khẩu không để trống",
+  },
+  PASSWORD_TOO_LONG: {
+    code: "PASSWORD_TOO_LONG",
+    status: 400,
+    message: `Mật khẩu tối đa ${MAX_PASSWORD_LENGTH} ký tự`,
+  },
+  PASSWORD_WEAK: {
+    code: "PASSWORD_WEAK",
+    status: 400,
+    message:
+      "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+  },
+  FIRST_NAME_REQUIRED: {
+    code: "FIRST_NAME_REQUIRED",
+    status: 400,
+    message: "Họ không để trống",
+  },
+  FIRST_NAME_TOO_LONG: {
+    code: "FIRST_NAME_TOO_LONG",
+    status: 400,
+    message: `Họ tối đa ${MAX_FIRST_NAME_LENGTH} ký tự`,
+  },
+  LAST_NAME_REQUIRED: {
+    code: "LAST_NAME_REQUIRED",
+    status: 400,
+    message: "Tên không để trống",
+  },
+  LAST_NAME_TOO_LONG: {
+    code: "LAST_NAME_TOO_LONG",
+    status: 400,
+    message: `Tên tối đa ${MAX_LAST_NAME_LENGTH} ký tự`,
+  },
+  PHONE_REQUIRED: {
+    code: "PHONE_REQUIRED",
+    status: 400,
+    message: "Số điện thoại không để trống",
+  },
+  PHONE_INVALID: {
+    code: "PHONE_INVALID",
+    status: 400,
+    message: "Số điện thoại không hợp lệ",
+  },
+  OTP_INVALID: {
+    code: "OTP_INVALID",
+    status: 400,
+    message: "Mã OTP không hợp lệ",
+  },
+  OTP_LENGTH_INVALID: {
+    code: "OTP_LENGTH_INVALID",
+    status: 400,
+    message: `Mã OTP gồm ${OTP_LENGTH} chữ số`,
+  },
+  OTP_RESEND_TOO_SOON: {
+    code: "OTP_RESEND_TOO_SOON",
+    status: 429,
+    message: `Vui lòng chờ ${OTP_RESEND_COOLDOWN_SECONDS} giây trước khi yêu cầu mã OTP mới`,
+  },
+  OTP_MAX_ATTEMPTS_EXCEEDED: {
+    code: "OTP_MAX_ATTEMPTS_EXCEEDED",
+    status: 429,
+    message: "Bạn đã nhập sai mã OTP quá nhiều lần, vui lòng đăng ký lại",
+  },
+  REGISTRATION_ALREADY_PENDING: {
+    code: "REGISTRATION_ALREADY_PENDING",
+    status: 409,
+    message:
+      "Email này đã được đăng ký và đang chờ xác thực OTP, vui lòng kiểm tra email hoặc thử lại sau ít phút",
+  },
 
   // User
   USER_NOT_FOUND: {
@@ -122,6 +204,38 @@ const ErrorCode = {
     code: "PHONE_ALREADY_USED_BY_ANOTHER_USER",
     status: 409,
     message: "Số điện thoại đã được sử dụng bởi tài khoản khác",
+  },
+
+  // friend
+  CANNOT_FRIEND_SELF: {
+    code: "CANNOT_FRIEND_SELF",
+    status: 400, // sửa từ statusCode → status
+    message: "Không thể tự kết bạn với chính mình",
+  },
+  FRIEND_REQUEST_ALREADY_EXISTS: {
+    code: "FRIEND_REQUEST_ALREADY_EXISTS",
+    status: 409,
+    message: "Lời mời kết bạn đã được gửi trước đó",
+  },
+  ALREADY_FRIENDS: {
+    code: "ALREADY_FRIENDS",
+    status: 409,
+    message: "Hai người đã là bạn bè",
+  },
+  FRIEND_REQUEST_NOT_FOUND: {
+    code: "FRIEND_REQUEST_NOT_FOUND",
+    status: 404,
+    message: "Không tìm thấy lời mời kết bạn",
+  },
+  NOT_FRIEND_REQUEST_OWNER: {
+    code: "NOT_FRIEND_REQUEST_OWNER",
+    status: 403,
+    message: "Bạn không có quyền thao tác với lời mời này",
+  },
+  FRIEND_NOT_FOUND: {
+    code: "FRIEND_NOT_FOUND",
+    status: 404,
+    message: "Không tìm thấy quan hệ bạn bè",
   },
 
   // File / Image upload
@@ -163,93 +277,7 @@ const ErrorCode = {
     message: `Chỉ được gửi tối đa ${MAX_UPLOAD} tệp và hình mỗi lần`,
   },
 
-  EMAIL_REQUIRED: {
-    code: "EMAIL_REQUIRED",
-    status: 400,
-    message: "Email không để trống",
-  },
-  EMAIL_INVALID: {
-    code: "EMAIL_INVALID",
-    status: 400,
-    message: "Email không hợp lệ",
-  },
-
-  PASSWORD_REQUIRED: {
-    code: "PASSWORD_REQUIRED",
-    status: 400,
-    message: "Mật khẩu không để trống",
-  },
-  PASSWORD_TOO_LONG: {
-    code: "PASSWORD_TOO_LONG",
-    status: 400,
-    message: `Mật khẩu tối đa ${MAX_PASSWORD_LENGTH} ký tự`,
-  },
-  PASSWORD_WEAK: {
-    code: "PASSWORD_WEAK",
-    status: 400,
-    message:
-      "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
-  },
-
-  FIRST_NAME_REQUIRED: {
-    code: "FIRST_NAME_REQUIRED",
-    status: 400,
-    message: "Họ không để trống",
-  },
-  FIRST_NAME_TOO_LONG: {
-    code: "FIRST_NAME_TOO_LONG",
-    status: 400,
-    message: `Họ tối đa ${MAX_FIRST_NAME_LENGTH} ký tự`,
-  },
-  LAST_NAME_REQUIRED: {
-    code: "LAST_NAME_REQUIRED",
-    status: 400,
-    message: "Tên không để trống",
-  },
-  LAST_NAME_TOO_LONG: {
-    code: "LAST_NAME_TOO_LONG",
-    status: 400,
-    message: `Tên tối đa ${MAX_LAST_NAME_LENGTH} ký tự`,
-  },
-
-  PHONE_REQUIRED: {
-    code: "PHONE_REQUIRED",
-    status: 400,
-    message: "Số điện thoại không để trống",
-  },
-  PHONE_INVALID: {
-    code: "PHONE_INVALID",
-    status: 400,
-    message: "Số điện thoại không hợp lệ",
-  },
-
-  OTP_INVALID: {
-    code: "OTP_INVALID",
-    status: 400,
-    message: "Mã OTP không hợp lệ",
-  },
-  OTP_LENGTH_INVALID: {
-    code: "OTP_LENGTH_INVALID",
-    status: 400,
-    message: `Mã OTP gồm ${OTP_LENGTH} chữ số`,
-  },
-  OTP_RESEND_TOO_SOON: {
-    code: "OTP_RESEND_TOO_SOON",
-    status: 429,
-    message: `Vui lòng chờ ${OTP_RESEND_COOLDOWN_SECONDS} giây trước khi yêu cầu mã OTP mới`,
-  },
-  OTP_MAX_ATTEMPTS_EXCEEDED: {
-    code: "OTP_MAX_ATTEMPTS_EXCEEDED",
-    status: 429,
-    message: "Bạn đã nhập sai mã OTP quá nhiều lần, vui lòng đăng ký lại",
-  },
-  REGISTRATION_ALREADY_PENDING: {
-    code: "REGISTRATION_ALREADY_PENDING",
-    status: 409,
-    message:
-      "Email này đã được đăng ký và đang chờ xác thực OTP, vui lòng kiểm tra email hoặc thử lại sau ít phút",
-  },
-
+  // conversation
   GROUP_NAME_REQUIRED: {
     code: "GROUP_NAME_REQUIRED",
     status: 400,
@@ -276,10 +304,46 @@ const ErrorCode = {
     message: "Danh sách thành viên bị trùng",
   },
 
+  // message
   MESSAGE_CONTENT_TOO_LONG: {
     code: "MESSAGE_CONTENT_TOO_LONG",
     status: 400,
     message: `Nội dung tối đa ${MAX_CONTENT_LENGTH} ký tự`,
+  },
+  CONVERSATION_NOT_FOUND: {
+    code: "CONVERSATION_NOT_FOUND",
+    status: 404,
+    message: "Không tìm thấy hội thoại",
+  },
+  NOT_CONVERSATION_MEMBER: {
+    code: "NOT_CONVERSATION_MEMBER",
+    status: 403,
+    message: "Bạn không phải thành viên của hội thoại này",
+  },
+  MESSAGE_NOT_FOUND: {
+    code: "MESSAGE_NOT_FOUND",
+    status: 404,
+    message: "Không tìm thấy tin nhắn",
+  },
+  NOT_MESSAGE_OWNER: {
+    code: "NOT_MESSAGE_OWNER",
+    status: 403,
+    message: "Bạn không có quyền thu hồi tin nhắn này",
+  },
+  MESSAGE_ALREADY_RECALLED: {
+    code: "MESSAGE_ALREADY_RECALLED",
+    status: 400,
+    message: "Tin nhắn đã được thu hồi trước đó",
+  },
+  REPLY_MESSAGE_NOT_FOUND: {
+    code: "REPLY_MESSAGE_NOT_FOUND",
+    status: 404,
+    message: "Tin nhắn được trả lời không tồn tại",
+  },
+  MESSAGE_CONTENT_REQUIRED: {
+    code: "MESSAGE_CONTENT_REQUIRED",
+    status: 400,
+    message: "Tin nhắn phải có nội dung hoặc ít nhất 1 tệp đính kèm",
   },
 };
 

@@ -11,9 +11,8 @@ const conversationSchema = new mongoose.Schema(
     name: { type: String, default: null, maxLength: 50 },
     avatar_url: { type: String, default: null },
     created_by: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
+      type: String,
+      required: true,
     },
     last_message_at: { type: Date, default: null, index: true },
   },

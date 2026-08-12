@@ -7,12 +7,12 @@ class Session extends Model {}
 Session.init(
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: { model: User, key: "id" },
       onDelete: "CASCADE",
@@ -54,8 +54,8 @@ Session.init(
     updatedAt: false,
     indexes: [
       { fields: ["user_id"] },
-      { fields: ["is_revoked"] },
       { fields: ["expires_at"] },
+      { fields: ["user_id", "is_revoked"] },
     ],
   },
 );

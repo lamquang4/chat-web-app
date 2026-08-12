@@ -1,0 +1,17 @@
+module.exports = {
+  // presence
+  USER_ONLINE: "user:online",
+  USER_OFFLINE: "user:offline",
+
+  // friend
+  FRIEND_REQUEST_RECEIVED: "friend:request_received",
+  FRIEND_REQUEST_ACCEPTED: "friend:request_accepted",
+  FRIEND_REQUEST_REJECTED: "friend:request_rejected",
+  FRIEND_REMOVED: "friend:removed",
+
+  // message
+  MESSAGE_NEW: "message:new",
+  MESSAGE_RECALLED: "message:recalled",
+
+  //conversation
+};

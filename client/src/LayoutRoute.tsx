@@ -10,8 +10,9 @@ function LayoutRoute() {
       <Route path="/" element={<AuthPage />} />
       <Route path="/messages" element={<ConversationPage />} />
       <Route path="/messages/:id" element={<ConversationPage />} />
-      <Route path="/friend" element={<FriendPage />} />
-      <Route path="/friend/add" element={<FriendPage />} />
+      <Route path="/friends" element={<FriendPage />} />
+      <Route path="/friends/request" element={<FriendPage />} />
+      <Route path="/friends/suggestion" element={<FriendPage />} />
       <Route path="/account/profile" element={<AccountPage />} />
     </Routes>
   );

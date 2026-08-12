@@ -2,7 +2,7 @@ const { z } = require("zod");
 const { MAX_CONTENT_LENGTH } = require("../constants/limit");
 const ErrorCode = require("../utils/error.code");
 
-const sendMessageBodySchema = z.object({
+const sendMessageSchema = z.object({
   content: z
     .string()
     .trim()
@@ -12,5 +12,5 @@ const sendMessageBodySchema = z.object({
 });
 
 module.exports = {
-  sendMessageBodySchema,
+  sendMessageSchema,
 };

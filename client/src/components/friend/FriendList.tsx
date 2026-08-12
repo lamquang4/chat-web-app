@@ -20,7 +20,7 @@ function FriendList({ friends }: Props) {
             titleClassName="font-semibold"
             dropdownItems={[
               {
-                label: "Nhắn tin",
+                label: "Nhắn tin riêng",
                 icon: <MessageCircleMore size={20} />,
                 href: `/messages/${friend.conversation_id}`,
               },

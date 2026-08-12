@@ -7,24 +7,24 @@ class Friend extends Model {}
 Friend.init(
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     requester_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: { model: User, key: "id" },
       onDelete: "CASCADE",
     },
     receiver_id: {
-      type: DataTypes.INTEGER,
+       type: DataTypes.UUID,
       allowNull: false,
       references: { model: User, key: "id" },
       onDelete: "CASCADE",
     },
     status: {
-      type: DataTypes.ENUM("pending", "accepted", "rejected"),
+      type: DataTypes.ENUM("pending", "accepted"),
       defaultValue: "pending",
     },
   },
@@ -35,11 +35,18 @@ Friend.init(
     underscored: true,
     createdAt: "created_at",
     updatedAt: "updated_at",
-    indexes: [
-      { fields: ["requester_id"] },
-      { fields: ["receiver_id"] },
-      { unique: true, fields: ["requester_id", "receiver_id"] },
-    ],
+   indexes: [
+  {
+    fields: ["requester_id", "status"],
+  },
+  {
+    fields: ["receiver_id", "status"],
+  },
+  {
+    unique: true,
+    fields: ["requester_id", "receiver_id"],
+  },
+],
     validate: {
       cannotFriendSelf() {
         if (this.requester_id === this.receiver_id) {

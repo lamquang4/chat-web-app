@@ -16,12 +16,12 @@ const authController = require("../controllers/auth.controller");
 
 router.post("/register", validate(registerSchema), authController.register);
 router.post(
-  "/register/verify-otp",
+  "/register/otp/verify",
   validate(verifyRegisterOtpSchema),
   authController.verifyRegisterOtp,
 );
 router.post(
-  "/register/resend-otp",
+  "/register/otp/resend",
   validate(sendRegisterOtpSchema),
   authController.resendRegisterOtp,
 );

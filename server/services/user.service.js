@@ -1,4 +1,8 @@
-const { USER_NOT_FOUND, PHONE_ALREADY_USED_BY_ANOTHER_USER } = require("../utils/error.code");
+const { toUserResponse } = require("../mappers/user.mapper");
+const {
+  USER_NOT_FOUND,
+  PHONE_ALREADY_USED_BY_ANOTHER_USER,
+} = require("../utils/error.code");
 const {
   getAvatarFolder,
   uploadBufferToCloudinary,
@@ -7,20 +11,7 @@ const User = require("../entities/user.entity");
 const { Op } = require("sequelize");
 const AppError = require("../utils/app.error");
 
-const toUserResponse = (user) => ({
-  user_id: String(user.id),
-  first_name: user.first_name,
-  last_name: user.last_name,
-  email: user.email,
-  phone: user.phone,
-  avatar_url: user.avatar_url,
-});
-
-const updateUser = async (
-  userId,
-  { first_name, last_name, phone },
-  avatar,
-) => {
+const updateUser = async (userId, { first_name, last_name, phone }, avatar) => {
   const user = await User.findByPk(userId);
   if (!user) throw new AppError(USER_NOT_FOUND);
 

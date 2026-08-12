@@ -59,6 +59,7 @@ export interface SendMessageRequest {
   attachments?: File[];
   reply_message_id?: string;
 }
+
 export interface UpdateUserRequest {
   first_name: string;
   last_name: string;
@@ -178,12 +179,18 @@ export interface FriendResponse {
 }
 
 export interface FriendRequestResponse {
-  request_id: string;
-  requester_id: string; // người yêu cầu
+  requester_id: string; // người ta gửi yêu cầu cho mình
   first_name: string;
   last_name: string;
   avatar_url: string | null;
   created_at: string;
+}
+
+export interface SuggestedFriendResponse {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  avatar_url: string | null;
 }
 
 // JWT

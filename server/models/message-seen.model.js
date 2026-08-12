@@ -8,8 +8,7 @@ const messageSeenSchema = new mongoose.Schema({
     index: true,
   },
   user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: true,
   },
   seen_at: { type: Date, default: Date.now },

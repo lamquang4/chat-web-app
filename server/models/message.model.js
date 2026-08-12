@@ -9,8 +9,7 @@ const messageSchema = new mongoose.Schema(
       index: true,
     },
     sender_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
     },
     content: { type: String, default: null, maxlength: 5000 },

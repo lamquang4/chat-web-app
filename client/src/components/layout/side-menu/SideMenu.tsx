@@ -51,13 +51,13 @@ function SideMenu() {
       label: "Danh sách bạn bè",
       icon: <UserRoundCheck size={20} />,
       onClick: () => dispatch(closeSideMenu()),
-      href: "/friend",
+      href: "/friends",
     },
     {
       label: "Lời mời kết bạn",
       icon: <UserRoundPlus size={20} />,
       onClick: () => dispatch(closeSideMenu()),
-      href: "/friend/add",
+      href: "/friends/request",
     },
     {
       label: "Tạo nhóm",
