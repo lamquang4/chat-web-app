@@ -127,12 +127,16 @@ function MessageItem({
         toast.success("Sao chép văn bản thành công");
       },
     },
-    {
-      label: `${is_me ? "Thu hồi" : "Gỡ"}`,
-      icon: <Trash2 size={18} />,
-      onClick: () => onRecall?.(message.message_id),
-      className: "text-danger",
-    },
+    ...(message.is_me && !is_recalled
+      ? [
+          {
+            label: "Thu hồi",
+            icon: <Trash2 size={18} />,
+            onClick: () => onRecall?.(message.message_id),
+            className: "text-danger",
+          },
+        ]
+      : []),
   ];
 
   const actions1 = actions.filter((a) => a.label !== "Sao chép");
@@ -195,7 +199,7 @@ function MessageItem({
                 key={att.attachment_id}
                 className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-100 text-neutral"}`}
               >
-                <AudioAttachment att={att} />
+                <AudioAttachment att={att} isMe={is_me} />
               </div>
             ))}
 

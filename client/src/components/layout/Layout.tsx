@@ -1,11 +1,18 @@
 import Header from "./header/Header";
 import SideMenu from "./side-menu/SideMenu";
+import { useConversationListSocket } from "../../hooks/useConversationListSocket";
+import { useOnlineStatus } from "../../hooks/useOnlineStatus";
+import { useFriendSocket } from "../../hooks/useFriendSocket";
 
 interface Props {
   children: React.ReactNode;
-};
+}
 
 function Layout({ children }: Props) {
+  useConversationListSocket();
+  useOnlineStatus();
+  useFriendSocket();
+
   return (
     <div className="flex flex-col h-dvh">
       <Header />

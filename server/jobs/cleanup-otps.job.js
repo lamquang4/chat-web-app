@@ -5,7 +5,7 @@ const User = require("../entities/user.entity");
 const { OTP_MAX_ATTEMPTS } = require("../constants/limit");
 
 const startOtpCleanupJob = () => {
-  cron.schedule("*/15 * * * *", async () => {
+  cron.schedule("*/5 * * * *", async () => {
     try {
       //  xóa OTP hết hạn hoặc đã vượt quá số lần thử sai cho phép
       const deletedOtpCount = await Otp.destroy({
@@ -54,7 +54,7 @@ const startOtpCleanupJob = () => {
     }
   });
 
-  console.log("[CLEANUP] OTP cleanup job đã được lên lịch (mỗi 15 phút)");
+  console.log("[CLEANUP] OTP cleanup job đã được lên lịch (mỗi 5 phút)");
 };
 
 module.exports = startOtpCleanupJob;

@@ -24,8 +24,6 @@ const updateUserSchema = z.object({
     .trim()
     .min(1, ErrorCode.PHONE_REQUIRED.message)
     .refine(validatePhone, { message: ErrorCode.PHONE_INVALID.message }),
-
-  avatar_url: z.string().trim().nullable(),
 });
 
 module.exports = {

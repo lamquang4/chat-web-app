@@ -41,8 +41,8 @@ const toMessageResponse = (
   currentUserId,
 ) => {
   const isMe = String(message.sender_id) === String(currentUserId);
-  const isSeenByMe = seenList.some(
-    (s) => String(s.user.id) === String(currentUserId),
+  const isSeenByOther = seenList.some(
+    (s) => String(s.user.id) !== String(currentUserId),
   );
 
   return {
@@ -65,7 +65,7 @@ const toMessageResponse = (
     seen_by: seenList.map(toSeenResponse),
     is_recalled: message.is_recalled,
     is_me: isMe,
-    is_seen: isSeenByMe,
+    is_seen: isSeenByOther,
     created_at: message.created_at.toISOString(),
   };
 };

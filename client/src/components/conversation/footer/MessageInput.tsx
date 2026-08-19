@@ -67,26 +67,24 @@ function MessageInput({
 
           <div className="relative">
             <Button
+              type="button"
               onClick={() => setShowEmoji((v) => !v)}
               className="text-primary flex items-center justify-center shrink-0"
             >
               <Smile size={20} />
             </Button>
-
-            {showEmoji && (
-              <div
-                ref={pickerRef}
-                className="absolute bottom-full right-0 mb-2 z-20"
-              >
-                <EmojiPicker
-                  onEmojiClick={(data) => onChange(value + data.emoji)}
-                  lazyLoadEmojis
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {showEmoji && (
+        <div ref={pickerRef} className="absolute bottom-full right-0 mb-2 z-20">
+          <EmojiPicker
+            onEmojiClick={(data) => onChange(value + data.emoji)}
+            lazyLoadEmojis
+          />
+        </div>
+      )}
     </div>
   );
 }

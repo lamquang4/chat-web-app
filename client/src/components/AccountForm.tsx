@@ -1,64 +1,68 @@
 import Label from "./ui/Label";
 import Input from "./ui/Input";
-import { mockAccount } from "../mocks/mockAccount";
 import Image from "./ui/Image";
 import { Camera } from "lucide-react";
 import Button from "./ui/Button";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import FieldError from "./ui/FieldError";
 import { updateUserSchema, type UpdateUserData } from "../schemas/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { imageSchema } from "../schemas/uploadSchema";
-import toast from "react-hot-toast";
+import { useGetAccount, useUpdateUser } from "../hooks/queries/useUsers";
 
 function AccountForm() {
-  const account = mockAccount;
+  const { data: account } = useGetAccount();
+  const updateUser = useUpdateUser();
+  const isLoading = updateUser.isPending;
 
   const {
     control,
     handleSubmit,
+    watch,
+    setValue,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<UpdateUserData>({
     resolver: zodResolver(updateUserSchema),
     mode: "onBlur",
-    defaultValues: {
-      first_name: account.first_name || "",
-      last_name: account.last_name || "",
-      phone: account.phone || "",
+    values: {
+      first_name: account?.first_name || "",
+      last_name: account?.last_name || "",
+      phone: account?.phone || "",
+      avatar: undefined,
     },
   });
 
-  const [avatarPreview, setAvatarPreview] = useState<string>(
-    account.avatar_url ?? "/assets/user.png",
-  );
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const avatarFile = watch("avatar");
+  const avatarPreview = avatarFile
+    ? URL.createObjectURL(avatarFile)
+    : (account?.avatar_url ?? "/assets/user.png");
 
   useEffect(() => {
     return () => {
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
+      if (avatarFile) URL.revokeObjectURL(avatarPreview);
     };
-  }, [avatarPreview]);
+  }, [avatarFile, avatarPreview]);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const result = imageSchema.safeParse(file);
-    if (!result.success) {
-      toast.error(result.error.issues[0]?.message);
-      e.target.value = "";
+    setValue("avatar", file);
+    const isValid = await trigger("avatar");
+
+    if (!isValid) {
+      setValue("avatar", undefined);
       return;
     }
-
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
   };
 
   const onSubmit = (data: UpdateUserData) => {
-    console.log({ ...data, avatarFile });
+    if (isLoading) {
+      return;
+    }
+
+    updateUser.mutate(data);
   };
 
   return (
@@ -140,7 +144,7 @@ function AccountForm() {
                 readOnly
                 placeholder="Nhập email"
                 className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
-                value={account.email}
+                value={account?.email}
               />
             </div>
 
@@ -166,7 +170,7 @@ function AccountForm() {
             </div>
 
             <Button
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoading}
               type="submit"
               className="w-full hover-scale bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
             >

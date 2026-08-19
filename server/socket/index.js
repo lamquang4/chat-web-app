@@ -1,15 +1,18 @@
-// socket/index.js
 const { Server } = require("socket.io");
+const config = require("../config/app.config");
 const socketMiddleware = require("./socket.middleware");
 const registerPresenceHandlers = require("./presence.socket");
-const registerMessageHandlers = require("./message.socket");
-const registerConversationHandlers = require("./conversation.socket");
+const registerMessageHandlers =
+  require("./message.socket").registerMessageHandlers;
 
 let io;
 
 const initSocket = (httpServer) => {
   io = new Server(httpServer, {
-    cors: { origin: process.env.CLIENT_URL, credentials: true },
+    cors: {
+      origin: config.cors.allowedOrigins,
+      credentials: true,
+    },
   });
 
   io.use(socketMiddleware);
@@ -17,14 +20,12 @@ const initSocket = (httpServer) => {
   io.on("connection", async (socket) => {
     await registerPresenceHandlers(io, socket);
     registerMessageHandlers(io, socket);
-    registerConversationHandlers(io, socket);
   });
 
   return io;
 };
 
 const getIO = () => {
-  if (!io) throw new Error("Socket.IO chưa được khởi tạo");
   return io;
 };
 

@@ -23,7 +23,7 @@ export const sendMessageSchema = z
   .refine(
     (data) => !!data.content?.trim().length || !!data.attachments?.length,
     {
-      message: "Vui lòng nhập nội dung hoặc đính kèm tệp hoặc hình",
+      message: "Gửi tin nhắn phải có nội dung hoặc ít nhất 1 tệp đính kèm",
       path: ["content"],
     },
   );

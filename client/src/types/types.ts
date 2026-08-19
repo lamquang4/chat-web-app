@@ -10,6 +10,13 @@ export interface PageResponse<T> {
   totalPages: number;
 }
 
+export interface ErrorResponse {
+  status: number;
+  message: string;
+  path?: string;
+  timestamp: string;
+}
+
 export interface ApiResponse<T> {
   data: T;
   message: string;
@@ -45,13 +52,16 @@ export interface RefreshTokenRequest {
 export interface CreateGroupRequest {
   name: string;
   member_ids: string[];
-  avatar_url?: File;
+  avatar?: File;
 }
 
 export interface UpdateGroupRequest {
   name: string;
+  avatar?: File;
+}
+
+export interface AddGroupMembersRequest {
   member_ids: string[];
-  avatar_url?: File;
 }
 
 export interface SendMessageRequest {
@@ -68,13 +78,11 @@ export interface UpdateUserRequest {
 }
 
 // Response
-
 export interface LoginResponse {
   user_id: string;
   access_token: string;
   refresh_token: string;
   expires_in: number;
-  session_id: string;
 }
 
 export interface RefreshTokenResponse {
@@ -89,6 +97,10 @@ export interface UserResponse {
   phone: string;
   email: string;
   avatar_url: string | null;
+}
+
+export interface GetOrCreatePrivateConversationResponse {
+  conversation_id: string;
 }
 
 // cần phân trang
@@ -154,12 +166,8 @@ export interface ReplyMessageResponse {
 }
 
 // Không cần phân trang
-export interface ConversationMembersGroupResponse {
-  conversation_id: string; // kiểm tra lấy đúng conversation không
-  members: ConversationMemberResponse[];
-}
 
-export interface ConversationMemberResponse {
+export interface GroupMemberResponse {
   user_id: string;
   first_name: string;
   last_name: string;
@@ -170,7 +178,6 @@ export interface ConversationMemberResponse {
 
 export interface FriendResponse {
   user_id: string;
-  conversation_id: string;
   first_name: string;
   last_name: string;
   avatar_url: string | null;
@@ -205,14 +212,4 @@ export interface RefreshTokenPayload {
   sub: string; // user_id
   iat: number;
   exp: number;
-}
-
-export interface CookieOptions {
-  expires?: Date;
-  maxAge?: number;
-  path?: string;
-  domain?: string;
-  secure?: boolean;
-  httpOnly?: boolean;
-  sameSite?: "Strict" | "Lax" | "None";
 }

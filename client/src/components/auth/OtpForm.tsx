@@ -15,6 +15,10 @@ import { MoveLeft } from "lucide-react";
 import { validateOtp, validateOtpDigit } from "../../utils/validators";
 import { sendOtpSchema, verifyOtpSchema } from "../../schemas/authSchema";
 import { formatDuration } from "../../utils/formatters";
+import {
+  useResendRegisterOtp,
+  useVerifyRegisterOtp,
+} from "../../hooks/queries/useAuth";
 
 interface Props {
   email: string;
@@ -23,16 +27,20 @@ interface Props {
 function OtpForm({ email }: Props) {
   const dispatch = useAppDispatch();
 
+  // Đếm ngược hết hạn OTP
   const [isExpireTimerActive, setIsExpireTimerActive] = useState<boolean>(true);
   const [expireEndTime, setExpireEndTime] = useState<number>(
     () => Date.now() + OTP_EXPIRE_SECONDS * 1000,
   );
   const [timeLeft, setTimeLeft] = useState<number>(OTP_EXPIRE_SECONDS);
+
+  // Đếm ngược cooldown gửi lại OTP
   const [isCooldownActive, setIsCooldownActive] = useState<boolean>(true);
   const [cooldownEndTime, setCooldownEndTime] = useState<number>(
     () => Date.now() + OTP_RESEND_COOLDOWN_SECONDS * 1000,
   );
-  const [cooldownLeft, setCooldownLeft] = useState<number>(
+  // THÊM MỚI: State lưu thời gian cooldown để hiển thị ra UI
+  const [cooldownTimeLeft, setCooldownTimeLeft] = useState<number>(
     OTP_RESEND_COOLDOWN_SECONDS,
   );
 
@@ -41,20 +49,26 @@ function OtpForm({ email }: Props) {
 
   const pendingEmail = email;
 
-  const isLoadingResend = false;
-  const isLoadingVerify = false;
+  const verifyRegisterOtp = useVerifyRegisterOtp();
+  const isLoadingRegisterVerify = verifyRegisterOtp.isPending;
+  const resendRegisterOtp = useResendRegisterOtp();
+  const isLoadingResendRegisterOtp = resendRegisterOtp.isPending;
 
   const reset = () => {
     const now = Date.now();
+
+    // Reset thời gian hết hạn OTP
     setExpireEndTime(now + OTP_EXPIRE_SECONDS * 1000);
     setTimeLeft(OTP_EXPIRE_SECONDS);
     setIsExpireTimerActive(true);
 
+    // Reset thời gian cooldown gửi lại
     setCooldownEndTime(now + OTP_RESEND_COOLDOWN_SECONDS * 1000);
-    setCooldownLeft(OTP_RESEND_COOLDOWN_SECONDS);
+    setCooldownTimeLeft(OTP_RESEND_COOLDOWN_SECONDS); // CẬP NHẬT
     setIsCooldownActive(true);
 
     setOtp(Array(OTP_LENGTH).fill(""));
+    inputRefs.current[0]?.focus(); // Tự động focus lại ô đầu tiên
   };
 
   // Đếm ngược hết hạn OTP
@@ -86,12 +100,12 @@ function OtpForm({ email }: Props) {
 
       if (remaining <= 0) {
         clearInterval(timer);
-        setCooldownLeft(0);
         setIsCooldownActive(false);
+        setCooldownTimeLeft(0); // CẬP NHẬT
         return;
       }
 
-      setCooldownLeft(remaining);
+      setCooldownTimeLeft(remaining); // CẬP NHẬT
     }, 1000);
 
     return () => clearInterval(timer);
@@ -135,27 +149,51 @@ function OtpForm({ email }: Props) {
     if (!validateOtp(pasted)) return;
 
     const newOtp = pasted.split("");
+
+    while (newOtp.length < OTP_LENGTH) {
+      newOtp.push("");
+    }
     setOtp(newOtp);
 
-    inputRefs.current[OTP_LENGTH - 1]?.focus();
+    // Focus vào ô cuối cùng được paste
+    const focusIndex = Math.min(pasted.length, OTP_LENGTH - 1);
+    inputRefs.current[focusIndex]?.focus();
   };
 
   const handleResendOtp = () => {
     const result = sendOtpSchema.safeParse({ email: pendingEmail || "" });
+
+    if (isLoadingResendRegisterOtp) {
+      return;
+    }
 
     if (!result.success) {
       toast.error(result.error.issues[0]?.message);
       return;
     }
 
-    const { email } = result.data;
-    console.log(email);
-
-    reset();
+    resendRegisterOtp.mutate(
+      {
+        email: pendingEmail,
+      },
+      {
+        onSuccess: () => {
+          reset();
+        },
+        onError: () => {
+          dispatch(setAuthView("register"));
+        },
+      },
+    );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isLoadingRegisterVerify) {
+      return;
+    }
+
     const otpValue = otp.join("");
 
     const result = verifyOtpSchema.safeParse({
@@ -168,9 +206,17 @@ function OtpForm({ email }: Props) {
       return;
     }
 
-    console.log(result.data);
-
-    dispatch(setAuthView("login"));
+    verifyRegisterOtp.mutate(
+      {
+        email: pendingEmail,
+        otp_code: otpValue,
+      },
+      {
+        onSuccess: () => {
+          dispatch(setAuthView("login"));
+        },
+      },
+    );
   };
 
   return (
@@ -191,9 +237,7 @@ function OtpForm({ email }: Props) {
         </div>
 
         <div>
-          <p className="text-center text-neutral">
-            Vui lòng nhập mã OTP vừa gửi đến
-          </p>
+          <p className="text-center">Vui lòng nhập mã OTP vừa gửi đến</p>
 
           <p className="font-semibold text-primary break-all text-center">
             {pendingEmail}
@@ -223,21 +267,25 @@ function OtpForm({ email }: Props) {
             ))}
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between text-[14px]">
             <Button
               type="button"
               onClick={handleResendOtp}
-              disabled={isCooldownActive || isLoadingResend}
-              className={`font-medium ${!isCooldownActive ? "text-primary" : "text-neutral"}`}
+              disabled={isCooldownActive || isLoadingResendRegisterOtp}
+              className={`font-medium transition-all ${
+                !isCooldownActive
+                  ? "text-primary cursor-pointer"
+                  : "text-neutral cursor-not-allowed"
+              }`}
             >
               {isCooldownActive
-                ? `Gửi lại mã (${formatDuration(cooldownLeft)})`
+                ? `Gửi lại mã (${cooldownTimeLeft}s)`
                 : "Gửi lại mã"}
             </Button>
 
             {timeLeft > 0 ? (
-              <span className="text-neutral">
-                Mã sẽ hết hạn trong{" "}
+              <span>
+                Hết hạn sau:{" "}
                 <span className="text-danger font-medium">
                   {formatDuration(timeLeft)}
                 </span>
@@ -249,17 +297,19 @@ function OtpForm({ email }: Props) {
 
           <Button
             disabled={
-              isLoadingVerify || !validateOtp(otp.join("")) || timeLeft <= 0
+              isLoadingRegisterVerify ||
+              !validateOtp(otp.join("")) ||
+              timeLeft <= 0
             }
             type="submit"
-            className="w-full hover-scale bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center"
+            className="w-full bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center"
           >
             Xác nhận
           </Button>
         </form>
       </div>
 
-      {isLoadingVerify && (
+      {isLoadingRegisterVerify && (
         <Overplay>
           <Loading height={0} size={55} color="white" thickness={8} />
           <h4 className="text-white font-bold">

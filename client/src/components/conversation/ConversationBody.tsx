@@ -1,20 +1,32 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import type { MessageResponse } from "../../types/types";
 import MessageItem from "./message/MessageItem";
 import Button from "../ui/Button";
 import { ArrowDown } from "lucide-react";
+import Loading from "../ui/Loading";
 
 interface Props {
   messages: MessageResponse[];
+  loadMoreRef: RefObject<HTMLDivElement | null>;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  onLoadMore: () => void;
   onReply: (message: MessageResponse) => void;
   onRecall: (messageId: string) => void;
 }
 
-const BOTTOM_THRESHOLD = 80;
-
-function ConversationBody({ messages, onReply, onRecall }: Props) {
+function ConversationBody({
+  messages,
+  loadMoreRef,
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMore,
+  onReply,
+  onRecall,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
   const replyMessageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
   const isAtBottomRef = useRef<boolean>(true);
@@ -31,25 +43,23 @@ function ConversationBody({ messages, onReply, onRecall }: Props) {
     });
   };
 
-  // Theo dõi vị trí scroll hiện tại
-  useEffect(() => {
+  const handleScroll = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const atBottom =
-        scrollHeight - scrollTop - clientHeight <= BOTTOM_THRESHOLD;
-      setAtBottom(atBottom);
-    };
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+    setAtBottom(distanceFromBottom <= 80);
 
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+    if (scrollTop <= 80 && hasNextPage && !isFetchingNextPage) {
+      onLoadMore();
+    }
+  };
 
   // Khi có tin nhắn mới / mở conversation -> cuộn xuống nếu đang ở đáy
   useEffect(() => {
     const smooth = !isFirstRenderRef.current;
+
     if (isFirstRenderRef.current || isAtBottomRef.current) {
       scrollToBottom(smooth);
     }
@@ -79,9 +89,16 @@ function ConversationBody({ messages, onReply, onRecall }: Props) {
   return (
     <div
       ref={containerRef}
+      onScroll={handleScroll}
       className="relative flex flex-col flex-1 overflow-y-auto"
     >
-      <div className="px-[15px] py-10">
+      <div className="px-3.75 py-10">
+        <div ref={loadMoreRef} className="h-1" />
+
+        {isFetchingNextPage && (
+          <Loading height={10} size={24} color="black" thickness={1.5} />
+        )}
+
         {messages.map((message) => (
           <div
             key={message.message_id}

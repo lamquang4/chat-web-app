@@ -11,6 +11,7 @@ import { setAuthView } from "../../redux/slices/authViewSlice";
 import { loginSchema, type LoginData } from "../../schemas/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useLogin } from "../../hooks/queries/useAuth";
 
 function LoginForm() {
   const dispatch = useAppDispatch();
@@ -31,16 +32,23 @@ function LoginForm() {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const login = useLogin();
+  const isLoading = login.isPending;
+
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const isLoading = false;
-
   const onSubmit = (data: LoginData) => {
-    console.log(data);
+    if (isLoading) {
+      return;
+    }
 
-    reset();
+    login.mutate(data, {
+      onSuccess: () => {
+        reset();
+      },
+    });
   };
 
   return (

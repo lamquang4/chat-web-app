@@ -16,16 +16,15 @@
 
 ## Chức vụ trong nhóm trò chuyện
 
-| Hành động          | Owner | Admin | Member |
-| ------------------ | :---: | :---: | :----: |
-| Đổi tên nhóm       |  ✅   |  ✅   |   ❌   |
-| Đổi ảnh nhóm       |  ✅   |  ✅   |   ❌   |
-| Thêm thành viên    |  ✅   |  ✅   |   ❌   |
-| Xóa thành viên     |  ✅   |  ✅   |   ❌   |
-| Bổ nhiệm Admin     |  ✅   |  ❌   |   ❌   |
-| Gỡ quyền Admin     |  ✅   |  ❌   |   ❌   |
-| Chuyển quyền Owner |  ✅   |  ❌   |   ❌   |
-| Xóa nhóm           |  ✅   |  ❌   |   ❌   |
+| Hành động                | Owner | Admin | Member |
+| ------------------------ | :---: | :---: | :----: |
+| Cập nhật thông tin nhóm  |  ✅   |  ✅   |   ❌   |
+| Thêm thành viên vào nhóm |  ✅   |  ✅   |   ❌   |
+| Xóa thành viên khỏi nhóm |  ✅   |  ✅   |   ❌   |
+| Bổ nhiệm Admin           |  ✅   |  ❌   |   ❌   |
+| Gỡ quyền Admin           |  ✅   |  ❌   |   ❌   |
+| Chuyển quyền Owner       |  ✅   |  ❌   |   ❌   |
+| Giải tán nhóm            |  ✅   |  ❌   |   ❌   |
 
 ## Quy tắc trả về API cho tin nhắn
 

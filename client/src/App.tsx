@@ -3,6 +3,8 @@ import { Toaster } from "react-hot-toast";
 import ScrollToTop from "./components/ScrollToTop";
 import LayoutRoute from "./LayoutRoute";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { connectSocket } from "./hooks/socket/socket";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +23,10 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router>

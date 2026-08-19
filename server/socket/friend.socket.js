@@ -20,8 +20,15 @@ const notifyFriendRemoved = (io, otherUserId, removedByUserId) => {
   });
 };
 
+const notifyFriendRequestRejected = (io, requesterId, rejectedByUserId) => {
+  io.to(`user:${requesterId}`).emit(EVENTS.FRIEND_REQUEST_REJECTED, {
+    user_id: String(rejectedByUserId),
+  });
+};
+
 module.exports = {
   notifyFriendRequestReceived,
   notifyFriendRequestAccepted,
+  notifyFriendRequestRejected,
   notifyFriendRemoved,
 };

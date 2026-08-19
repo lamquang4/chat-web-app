@@ -15,7 +15,7 @@ Otp.init(
       allowNull: false,
     },
     otp_code_hash: {
-      type: DataTypes.STRING(60),
+      type: DataTypes.STRING(64),
       allowNull: false,
     },
     attempts: {

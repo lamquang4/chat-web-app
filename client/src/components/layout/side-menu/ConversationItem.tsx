@@ -48,14 +48,18 @@ function ConversationItem({ conversation }: Props) {
           <h5 className={`font-semibold`}>{name}</h5>
 
           <p
-            className={`truncate ${is_last_message_seen ? "font-medium" : "text-neutral"}`}
+            className={`truncate text-neutral ${is_last_message_seen ? "font-semibold" : "font-medium"}`}
           >
-            {is_last_message_me ? `Bạn: ${last_message}` : last_message}
+            {last_message
+              ? is_last_message_me
+                ? `Bạn: ${last_message}`
+                : last_message
+              : "Hãy gửi lời chào đến bạn của bạn"}
           </p>
         </div>
 
         <div className="flex flex-col items-end gap-1">
-          {is_last_message_seen && (
+          {!is_last_message_me && !is_last_message_seen && (
             <div className="w-3 h-3 bg-primary rounded-full"></div>
           )}
         </div>

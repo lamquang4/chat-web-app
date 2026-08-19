@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 const ms = require("ms");
 const config = require("../config/app.config");
 const transporter = require("../config/nodemailer.config");
+const { sequelize } = require("../config/database/mysql.config");
 const AppError = require("../utils/app.error");
 const {
   REGISTRATION_ALREADY_PENDING,
@@ -33,6 +34,7 @@ const {
   OTP_EXPIRE_SECONDS,
   OTP_MAX_ATTEMPTS,
   OTP_RESEND_COOLDOWN_SECONDS,
+  MAX_ACTIVE_SESSIONS_PER_USER,
 } = require("../constants/limit");
 
 const buildOtpEmailHtml = (otp_code) => `
@@ -70,45 +72,66 @@ const sendOtpEmail = async (to, otp_code) => {
 };
 
 const register = async ({ first_name, last_name, email, phone, password }) => {
-  const existing_user = await User.findOne({
-    where: {
-      [Op.or]: [{ email }, { phone }],
-    },
-  });
+  const existing_by_email = await User.findOne({ where: { email } });
+  const existing_by_phone = await User.findOne({ where: { phone } });
 
-  if (existing_user) {
-    if (existing_user.email === email) {
-      if (!existing_user.is_verified) {
-        throw new AppError(REGISTRATION_ALREADY_PENDING);
-      }
+  // Phone đã bị dùng bởi 1 tài khoản KHÁC (không phải chính người đang re-register) -> luôn chặn
+  if (
+    existing_by_phone &&
+    (!existing_by_email || existing_by_phone.id !== existing_by_email.id)
+  ) {
+    throw new AppError(PHONE_ALREADY_EXISTS);
+  }
 
+  let current_otp = null;
+
+  if (existing_by_email) {
+    if (existing_by_email.is_verified) {
       throw new AppError(EMAIL_ALREADY_EXISTS);
     }
 
-    if (existing_user.phone === phone) {
-      throw new AppError(PHONE_ALREADY_EXISTS);
+    current_otp = await Otp.findOne({
+      where: { email },
+      order: [["created_at", "DESC"]],
+    });
+
+    // OTP vẫn còn hạn → chặn đăng ký lại
+    if (current_otp && current_otp.expires_at > new Date()) {
+      throw new AppError(REGISTRATION_ALREADY_PENDING);
     }
   }
 
   const password_hash = await bcrypt.hash(password, config.bcryptSaltRounds);
-
   const otp_code = generateOtpCode();
   const otp_code_hash = hashOtp(otp_code);
+  const expires_at = new Date(Date.now() + OTP_EXPIRE_SECONDS * 1000);
 
-  await User.create({
-    first_name,
-    last_name,
-    email,
-    phone,
-    password_hash,
-    is_verified: false,
-  });
+  await sequelize.transaction(async (t) => {
+    if (existing_by_email) {
+      await Otp.destroy({ where: { email }, transaction: t });
 
-  await Otp.create({
-    email,
-    otp_code_hash,
-    attempts: 0,
-    expires_at: new Date(Date.now() + OTP_EXPIRE_SECONDS * 1000),
+      await existing_by_email.update(
+        { first_name, last_name, phone, password_hash, is_verified: false },
+        { transaction: t },
+      );
+    } else {
+      await User.create(
+        {
+          first_name,
+          last_name,
+          email,
+          phone,
+          password_hash,
+          is_verified: false,
+        },
+        { transaction: t },
+      );
+    }
+
+    await Otp.create(
+      { email, otp_code_hash, attempts: 0, expires_at },
+      { transaction: t },
+    );
   });
 
   await sendOtpEmail(email, otp_code);
@@ -226,12 +249,41 @@ const login = async ({ email, password, user_agent, ip_address }) => {
     throw new AppError(INVALID_CREDENTIALS);
   }
 
-  await Session.destroy({
-    where: { user_id: user.id },
+  // Lấy các session đang hoạt động
+  const activeSessions = await Session.findAll({
+    where: {
+      user_id: user.id,
+      is_revoked: false,
+      expires_at: {
+        [Op.gt]: new Date(),
+      },
+    },
+    order: [["created_at", "ASC"]],
   });
 
+  // Nếu đã đạt giới hạn → revoke session cũ nhất
+  if (activeSessions.length >= MAX_ACTIVE_SESSIONS_PER_USER) {
+    const numberToRevoke =
+      activeSessions.length - MAX_ACTIVE_SESSIONS_PER_USER + 1;
+
+    const sessionsToRevoke = activeSessions.slice(0, numberToRevoke);
+
+    await Session.update(
+      {
+        is_revoked: true,
+      },
+      {
+        where: {
+          id: sessionsToRevoke.map((session) => session.id),
+        },
+      },
+    );
+  }
+
   const refresh_token = generateRefreshToken(user.id);
+
   const refresh_token_hash = hashToken(refresh_token);
+
   const expires_at = new Date(Date.now() + ms(config.jwt.sessionExpiration));
 
   const session = await Session.create({
@@ -249,7 +301,6 @@ const login = async ({ email, password, user_agent, ip_address }) => {
     access_token,
     refresh_token,
     expires_in: Math.floor(ms(config.jwt.accessExpiration) / 1000),
-    session_id: String(session.id),
   };
 };
 

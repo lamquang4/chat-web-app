@@ -14,9 +14,7 @@ import Image from "../ui/Image";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import Label from "../ui/Label";
-import { mockConversationMembersGroup } from "../../mocks/mockConversationMembersGroup";
 import UserItem from "../ui/UserItem";
-import { mockAccount } from "../../mocks/mockAccount";
 import { useGroupPermission } from "../../hooks/useGroupPermission";
 import Swal from "sweetalert2";
 import { MEMBER_ROLE_LABEL } from "../../constants/memberRole";
@@ -26,6 +24,18 @@ import {
   type UpdateGroupData,
 } from "../../schemas/conversationSchema";
 import { MAX_GROUP_NAME_LENGTH } from "../../constants/limit";
+import {
+  useDeleteGroup,
+  useDemoteAdmin,
+  useGetGroupMembers,
+  useGetOrCreatePrivateConversation,
+  usePromoteToAdmin,
+  useRemoveGroupMember,
+  useTransferOwnership,
+  useUpdateGroup,
+} from "../../hooks/queries/useConversations";
+import { useGetAccount } from "../../hooks/queries/useUsers";
+import { useNavigate } from "react-router-dom";
 interface Props {
   onClose: () => void;
   onOpenAddMembers: () => void;
@@ -41,15 +51,41 @@ function EditGroupForm({
   name,
   avatar_url,
 }: Props) {
-  const memberList = mockConversationMembersGroup;
+  const navigate = useNavigate();
 
-  const { register, handleSubmit, watch, setValue } = useForm<UpdateGroupData>({
-    resolver: zodResolver(updateGroupSchema),
-    defaultValues: {
-      name,
-      member_ids: memberList.members.map((m) => m.user_id),
-    },
-  });
+  const updateGroup = useUpdateGroup(conversationId);
+  const isLoadingUpdateGroup = updateGroup.isPending;
+
+  const deleteGroup = useDeleteGroup(conversationId);
+  const isLoadingDeleteGroup = deleteGroup.isPending;
+
+  const removeGroupMember = useRemoveGroupMember(conversationId);
+  const isLoadingRemoveGroupMember = removeGroupMember.isPending;
+
+  const promoteToAdmin = usePromoteToAdmin(conversationId);
+  const isLoadingPromoteToAdmin = promoteToAdmin.isPending;
+
+  const demoteAdmin = useDemoteAdmin(conversationId);
+  const isLoadingDemoteAdmin = demoteAdmin.isPending;
+
+  const transferOwnership = useTransferOwnership(conversationId);
+  const isLoadingTransferOwnership = transferOwnership.isPending;
+
+  const getOrCreatePrivateConversation = useGetOrCreatePrivateConversation();
+  const isLoadingGetOrCreatePrivateConversation =
+    getOrCreatePrivateConversation.isPending;
+
+  const { data: members } = useGetGroupMembers(conversationId);
+  const { data: account } = useGetAccount();
+
+  const { register, trigger, handleSubmit, watch, setValue } =
+    useForm<UpdateGroupData>({
+      resolver: zodResolver(updateGroupSchema),
+      values: {
+        name: name || "",
+        avatar: undefined,
+      },
+    });
 
   const {
     currentUserRole,
@@ -60,21 +96,39 @@ function EditGroupForm({
     canDeleteGroup,
     canTransferOwner,
   } = useGroupPermission({
-    members: memberList.members,
-    currentUserId: mockAccount.user_id,
+    members: members || [],
+    currentUserId: account?.user_id || "",
   });
 
   const avatarFile = watch("avatar");
-  const avatarPreview = avatarFile ? URL.createObjectURL(avatarFile) : "";
+  const avatarPreview = avatarFile
+    ? URL.createObjectURL(avatarFile)
+    : (avatar_url ?? "/assets/group.png");
 
   useEffect(() => {
     return () => {
-      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+      if (avatarFile) URL.revokeObjectURL(avatarPreview);
     };
-  }, [avatarPreview]);
+  }, [avatarFile, avatarPreview]);
+
+  const handleMessage = (userId: string) => {
+    if (isLoadingGetOrCreatePrivateConversation) {
+      return;
+    }
+
+    getOrCreatePrivateConversation.mutate(userId, {
+      onSuccess: (res) => {
+        const conversationId = res.data.conversation_id;
+
+        navigate(`/messages/${conversationId}`);
+
+        onClose();
+      },
+    });
+  };
 
   const handleDeleteGroup = async () => {
-    if (!canDeleteGroup) return;
+    if (!canDeleteGroup || isLoadingDeleteGroup) return;
 
     const result = await Swal.fire({
       title: "Giải tán nhóm?",
@@ -89,22 +143,81 @@ function EditGroupForm({
     });
 
     if (!result.isConfirmed) return;
+
+    deleteGroup.mutate();
+    onClose();
+    navigate("/messages");
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!canEditGroupInfo) return;
+  const handleRemoveGroupMember = async (userId: string) => {
+    if (isLoadingRemoveGroupMember) return;
+
+    const result = await Swal.fire({
+      title: "Xóa thành viên?",
+      text: "Bạn có chắc chắn muốn xóa thành viên này khỏi nhóm?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      confirmButtonColor: "#076ffe",
+      cancelButtonColor: "#d9534f",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    removeGroupMember.mutate(userId);
+  };
+
+  const handlePromoteToAdmin = async (userId: string) => {
+    if (isLoadingPromoteToAdmin) return;
+
+    promoteToAdmin.mutate(userId);
+  };
+
+  const handleDemoteAdmin = async (userId: string) => {
+    if (isLoadingDemoteAdmin) return;
+
+    demoteAdmin.mutate(userId);
+  };
+
+  const handleTransferOwnership = async (userId: string) => {
+    if (isLoadingTransferOwnership) return;
+
+    const result = await Swal.fire({
+      title: "Chuyển quyền sở hữu?",
+      text: "Sau khi chuyển, bạn sẽ không còn là trưởng nhóm.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      confirmButtonColor: "#076ffe",
+      cancelButtonColor: "#d9534f",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    transferOwnership.mutate(userId);
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setValue("avatar", file, { shouldValidate: true });
+    setValue("avatar", file);
+    const isValid = await trigger("avatar");
+
+    if (!isValid) {
+      setValue("avatar", undefined);
+      return;
+    }
   };
 
   const onSubmit = (data: UpdateGroupData) => {
-    if (!canEditGroupInfo) return;
-    if (conversationId !== memberList.conversation_id) return;
+    if (!canEditGroupInfo || !conversationId || isLoadingUpdateGroup) return;
 
-    console.log(data);
-    onClose();
+    updateGroup.mutate(data);
   };
 
   const onError = (formErrors: FieldErrors<UpdateGroupData>) => {
@@ -169,8 +282,8 @@ function EditGroupForm({
 
           <div className="max-h-[280px] overflow-y-auto custom-scroll space-y-2">
             <div className="space-y-1">
-              {memberList.members.map((member) => {
-                const isMe = member.user_id === mockAccount.user_id;
+              {members?.map((member) => {
+                const isMe = member.user_id === account?.user_id;
 
                 const dropdownItems = isMe
                   ? undefined
@@ -178,42 +291,49 @@ function EditGroupForm({
                       {
                         label: "Nhắn tin",
                         icon: <MessageCircleMore size={20} />,
-                        href: `/messages/${member.user_id}`,
-                        onClick: onClose,
+
+                        onClick: () => handleMessage(member.user_id),
                       },
+
                       ...(canPromoteToAdmin(member.role)
                         ? [
                             {
                               label: "Đặt làm quản trị viên",
                               icon: <UserRoundCog size={20} />,
-                              onClick: () => {},
+                              onClick: () =>
+                                handlePromoteToAdmin(member.user_id),
                             },
                           ]
                         : []),
+
                       ...(canTransferOwner(member.role)
                         ? [
                             {
                               label: "Chuyển quyền sở hữu",
                               icon: <UserRoundKey size={20} />,
-                              onClick: () => {},
+                              onClick: () =>
+                                handleTransferOwnership(member.user_id),
                             },
                           ]
                         : []),
+
                       ...(canRemoveAdmin(member.role)
                         ? [
                             {
                               label: "Gỡ quyền quản trị",
                               icon: <UserRoundMinus size={20} />,
-                              onClick: () => {},
+                              onClick: () => handleDemoteAdmin(member.user_id),
                             },
                           ]
                         : []),
+
                       ...(canKickMember(member.role)
                         ? [
                             {
                               label: "Xóa khỏi nhóm",
                               icon: <UserRoundX size={20} />,
-                              onClick: () => {},
+                              onClick: () =>
+                                handleRemoveGroupMember(member.user_id),
                               textColor: "text-danger",
                             },
                           ]
@@ -252,6 +372,7 @@ function EditGroupForm({
       {canEditGroupInfo && (
         <div className="flex items-center gap-4 justify-center pt-4">
           <Button
+            disabled={isLoadingUpdateGroup}
             type="submit"
             className="px-2 py-2.5 font-medium rounded-lg bg-info text-white"
           >

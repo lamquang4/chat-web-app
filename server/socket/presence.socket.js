@@ -21,6 +21,7 @@ const registerPresenceHandlers = async (io, socket) => {
   const userId = socket.userId;
 
   addUser(userId, socket.id);
+  socket.join(`user:${userId}`);
 
   const friendIds = await getFriendIds(userId);
   friendIds.forEach((friendId) => {
@@ -28,8 +29,6 @@ const registerPresenceHandlers = async (io, socket) => {
       user_id: String(userId),
     });
   });
-
-  socket.join(`user:${userId}`);
 
   socket.on("disconnect", async () => {
     const isFullyOffline = removeUser(userId, socket.id);

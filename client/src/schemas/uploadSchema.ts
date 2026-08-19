@@ -12,7 +12,7 @@ export const imageSchema = z
     message: `Hình không được vượt quá ${MAX_IMAGE_SIZE / (1024 * 1024)}MB`,
   })
   .refine((file) => ALLOWED_IMAGE_MIME_TYPES.includes(file.type), {
-    message: "Chỉ hỗ trợ JPG, PNG, WEBP",
+    message: "Chỉ hỗ trợ hình JPG, PNG, WEBP",
   });
 
 export const fileSchema = z

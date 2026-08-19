@@ -21,7 +21,7 @@ function DocumentAttachment({ att }: Props) {
 
       URL.revokeObjectURL(blobUrl);
     } catch (err) {
-      toast.error(`Tải file thất bại: ${err}`);
+      toast.error(`Tải thất bại: ${err}`);
     }
   };
 

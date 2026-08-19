@@ -1,13 +1,13 @@
 const { Op } = require("sequelize");
 const Friend = require("../entities/friend.entity");
 const User = require("../entities/user.entity");
-const Conversation = require("../models/conversation.model");
 const ConversationMember = require("../models/conversation-member.model");
 const { isOnline } = require("../socket/online-users");
 const { getIO } = require("../socket");
 const {
   notifyFriendRequestReceived,
   notifyFriendRequestAccepted,
+  notifyFriendRequestRejected,
   notifyFriendRemoved,
 } = require("../socket/friend.socket");
 const AppError = require("../utils/app.error");
@@ -24,6 +24,69 @@ const {
   toFriendRequestResponse,
   toSuggestedFriendResponse,
 } = require("../mappers/friend.mapper");
+const { buildUserNameSearch } = require("../utils/search.util");
+
+const getFriendsNotInConversation = async (
+  userId,
+  conversationId,
+  { page, size, q },
+) => {
+  const friends = await Friend.findAll({
+    where: {
+      status: "accepted",
+      [Op.or]: [{ requester_id: userId }, { receiver_id: userId }],
+    },
+  });
+
+  if (friends.length === 0) {
+    return { content: [], page, size, totalElements: 0 };
+  }
+
+  const otherUserIds = friends.map((f) =>
+    String(f.requester_id) === String(userId) ? f.receiver_id : f.requester_id,
+  );
+
+  const existingMembers = await ConversationMember.find({
+    conversation_id: conversationId,
+  })
+    .select("user_id")
+    .lean();
+  const existingMemberIds = new Set(
+    existingMembers.map((m) => String(m.user_id)),
+  );
+
+  const candidateIds = otherUserIds.filter(
+    (id) => !existingMemberIds.has(String(id)),
+  );
+
+  if (candidateIds.length === 0) {
+    return { content: [], page, size, totalElements: 0 };
+  }
+
+  const searchCondition = buildUserNameSearch(q);
+
+  const { rows: users, count } = await User.findAndCountAll({
+    where: { id: candidateIds, ...searchCondition },
+    offset: page * size,
+    limit: size,
+    order: [["first_name", "ASC"]],
+  });
+
+  const friendMap = new Map(
+    friends.map((f) => [
+      String(f.requester_id) === String(userId)
+        ? f.receiver_id
+        : f.requester_id,
+      f,
+    ]),
+  );
+
+  const content = users.map((u) =>
+    toFriendResponse(friendMap.get(u.id), u, isOnline(u.id), null),
+  );
+
+  return { content, page, size, totalElements: count };
+};
 
 const sendFriendRequest = async (userId, receiverId) => {
   if (String(userId) === String(receiverId)) {
@@ -75,24 +138,6 @@ const acceptFriendRequest = async (userId, requesterId) => {
 
   if (!friend) throw new AppError(FRIEND_REQUEST_NOT_FOUND);
 
-  const conversation = await Conversation.create({
-    type: "private",
-    created_by: friend.requester_id,
-  });
-
-  await ConversationMember.insertMany([
-    {
-      conversation_id: conversation._id,
-      user_id: friend.requester_id,
-      role: "member",
-    },
-    {
-      conversation_id: conversation._id,
-      user_id: friend.receiver_id,
-      role: "member",
-    },
-  ]);
-
   friend.status = "accepted";
   await friend.save();
 
@@ -102,12 +147,7 @@ const acceptFriendRequest = async (userId, requesterId) => {
   notifyFriendRequestAccepted(
     io,
     friend.requester_id,
-    toFriendResponse(
-      friend,
-      receiver,
-      isOnline(friend.receiver_id),
-      String(conversation._id),
-    ),
+    toFriendResponse(friend, receiver, isOnline(friend.receiver_id), null),
   );
 
   return null;
@@ -125,6 +165,8 @@ const rejectFriendRequest = async (userId, requesterId) => {
   if (!friend) throw new AppError(FRIEND_REQUEST_NOT_FOUND);
 
   await friend.destroy();
+  const io = getIO();
+  notifyFriendRequestRejected(io, requesterId, userId);
   return null;
 };
 
@@ -165,14 +207,7 @@ const getFriendList = async (userId, { page, size, q }) => {
     String(f.requester_id) === String(userId) ? f.receiver_id : f.requester_id,
   );
 
-  const searchCondition = q
-    ? {
-        [Op.or]: [
-          { first_name: { [Op.like]: `%${q}%` } },
-          { last_name: { [Op.like]: `%${q}%` } },
-        ],
-      }
-    : {};
+  const searchCondition = buildUserNameSearch(q);
 
   const { rows: users, count } = await User.findAndCountAll({
     where: { id: otherUserIds, ...searchCondition },
@@ -190,40 +225,8 @@ const getFriendList = async (userId, { page, size, q }) => {
     ]),
   );
 
-  const pageUserIds = users.map((u) => u.id);
-
-  const myMemberships = await ConversationMember.find({
-    user_id: userId,
-  }).lean();
-  const myConversationIds = myMemberships.map((m) => m.conversation_id);
-
-  const privateConversations = await Conversation.find({
-    _id: { $in: myConversationIds },
-    type: "private",
-  })
-    .select("_id")
-    .lean();
-  const myPrivateConversationIds = privateConversations.map((c) => c._id);
-
-  const sharedMemberships = await ConversationMember.find({
-    user_id: { $in: pageUserIds },
-    conversation_id: { $in: myPrivateConversationIds },
-  }).lean();
-
-  const conversationMap = new Map(
-    sharedMemberships.map((m) => [
-      String(m.user_id),
-      m.conversation_id.toString(),
-    ]),
-  );
-
   const content = users.map((u) =>
-    toFriendResponse(
-      friendMap.get(u.id),
-      u,
-      isOnline(u.id),
-      conversationMap.get(String(u.id)) ?? null,
-    ),
+    toFriendResponse(friendMap.get(u.id), u, isOnline(u.id)),
   );
 
   return { content, page, size, totalElements: count };
@@ -239,14 +242,7 @@ const getFriendRequestList = async (userId, { page, size, q }) => {
   }
 
   const requesterIds = requests.map((r) => r.requester_id);
-  const searchCondition = q
-    ? {
-        [Op.or]: [
-          { first_name: { [Op.like]: `%${q}%` } },
-          { last_name: { [Op.like]: `%${q}%` } },
-        ],
-      }
-    : {};
+  const searchCondition = buildUserNameSearch(q);
 
   const { rows: requesters, count } = await User.findAndCountAll({
     where: { id: requesterIds, ...searchCondition },
@@ -278,14 +274,7 @@ const getSuggestedFriends = async (userId, { page, size, q }) => {
     excludedIds.add(String(f.receiver_id));
   });
 
-  const searchCondition = q
-    ? {
-        [Op.or]: [
-          { first_name: { [Op.like]: `%${q}%` } },
-          { last_name: { [Op.like]: `%${q}%` } },
-        ],
-      }
-    : {};
+  const searchCondition = buildUserNameSearch(q);
 
   const { rows: users, count } = await User.findAndCountAll({
     where: {
@@ -311,4 +300,5 @@ module.exports = {
   getFriendList,
   getFriendRequestList,
   getSuggestedFriends,
+  getFriendsNotInConversation,
 };

@@ -1,4 +1,3 @@
-// routes/user.route.js
 const express = require("express");
 const router = express.Router();
 const { validate } = require("../middleware/validate.middleware");
@@ -20,9 +19,9 @@ router.put(
   authMiddleware,
   requireAuth,
   uploadImage, 
-  validateImageSize, 
-  validate(updateUserSchema), 
-  userController.updateUser, 
+  validateImageSize,
+  validate(updateUserSchema, "body"), 
+  userController.updateUser,
 );
 
 module.exports = router;

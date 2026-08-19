@@ -1,6 +1,5 @@
-const toFriendResponse = (friend, otherUser, isOnline, conversationId) => ({
+const toFriendResponse = (friend, otherUser, isOnline) => ({
   user_id: String(otherUser.id),
-  conversation_id: conversationId,
   first_name: otherUser.first_name,
   last_name: otherUser.last_name,
   avatar_url: otherUser.avatar_url,
@@ -8,12 +7,12 @@ const toFriendResponse = (friend, otherUser, isOnline, conversationId) => ({
   updated_at: friend.updated_at,
 });
 
-const toFriendRequestResponse = (requester) => ({
+const toFriendRequestResponse = (friendRequest, requester) => ({
   requester_id: String(requester.id),
   first_name: requester.first_name,
   last_name: requester.last_name,
   avatar_url: requester.avatar_url,
-  created_at: requester.friend_created_at,
+  created_at: friendRequest.created_at,
 });
 
 const toSuggestedFriendResponse = (user) => ({

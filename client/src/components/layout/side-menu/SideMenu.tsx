@@ -15,13 +15,18 @@ import {
 import Button from "../../ui/Button";
 import DropdownMenu from "../../ui/DropdownMenu";
 import CreateGroupModal from "../../group/CreateGroupModal";
+import useDebounce from "../../../hooks/useDebounce";
 
 function SideMenu() {
   const dispatch = useAppDispatch();
 
   const [createGroupOpen, setCreateGroupOpen] = useState<boolean>(false);
   const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const debouncedSearch = useDebounce(search.trim(), 500);
+  const activeTab = useAppSelector((state) => state.ui.activeConversationTab);
 
   useEffect(() => {
     if (!dropDownOpen) return;
@@ -106,9 +111,9 @@ function SideMenu() {
             </div>
           </div>
 
-          <SearchInput />
+          <SearchInput value={search} onChange={setSearch} />
           <ConversationTabs />
-          <ConversationList />
+          <ConversationList type={activeTab} q={debouncedSearch} />
         </div>
       </aside>
 

@@ -6,7 +6,7 @@ const register = async (req, res, next) => {
     await authService.register(req.body);
 
     return response.success(res, {
-      message: "Đã gửi mã OTP tới email, vui lòng xác thực để hoàn tất đăng ký",
+      message: "Đã gửi mã OTP tới email",
       data: null,
       status: 200,
     });
@@ -63,7 +63,7 @@ const resendRegisterOtp = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    await authService.logout(req.user.id, req.session.id);
+    await authService.logout(req.user.id, req.user.session_id);
 
     return response.success(res, {
       message: "Đăng xuất thành công",

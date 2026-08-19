@@ -23,11 +23,12 @@ const updateUser = async (userId, { first_name, last_name, phone }, avatar) => {
   }
 
   if (avatar) {
-    const avatarUrl = await uploadBufferToCloudinary(
-      avatar.buffer,
-      getAvatarFolder(userId),
-      "image",
-    );
+    const avatarUrl = await uploadBufferToCloudinary(avatar.buffer, {
+      folder: getAvatarFolder(),
+      publicId: userId,
+      resourceType: "image",
+    });
+
     user.avatar_url = avatarUrl;
   }
 

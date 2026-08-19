@@ -17,16 +17,21 @@ import {
   RECORDING_MIME_TYPE,
 } from "../../../constants/limit";
 import { sendMessageSchema } from "../../../schemas/messageSchema";
+import { useSendMessage } from "../../../hooks/queries/useMesssages";
 
 interface Props {
+  conversationId: string;
   replyTo: ReplyMessageResponse | null;
   onCancelReply: () => void;
 }
 
-function ConversationFooter({ replyTo, onCancelReply }: Props) {
+function ConversationFooter({ conversationId, replyTo, onCancelReply }: Props) {
   const [message, setMessage] = useState<string>("");
   const [previews, setPreviews] = useState<PreviewFile[]>([]);
   const recorder = useAudioRecorder();
+
+  const sendMessage = useSendMessage(conversationId);
+  const isLoadingSendMessage = sendMessage.isPending;
 
   useEffect(() => {
     return () => {
@@ -40,7 +45,7 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
     const total = previews.length + files.length;
 
     if (total > MAX_UPLOAD) {
-      toast.error(`Chỉ được gửi tối đa ${MAX_UPLOAD} file và hình`);
+      toast.error(`Chỉ được gửi tối đa ${MAX_UPLOAD} tệp và hình mỗi lần`);
       return;
     }
 
@@ -83,6 +88,10 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
   };
 
   const handleSendMessage = async () => {
+    if (isLoadingSendMessage) {
+      return;
+    }
+
     let audioBlob = recorder.audioBlob;
 
     if (recorder.isRecording) {
@@ -95,6 +104,7 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
       const audioFile = new File([audioBlob], `voice-${Date.now()}.mp4`, {
         type: RECORDING_MIME_TYPE,
       });
+
       attachments.push(audioFile);
     }
 
@@ -109,13 +119,14 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
       return;
     }
 
-    const data = result.data;
-    console.log(data);
-
-    setMessage("");
-    setPreviews([]);
-    recorder.reset();
-    onCancelReply();
+    sendMessage.mutate(result.data, {
+      onSuccess: () => {
+        setMessage("");
+        setPreviews([]);
+        recorder.reset();
+        onCancelReply();
+      },
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -166,8 +177,8 @@ function ConversationFooter({ replyTo, onCancelReply }: Props) {
 
         <Button
           onClick={handleSendMessage}
-          disabled={!canSend}
-          className={`p-1.5 rounded-full ${canSend ? "bg-primary text-white" : "text-neutral bg-gray-100"}`}
+          disabled={!canSend || isLoadingSendMessage}
+          className={`p-1.5 rounded-full ${canSend && !isLoadingSendMessage ? "bg-primary text-white" : "text-neutral bg-gray-100"}`}
         >
           <SendHorizontal size={20} />
         </Button>

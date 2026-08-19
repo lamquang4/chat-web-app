@@ -23,6 +23,7 @@ const connectMySQL = async () => {
   try {
     await sequelize.authenticate();
     console.log("[MYSQL] MySQL đã kết nối");
+    await sequelize.sync();
   } catch (error) {
     console.error("[MYSQL] Lỗi: ", error.message);
     throw error;

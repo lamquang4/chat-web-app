@@ -1,14 +1,63 @@
 import { MessageCircleMore, UserRoundX } from "lucide-react";
 import type { FriendResponse } from "../../types/types";
 import UserItem from "../ui/UserItem";
+import { useRemoveFriend } from "../../hooks/queries/useFriends";
+import { useGetOrCreatePrivateConversation } from "../../hooks/queries/useConversations";
+import { useNavigate } from "react-router-dom";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import Loading from "../ui/Loading";
 
 interface Props {
   friends: FriendResponse[];
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
 }
 
-function FriendList({ friends }: Props) {
+function FriendList({
+  friends,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+}: Props) {
+  const navigate = useNavigate();
+
+  const removeFriend = useRemoveFriend();
+  const isLoadingRemoveFriend = removeFriend.isPending;
+
+  const getOrCreatePrivateConversation = useGetOrCreatePrivateConversation();
+  const isLoadingGetOrCreatePrivateConversation =
+    getOrCreatePrivateConversation.isPending;
+
+  const loadMoreRef = useIntersectionObserver({
+    enabled: hasNextPage && !isFetchingNextPage,
+    onIntersect: fetchNextPage,
+  });
+
+  const handleRemoveFriend = (friendId: string) => {
+    if (isLoadingRemoveFriend) {
+      return;
+    }
+
+    removeFriend.mutate(friendId);
+  };
+
+  const handleMessage = (friendId: string) => {
+    if (isLoadingGetOrCreatePrivateConversation) {
+      return;
+    }
+
+    getOrCreatePrivateConversation.mutate(friendId, {
+      onSuccess: (res) => {
+        const conversationId = res.data.conversation_id;
+
+        navigate(`/messages/${conversationId}`);
+      },
+    });
+  };
+
   return (
-    <div className="max-h-[400px] overflow-y-auto">
+    <div className="max-h-[400px] h-full overflow-y-auto">
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
         {friends.map((friend) => (
           <UserItem
@@ -20,20 +69,32 @@ function FriendList({ friends }: Props) {
             titleClassName="font-semibold"
             dropdownItems={[
               {
-                label: "Nhắn tin riêng",
+                label: "Nhắn tin",
                 icon: <MessageCircleMore size={20} />,
-                href: `/messages/${friend.conversation_id}`,
+                onClick: () => {
+                  handleMessage(friend.user_id);
+                },
+                disabled: isLoadingGetOrCreatePrivateConversation,
               },
               {
                 label: "Hủy kết bạn",
                 icon: <UserRoundX size={20} />,
-                onClick: () => {},
+                onClick: () => {
+                  handleRemoveFriend(friend.user_id);
+                },
+                disabled: isLoadingRemoveFriend,
                 textColor: "text-danger",
               },
             ]}
           />
         ))}
       </div>
+
+      <div ref={loadMoreRef} className="h-1" />
+
+      {isFetchingNextPage && (
+        <Loading height={10} size={24} color={"black"} thickness={1.5} />
+      )}
     </div>
   );
 }

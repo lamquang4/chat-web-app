@@ -1,4 +1,4 @@
-// services/message.service.js
+const { toMessageResponse } = require("../mappers/message.mapper");
 const Message = require("../models/message.model");
 const MessageAttachment = require("../models/message-attachment.model");
 const ConversationMember = require("../models/conversation-member.model");
@@ -9,11 +9,12 @@ const {
   notifyMessageRecalled,
 } = require("../socket/message.socket");
 const {
-  getConversationFolder,
   uploadBufferToCloudinary,
+  getConversationAttachmentsFolder,
+  extractPublicIdFromUrl,
+  deleteCloudinaryFile,
 } = require("../utils/cloudinary.util");
 const { ALLOWED_IMAGE_MIME_TYPES } = require("../constants/limit");
-const { toMessageResponse } = require("../mappers/message.mapper");
 const AppError = require("../utils/app.error");
 const {
   NOT_CONVERSATION_MEMBER,
@@ -26,8 +27,18 @@ const {
 } = require("../utils/error.code");
 
 const resolveAttachmentType = (mimetype) => {
-  if (ALLOWED_IMAGE_MIME_TYPES.includes(mimetype)) return "image";
-  if (mimetype.startsWith("audio/")) return "audio";
+  if (ALLOWED_IMAGE_MIME_TYPES.includes(mimetype)) {
+    return "image";
+  }
+
+  if (mimetype.startsWith("audio/")) {
+    return "audio";
+  }
+
+  if (mimetype.startsWith("video/")) {
+    return "video";
+  }
+
   return "document";
 };
 
@@ -82,12 +93,16 @@ const sendMessage = async (
   await assertIsMember(conversationId, userId);
 
   const trimmedContent = content?.trim();
+
   if (!trimmedContent && (!files || files.length === 0)) {
     throw new AppError(MESSAGE_CONTENT_REQUIRED);
   }
 
   const sender = await User.findByPk(userId);
-  if (!sender) throw new AppError(USER_NOT_FOUND);
+
+  if (!sender) {
+    throw new AppError(USER_NOT_FOUND);
+  }
 
   const replyPayload = await buildReplyPayload(
     reply_message_id,
@@ -101,18 +116,21 @@ const sendMessage = async (
     reply_msg_id: replyPayload ? replyPayload.message._id : null,
   });
 
-  const folder = getConversationFolder(conversationId);
-
   const uploaded = await Promise.all(
     files.map(async (file) => {
       const type = resolveAttachmentType(file.mimetype);
-      const resourceType = type === "image" ? "image" : "raw";
-      const url = await uploadBufferToCloudinary(
-        file.buffer,
-        folder,
-        resourceType,
-      );
-      return { type, url, file };
+
+      const url = await uploadBufferToCloudinary(file.buffer, {
+        folder: getConversationAttachmentsFolder(conversationId),
+        publicId: `${message._id}_${crypto.randomUUID()}`,
+        resourceType: "auto",
+      });
+
+      return {
+        type,
+        url,
+        file,
+      };
     }),
   );
 
@@ -142,8 +160,8 @@ const sendMessage = async (
   );
 
   const memberIds = await getMemberIds(conversationId);
-  const io = getIO();
-  notifyNewMessage(io, memberIds, userId, messageResponse);
+
+  notifyNewMessage(getIO(), memberIds, userId, messageResponse);
 
   return messageResponse;
 };
@@ -160,8 +178,31 @@ const recallMessage = async (userId, messageId) => {
     throw new AppError(MESSAGE_ALREADY_RECALLED);
   }
 
+  const attachments = await MessageAttachment.find({
+    message_id: messageId,
+  }).lean();
+
+  await Promise.all(
+    attachments.map(async (file) => {
+      let cloudinaryResourceType = file.type;
+      if (file.type === "document") cloudinaryResourceType = "raw";
+      if (file.type === "audio") cloudinaryResourceType = "video";
+
+      const publicId =
+        file.public_id ||
+        extractPublicIdFromUrl(file.url, cloudinaryResourceType);
+
+      if (publicId) {
+        await deleteCloudinaryFile(publicId, cloudinaryResourceType);
+      }
+    }),
+  );
+
   message.is_recalled = true;
+  message.content = null;
   await message.save();
+
+  await MessageAttachment.deleteMany({ message_id: messageId });
 
   const memberIds = await getMemberIds(message.conversation_id);
   const io = getIO();
@@ -173,5 +214,4 @@ const recallMessage = async (userId, messageId) => {
 
   return null;
 };
-
 module.exports = { sendMessage, recallMessage };

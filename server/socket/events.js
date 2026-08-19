@@ -12,6 +12,10 @@ module.exports = {
   // message
   MESSAGE_NEW: "message:new",
   MESSAGE_RECALLED: "message:recalled",
+  MESSAGE_SEEN: "message:seen",
 
   //conversation
+  CONVERSATION_CREATED: "conversation:created",
+  CONVERSATION_UPDATED: "conversation:updated",
+  CONVERSATION_DELETED: "conversation:deleted",
 };

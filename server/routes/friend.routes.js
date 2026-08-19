@@ -11,6 +11,10 @@ router.use(authMiddleware, requireAuth);
 router.get("/", friendController.getFriendList);
 router.get("/requests", friendController.getFriendRequestList);
 router.get("/suggestions", friendController.getSuggestedFriends);
+router.get(
+  "/:conversationId/addable-friends",
+  friendController.getFriendsNotInConversation,
+);
 
 router.post("/request/:id", friendController.sendFriendRequest);
 router.put("/request/:id", friendController.acceptFriendRequest);

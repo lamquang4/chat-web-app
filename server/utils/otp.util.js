@@ -10,7 +10,7 @@ const generateOtpCode = () => {
 
 const hashOtp = (otpCode) => {
   return crypto
-    .createHmac("sha256", config.otpHashSecret)
+    .createHmac("sha256", config.secret.otpHashSecret)
     .update(otpCode)
     .digest("hex");
 };

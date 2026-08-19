@@ -1,6 +1,5 @@
 import { Camera, X } from "lucide-react";
-import { useEffect } from "react";
-import { mockFriendList } from "../../mocks/mockFriendList";
+import { useEffect, useState } from "react";
 import { useForm, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { FriendResponse } from "../../types/types";
@@ -16,20 +15,31 @@ import {
 } from "../../schemas/conversationSchema";
 import { MAX_GROUP_NAME_LENGTH } from "../../constants/limit";
 import toast from "react-hot-toast";
+import { useGetFriendList } from "../../hooks/queries/useFriends";
+import { useCreateGroup } from "../../hooks/queries/useConversations";
 interface Props {
   onClose: () => void;
 }
 
 function CreateGroupForm({ onClose }: Props) {
-  const { register, handleSubmit, watch, setValue } = useForm<CreateGroupData>({
-    resolver: zodResolver(createGroupSchema),
-    defaultValues: { name: "", member_ids: [] },
-  });
+  const [search, setSearch] = useState<string>("");
 
-  const friends = mockFriendList;
+  const { register, trigger, handleSubmit, watch, setValue } =
+    useForm<CreateGroupData>({
+      resolver: zodResolver(createGroupSchema),
+      defaultValues: { name: "", member_ids: [], avatar: undefined },
+    });
+
+  const { data: friends } = useGetFriendList();
+  const createGroup = useCreateGroup();
+  const isLoading = createGroup.isPending;
+
   const avatarFile = watch("avatar");
   const memberIds = watch("member_ids") ?? [];
-  const selected = friends.filter((f) => memberIds.includes(f.user_id));
+
+  const selected = friends?.content.filter((f) =>
+    memberIds.includes(f.user_id),
+  );
 
   const avatarPreview = avatarFile ? URL.createObjectURL(avatarFile) : "";
 
@@ -59,16 +69,30 @@ function CreateGroupForm({ onClose }: Props) {
     );
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setValue("avatar", file, { shouldValidate: true });
+
+    setValue("avatar", file);
+    const isValid = await trigger("avatar");
+
+    if (!isValid) {
+      setValue("avatar", undefined);
+      e.target.value = "";
+      return;
+    }
   };
 
   const onSubmit = (data: CreateGroupData) => {
-    console.log(data);
+    if (isLoading) {
+      return;
+    }
 
-    onClose();
+    createGroup.mutate(data, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
   };
 
   const onError = (formErrors: FieldErrors<CreateGroupData>) => {
@@ -114,11 +138,11 @@ function CreateGroupForm({ onClose }: Props) {
             </div>
           </div>
 
-          {selected.length > 0 && (
+          {selected && selected?.length > 0 && (
             <div className="flex flex-col gap-2">
-              <p>Đã chọn ({selected.length})</p>
+              <p>Đã chọn ({selected?.length})</p>
               <div className="flex gap-2 overflow-x-auto pb-1">
-                {selected.map((f) => (
+                {selected?.map((f) => (
                   <div
                     key={f.user_id}
                     className="flex items-center gap-2 bg-gray-100 rounded-md p-2 shrink-0"
@@ -142,15 +166,15 @@ function CreateGroupForm({ onClose }: Props) {
           )}
 
           <div className="flex flex-col gap-2">
-            <SearchInput />
+            <SearchInput value={search} onChange={setSearch} />
 
             <div className="max-h-[280px] overflow-y-auto custom-scroll">
-              {friends.length === 0 ? (
+              {friends?.content.length === 0 ? (
                 <p className="text-center py-2 text-neutral">
                   Không tìm thấy kết quả
                 </p>
               ) : (
-                friends.map((friend) => (
+                friends?.content.map((friend) => (
                   <UserSelectItem
                     key={friend.user_id}
                     avatarUrl={friend.avatar_url}
@@ -169,6 +193,7 @@ function CreateGroupForm({ onClose }: Props) {
 
       <div className="flex items-center justify-center pt-4">
         <Button
+          disabled={isLoading}
           type="submit"
           className="px-2 py-2.5 font-medium rounded-lg bg-success text-white"
         >

@@ -46,6 +46,29 @@ const removeFriend = async (req, res, next) => {
   }
 };
 
+const getFriendsNotInConversation = async (req, res, next) => {
+  try {
+    const { page, size, q } = response.getPagination(req.query);
+
+    const result = await friendService.getFriendsNotInConversation(
+      req.user.id,
+      req.params.conversationId,
+      {
+        page,
+        size,
+        q,
+      },
+    );
+
+    return response.successPage(res, {
+      message: "Lấy danh sách bạn bè thành công",
+      ...result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getFriendList = async (req, res, next) => {
   try {
     const { page, size, q } = response.getPagination(req.query);
@@ -105,4 +128,5 @@ module.exports = {
   getFriendList,
   getFriendRequestList,
   getSuggestedFriends,
+  getFriendsNotInConversation,
 };

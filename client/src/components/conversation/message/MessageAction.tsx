@@ -27,7 +27,7 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
         }
       `}
     >
-      <div className="flex items-center bg-white border border-gray-300 rounded-lg">
+      <div className="flex items-center bg-white border border-gray-300 rounded-lg font-medium">
         {actions.map((action) => (
           <Button
             key={action.label}

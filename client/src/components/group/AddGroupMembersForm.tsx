@@ -1,11 +1,12 @@
 import { X } from "lucide-react";
 import { useState } from "react";
-import { mockFriendList } from "../../mocks/mockFriendList";
 import type { FriendResponse } from "../../types/types";
 import Image from "../ui/Image";
 import Button from "../ui/Button";
 import SearchInput from "../ui/SearchInput";
 import UserSelectItem from "../ui/UserSelectItem";
+import { useGetFriendsNotInConversation } from "../../hooks/queries/useFriends";
+import { useAddGroupMembers } from "../../hooks/queries/useConversations";
 
 interface Props {
   onClose: () => void;
@@ -14,8 +15,12 @@ interface Props {
 
 function AddGroupMembersForm({ onClose, conversationId }: Props) {
   const [selected, setSelected] = useState<FriendResponse[]>([]);
+  const [search, setSearch] = useState<string>("");
 
-  const friends = mockFriendList;
+  const { data: friends } = useGetFriendsNotInConversation(conversationId);
+
+  const addGroupMembers = useAddGroupMembers(conversationId);
+  const isLoadingAddGroupMembers = addGroupMembers.isPending;
 
   const isSelected = (userId: string) =>
     selected.some((s) => s.user_id === userId);
@@ -32,12 +37,25 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
     setSelected((prev) => prev.filter((s) => s.user_id !== userId));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(conversationId);
+    if (isLoadingAddGroupMembers) return;
 
-    onClose();
+    if (selected.length === 0) return;
+
+    const memberIds = selected.map((member) => member.user_id);
+
+    addGroupMembers.mutate(
+      {
+        member_ids: memberIds,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      },
+    );
   };
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -71,15 +89,15 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
           )}
 
           <div className="flex flex-col gap-2">
-            <SearchInput />
+            <SearchInput value={search} onChange={setSearch} />
 
             <div className="max-h-[280px] overflow-y-auto custom-scroll">
-              {friends.length === 0 ? (
+              {friends?.content?.length === 0 ? (
                 <p className="text-center py-2 text-neutral">
                   Không tìm thấy kết quả
                 </p>
               ) : (
-                friends.map((friend) => (
+                friends?.content?.map((friend) => (
                   <UserSelectItem
                     key={friend.user_id}
                     avatarUrl={friend.avatar_url}

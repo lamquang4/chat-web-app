@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { ConversationType } from "../../types/types";
 
-export type ConversationTab = "all" | "unread" | "group";
+export type ConversationTab = ConversationType | null;
 
 interface UIState {
   sideMenuOpen: boolean;
@@ -9,7 +10,7 @@ interface UIState {
 
 const initialState: UIState = {
   sideMenuOpen: false,
-  activeConversationTab: "all",
+  activeConversationTab: null,
 };
 
 const uiSlice = createSlice({

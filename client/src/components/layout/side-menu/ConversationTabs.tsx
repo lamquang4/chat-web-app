@@ -6,9 +6,9 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 
 const tabs: { label: string; value: ConversationTab }[] = [
-  { label: "Tất cả", value: "all" },
-  { label: "Chưa đọc", value: "unread" },
+  { label: "Tất cả", value: null },
   { label: "Nhóm", value: "group" },
+  { label: "Riêng tư", value: "private" },
 ];
 
 function ConversationTabs() {

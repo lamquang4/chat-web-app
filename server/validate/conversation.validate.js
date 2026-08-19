@@ -5,14 +5,6 @@ const {
 } = require("../constants/limit");
 const ErrorCode = require("../utils/error.code");
 
-const memberIdsSchema = z
-  .array(z.string())
-  .min(1, ErrorCode.GROUP_MEMBERS_REQUIRED.message)
-  .max(MAX_GROUP_MEMBERS, ErrorCode.GROUP_MEMBERS_TOO_MANY.message)
-  .refine((ids) => new Set(ids).size === ids.length, {
-    message: ErrorCode.GROUP_MEMBERS_DUPLICATE.message,
-  });
-
 const groupNameSchema = z
   .string()
   .trim()
@@ -21,15 +13,30 @@ const groupNameSchema = z
 
 const createGroupSchema = z.object({
   name: groupNameSchema,
-  member_ids: memberIdsSchema,
+  member_ids: z
+    .array(z.string())
+    .min(2, ErrorCode.GROUP_MEMBERS_REQUIRED.message)
+    .max(MAX_GROUP_MEMBERS, ErrorCode.GROUP_MEMBERS_TOO_MANY.message)
+    .refine((ids) => new Set(ids).size === ids.length, {
+      message: ErrorCode.GROUP_MEMBERS_DUPLICATE.message,
+    }),
 });
 
 const updateGroupSchema = z.object({
   name: groupNameSchema,
-  member_ids: memberIdsSchema,
+});
+
+const addGroupMembersSchema = z.object({
+  member_ids: z
+    .array(z.string())
+    .min(1, ErrorCode.GROUP_MEMBERS_REQUIRED.message)
+    .refine((ids) => new Set(ids).size === ids.length, {
+      message: ErrorCode.GROUP_MEMBERS_DUPLICATE.message,
+    }),
 });
 
 module.exports = {
   createGroupSchema,
   updateGroupSchema,
+  addGroupMembersSchema,
 };

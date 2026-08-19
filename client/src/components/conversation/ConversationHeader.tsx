@@ -37,19 +37,26 @@ function ConversationHeader({
           className={`flex gap-2 items-center ${type === "group" && "cursor-pointer"}`}
           onClick={handleOpenModal}
         >
-          <Image
-            src={
-              avatar_url ??
-              (type === "group" ? "/assets/group.png" : "/assets/user.png")
-            }
-            alt={name}
-            className="w-10 h-10 rounded-full object-cover"
-          />
+          <div className="relative flex shrink-0">
+            <Image
+              src={
+                avatar_url ??
+                (type === "group" ? "/assets/group.png" : "/assets/user.png")
+              }
+              alt={name}
+              className="w-12 h-12 rounded-full object-contain"
+            />
+            {is_online && (
+              <span className="absolute bottom-0 right-0 w-4 h-4 bg-success border-2 border-white rounded-full" />
+            )}
+          </div>
 
           <div className="flex-1 min-w-0">
             <h5 className={`font-semibold`}>{name}</h5>
 
-            <span className={`${is_online ? "text-success" : "text-neutral"}`}>
+            <span
+              className={`font-medium ${is_online ? "text-success" : "text-neutral"}`}
+            >
               {is_online ? "Đang online" : "Đang offline"}
             </span>
           </div>

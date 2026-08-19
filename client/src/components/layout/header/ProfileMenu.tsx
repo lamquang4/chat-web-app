@@ -1,13 +1,23 @@
-import { mockAccount } from "../../../mocks/mockAccount";
 import DropdownMenu from "../../ui/DropdownMenu";
 import { CircleUserRound, DoorOpen } from "lucide-react";
 import Image from "../../ui/Image";
 import { useState } from "react";
+import { useGetAccount } from "../../../hooks/queries/useUsers";
+import { useLogout } from "../../../hooks/queries/useAuth";
 
 function ProfileMenu() {
   const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
 
-  const account = mockAccount;
+  const { data: account } = useGetAccount();
+  const logout = useLogout();
+  const isLoading = logout.isPending;
+
+  const handleLogout = () => {
+    if (isLoading) {
+      return;
+    }
+    logout.mutate();
+  };
 
   const handleToggleDropdown = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -24,7 +34,9 @@ function ProfileMenu() {
     {
       label: "Đăng xuất",
       icon: <DoorOpen size={20} />,
-      onClick: () => {},
+      onClick: () => {
+        handleLogout();
+      },
       textColor: "text-danger",
     },
   ];
@@ -39,14 +51,14 @@ function ProfileMenu() {
         onClick={handleToggleDropdown}
       >
         <Image
-          src={`${account.avatar_url ? account.avatar_url : "/assets/user.png"}`}
+          src={`${account?.avatar_url ? account?.avatar_url : "/assets/user.png"}`}
           alt=""
           className="w-10 h-10 rounded-full object-cover"
           loading="eager"
         />
 
         <p className="font-medium">
-          {account.first_name + " " + account.last_name}
+          {account?.first_name + " " + account?.last_name}
         </p>
       </div>
 

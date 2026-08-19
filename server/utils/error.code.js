@@ -10,6 +10,7 @@ const {
   MAX_PASSWORD_LENGTH,
   OTP_LENGTH,
   OTP_RESEND_COOLDOWN_SECONDS,
+  OTP_EXPIRE_SECONDS,
 } = require("../constants/limit");
 
 const ErrorCode = {
@@ -49,7 +50,7 @@ const ErrorCode = {
   REGISTRATION_SESSION_EXPIRED: {
     code: "REGISTRATION_SESSION_EXPIRED",
     status: 400,
-    message: "Phiên đăng ký đã hết hạn, vui lòng đăng ký lại",
+    message: "Phiên đăng ký đã xóa, vui vòng đăng ký lại",
   },
   INVALID_CREDENTIALS: {
     code: "INVALID_CREDENTIALS",
@@ -185,8 +186,7 @@ const ErrorCode = {
   REGISTRATION_ALREADY_PENDING: {
     code: "REGISTRATION_ALREADY_PENDING",
     status: 409,
-    message:
-      "Email này đã được đăng ký và đang chờ xác thực OTP, vui lòng kiểm tra email hoặc thử lại sau ít phút",
+    message: `Email này đang chờ xác thực OTP. Vui lòng kiểm tra email hoặc thử lại sau ${OTP_EXPIRE_SECONDS / 60} phút.`,
   },
 
   // User
@@ -291,7 +291,7 @@ const ErrorCode = {
   GROUP_MEMBERS_REQUIRED: {
     code: "GROUP_MEMBERS_REQUIRED",
     status: 400,
-    message: "Nhóm phải có ít nhất 1 thành viên",
+    message: "Nhóm phải có ít nhất 2 thành viên",
   },
   GROUP_MEMBERS_TOO_MANY: {
     code: "GROUP_MEMBERS_TOO_MANY",
@@ -303,22 +303,58 @@ const ErrorCode = {
     status: 400,
     message: "Danh sách thành viên bị trùng",
   },
+  NOT_GROUP_ADMIN_OR_OWNER: {
+    code: "NOT_GROUP_ADMIN_OR_OWNER",
+    status: 403,
+    message:
+      "Chỉ trưởng nhóm hoặc quản trị viên mới có quyền thực hiện thao tác này",
+  },
+  GROUP_MEMBERS_LIMIT_EXCEEDED: {
+    code: "GROUP_MEMBERS_LIMIT_EXCEEDED",
+    status: 400,
+    message: `Nhóm tối đa ${MAX_GROUP_MEMBERS} thành viên, không thể thêm nữa`,
+  },
+  MIN_GROUP_MEMBERS_REQUIRED: {
+    code: "MIN_GROUP_MEMBERS_REQUIRED",
+    status: 400,
+    message: "Nhóm phải có ít nhất 2 thành viên, không thể xóa thêm",
+  },
+  TARGET_NOT_GROUP_MEMBER: {
+    code: "TARGET_NOT_GROUP_MEMBER",
+    status: 404,
+    message: "Người này không phải thành viên của nhóm",
+  },
+  ALREADY_ADMIN: {
+    code: "ALREADY_ADMIN",
+    status: 409,
+    message: "Người này đã là quản trị viên",
+  },
+  NOT_ADMIN: {
+    code: "NOT_ADMIN",
+    status: 400,
+    message: "Người này không phải quản trị viên",
+  },
+  CANNOT_ACT_ON_OWNER: {
+    code: "CANNOT_ACT_ON_OWNER",
+    status: 403,
+    message: "Không thể thực hiện thao tác này với trưởng nhóm",
+  },
+  CANNOT_TRANSFER_TO_SELF: {
+    code: "CANNOT_TRANSFER_TO_SELF",
+    status: 400,
+    message: "Bạn đã là trưởng nhóm",
+  },
+  CANNOT_MESSAGE_SELF: {
+    code: "CANNOT_MESSAGE_SELF",
+    status: 400,
+    message: "Không thể nhắn tin với chính mình",
+  },
 
   // message
   MESSAGE_CONTENT_TOO_LONG: {
     code: "MESSAGE_CONTENT_TOO_LONG",
     status: 400,
     message: `Nội dung tối đa ${MAX_CONTENT_LENGTH} ký tự`,
-  },
-  CONVERSATION_NOT_FOUND: {
-    code: "CONVERSATION_NOT_FOUND",
-    status: 404,
-    message: "Không tìm thấy hội thoại",
-  },
-  NOT_CONVERSATION_MEMBER: {
-    code: "NOT_CONVERSATION_MEMBER",
-    status: 403,
-    message: "Bạn không phải thành viên của hội thoại này",
   },
   MESSAGE_NOT_FOUND: {
     code: "MESSAGE_NOT_FOUND",
@@ -343,7 +379,34 @@ const ErrorCode = {
   MESSAGE_CONTENT_REQUIRED: {
     code: "MESSAGE_CONTENT_REQUIRED",
     status: 400,
-    message: "Tin nhắn phải có nội dung hoặc ít nhất 1 tệp đính kèm",
+    message: "Gửi tin nhắn phải có nội dung hoặc ít nhất 1 tệp đính kèm",
+  },
+
+  //conversation
+  GROUP_MEMBER_NOT_FOUND: {
+    code: "GROUP_MEMBER_NOT_FOUND",
+    status: 404,
+    message: "Một hoặc nhiều thành viên không tồn tại",
+  },
+  NOT_GROUP_OWNER: {
+    code: "NOT_GROUP_OWNER",
+    status: 403,
+    message: "Chỉ trưởng nhóm mới có quyền thực hiện thao tác này",
+  },
+  NOT_GROUP_CONVERSATION: {
+    code: "NOT_GROUP_CONVERSATION",
+    status: 400,
+    message: "Chức năng này chỉ áp dụng cho hội thoại nhóm",
+  },
+  CONVERSATION_NOT_FOUND: {
+    code: "CONVERSATION_NOT_FOUND",
+    status: 404,
+    message: "Không tìm thấy hội thoại",
+  },
+  NOT_CONVERSATION_MEMBER: {
+    code: "NOT_CONVERSATION_MEMBER",
+    status: 403,
+    message: "Bạn không phải thành viên của hội thoại này",
   },
 };
 

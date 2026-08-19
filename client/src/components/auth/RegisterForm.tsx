@@ -11,6 +11,7 @@ import { setAuthView } from "../../redux/slices/authViewSlice";
 import { registerSchema, type RegisterData } from "../../schemas/authSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRegister } from "../../hooks/queries/useAuth";
 
 interface Props {
   onSuccess: (email: string) => void;
@@ -37,21 +38,24 @@ function RegisterForm({ onSuccess }: Props) {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const registerAuth = useRegister();
+  const isLoading = registerAuth.isPending;
+
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const isLoading = false;
-
-  // khi đăng ký tài khoản mới -> gửi thông tin đăng ký
-  // BE lưu ở redis (sau 10 phút sẽ xóa)
-  // verify otp xong thì thông tin đăng ký sẽ lưu vào db mysql user
   const onSubmit = (data: RegisterData) => {
-    console.log(data);
+    if (isLoading) {
+      return;
+    }
 
-    onSuccess(data.email);
-
-    dispatch(setAuthView("otp"));
+    registerAuth.mutate(data, {
+      onSuccess: () => {
+        onSuccess(data.email);
+        dispatch(setAuthView("otp"));
+      },
+    });
   };
 
   return (

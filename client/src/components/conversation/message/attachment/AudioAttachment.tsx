@@ -6,11 +6,12 @@ import { formatDuration } from "../../../../utils/formatters";
 
 interface Props {
   att: MessageAttachmentResponse;
+  isMe: boolean;
 }
 
 const BAR_COUNT = 24;
 
-function AudioAttachment({ att }: Props) {
+function AudioAttachment({ att, isMe }: Props) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -107,12 +108,12 @@ function AudioAttachment({ att }: Props) {
       <Button
         onClick={toggle}
         aria-label={isPlaying ? "Tạm dừng" : "Phát"}
-        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-primary"
+        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isPlaying ? "bg-primary" : "bg-primary"} `}
       >
         {isPlaying ? (
-          <Pause size={14} className="text-white" fill="white" />
+          <Pause size={16} className="text-white" fill="white" />
         ) : (
-          <Play size={14} className="text-white ml-0.5" fill="white" />
+          <Play size={16} className="text-white ml-0.5" fill="white" />
         )}
       </Button>
 
@@ -130,8 +131,15 @@ function AudioAttachment({ att }: Props) {
           return (
             <div
               key={i}
-              className={`w-[3px] rounded-full transition-colors duration-100 shrink-0
-                  ${filled ? "bg-primary" : "bg-gray-300"}`}
+              className={`w-[3px] rounded-full transition-colors duration-100 shrink-0 ${
+                isMe
+                  ? filled
+                    ? "bg-white"
+                    : "bg-white/40"
+                  : filled
+                    ? "bg-primary"
+                    : "bg-gray-300"
+              }`}
               style={{ height: `${height}%` }}
             />
           );
@@ -141,7 +149,7 @@ function AudioAttachment({ att }: Props) {
       {isBuffering ? (
         <Loader2 size={14} className="shrink-0 animate-spin text-primary" />
       ) : (
-        <span>{displayTime}</span>
+        <span className="font-medium">{displayTime}</span>
       )}
     </div>
   );
