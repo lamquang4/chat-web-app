@@ -1,7 +1,7 @@
-import type { ConversationMemberResponse, MemberRole } from "../types/types";
+import type {  GroupMemberResponse, MemberRole } from "../types/types";
 
 type Params = {
-  members: ConversationMemberResponse[];
+  members: GroupMemberResponse[];
   currentUserId: string;
 };
 
