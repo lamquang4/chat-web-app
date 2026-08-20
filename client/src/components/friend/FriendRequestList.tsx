@@ -8,12 +8,15 @@ import {
 } from "../../hooks/queries/useFriends";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Loading from "../ui/Loading";
+import Image from "../ui/Image";
+import FriendListSkeleton from "../skeleton/FriendListSkeleton";
 
 interface Props {
   friendRequests: FriendRequestResponse[];
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  isLoading: boolean;
 }
 
 function FriendRequestList({
@@ -21,6 +24,7 @@ function FriendRequestList({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  isLoading,
 }: Props) {
   const acceptFriendRequest = useAcceptFriendRequest();
   const isLoadingAcceptFriendRequest = acceptFriendRequest.isPending;
@@ -50,44 +54,62 @@ function FriendRequestList({
   };
 
   return (
-    <div className="max-h-[400px] h-full overflow-y-auto">
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
-        {friendRequests.map((friendRequest) => (
-          <UserItem
-            key={friendRequest.requester_id}
-            avatarUrl={friendRequest.avatar_url}
-            title={`${friendRequest.first_name} ${friendRequest.last_name}`}
-            titleAs="h5"
-            titleClassName="font-semibold"
-            subtitle={
-              "Ngày gửi: " +
-              format(new Date(friendRequest.created_at), "dd/MM/yyyy")
-            }
-            extra={
-              <div className="flex gap-4">
-                <Button
-                  disabled={isLoadingAcceptFriendRequest}
-                  onClick={() =>
-                    handleAcceptFriendRequest(friendRequest.requester_id)
-                  }
-                  className="py-1.5 w-full rounded-md font-medium bg-success text-white"
-                >
-                  Xác nhận
-                </Button>
-                <Button
-                  disabled={isLoadingRejectFriendRequest}
-                  onClick={() =>
-                    handleRejectFriendRequest(friendRequest.requester_id)
-                  }
-                  className="py-1.5 w-full rounded-md font-medium bg-danger text-white"
-                >
-                  Từ chối
-                </Button>
-              </div>
-            }
-          />
-        ))}
-      </div>
+    <div
+      className={`max-h-[400px] h-full ${friendRequests.length ? "overflow-y-auto" : "overflow-hidden"}`}
+    >
+      {isLoading ? (
+        <FriendListSkeleton count={6} showSubtitle showExtra extraCount={2} />
+      ) : friendRequests.length ? (
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+          {friendRequests.map((friendRequest) => (
+            <UserItem
+              key={friendRequest.requester_id}
+              avatarUrl={friendRequest.avatar_url}
+              title={`${friendRequest.first_name} ${friendRequest.last_name}`}
+              titleAs="h5"
+              titleClassName="font-semibold"
+              subtitle={
+                "Ngày gửi: " +
+                format(new Date(friendRequest.created_at), "dd/MM/yyyy")
+              }
+              extra={
+                <div className="flex gap-4">
+                  <Button
+                    disabled={isLoadingAcceptFriendRequest}
+                    onClick={() =>
+                      handleAcceptFriendRequest(friendRequest.requester_id)
+                    }
+                    className="py-1.5 w-full rounded-md font-medium bg-success text-white"
+                  >
+                    Xác nhận
+                  </Button>
+                  <Button
+                    disabled={isLoadingRejectFriendRequest}
+                    onClick={() =>
+                      handleRejectFriendRequest(friendRequest.requester_id)
+                    }
+                    className="py-1.5 w-full rounded-md font-medium bg-danger text-white"
+                  >
+                    Từ chối
+                  </Button>
+                </div>
+              }
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <div className="flex flex-col items-center gap-[15px]">
+            <Image
+              src="/assets/notfound1.png"
+              className="w-[140px]"
+              alt="not found"
+              loading="eager"
+            />
+            <h4 className="font-semibold">Không tìm thấy</h4>
+          </div>
+        </div>
+      )}
 
       <div ref={loadMoreRef} className="h-1" />
 

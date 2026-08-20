@@ -6,12 +6,15 @@ import { useGetOrCreatePrivateConversation } from "../../hooks/queries/useConver
 import { useNavigate } from "react-router-dom";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Loading from "../ui/Loading";
+import Image from "../ui/Image";
+import FriendListSkeleton from "../skeleton/FriendListSkeleton";
 
 interface Props {
   friendSuggests: SuggestedFriendResponse[];
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  isLoading: boolean;
 }
 
 function SuggestedFriendList({
@@ -19,6 +22,7 @@ function SuggestedFriendList({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  isLoading,
 }: Props) {
   const navigate = useNavigate();
 
@@ -57,36 +61,56 @@ function SuggestedFriendList({
   };
 
   return (
-    <div className="max-h-[400px] h-full overflow-y-auto">
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
-        {friendSuggests.map((friendSuggest) => (
-          <UserItem
-            avatarUrl={friendSuggest.avatar_url}
-            title={`${friendSuggest.first_name} ${friendSuggest.last_name}`}
-            titleAs="h5"
-            titleClassName="font-semibold"
-            extra={
-              <div className="flex gap-4">
-                <Button
-                  disabled={isLoadingSendFriendRequest}
-                  onClick={() => handleSendFriendRequest(friendSuggest.user_id)}
-                  className="py-1.5 w-full rounded-md font-medium bg-success text-white"
-                >
-                  Thêm bạn bè
-                </Button>
+    <div
+      className={`max-h-[400px] h-full ${friendSuggests.length ? "overflow-y-auto" : "overflow-hidden"}`}
+    >
+      {isLoading ? (
+        <FriendListSkeleton count={6} showExtra extraCount={2} />
+      ) : friendSuggests?.length ? (
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+          {friendSuggests.map((friendSuggest) => (
+            <UserItem
+              avatarUrl={friendSuggest.avatar_url}
+              title={`${friendSuggest.first_name} ${friendSuggest.last_name}`}
+              titleAs="h5"
+              titleClassName="font-semibold"
+              extra={
+                <div className="flex gap-4">
+                  <Button
+                    disabled={isLoadingSendFriendRequest}
+                    onClick={() =>
+                      handleSendFriendRequest(friendSuggest.user_id)
+                    }
+                    className="py-1.5 w-full rounded-md font-medium bg-success text-white"
+                  >
+                    Thêm bạn bè
+                  </Button>
 
-                <Button
-                  disabled={isLoadingGetOrCreatePrivateConversation}
-                  onClick={() => handleMessage(friendSuggest.user_id)}
-                  className="py-1.5 w-full rounded-md font-medium bg-danger text-white"
-                >
-                  Nhắn tin
-                </Button>
-              </div>
-            }
-          />
-        ))}
-      </div>
+                  <Button
+                    disabled={isLoadingGetOrCreatePrivateConversation}
+                    onClick={() => handleMessage(friendSuggest.user_id)}
+                    className="py-1.5 w-full rounded-md font-medium bg-danger text-white"
+                  >
+                    Nhắn tin
+                  </Button>
+                </div>
+              }
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <div className="flex flex-col items-center gap-[15px]">
+            <Image
+              src="/assets/notfound.png"
+              className="w-[140px]"
+              alt="not found"
+              loading="eager"
+            />
+            <h4 className="font-semibold">Không tìm thấy</h4>
+          </div>
+        </div>
+      )}
 
       <div ref={loadMoreRef} className="h-1" />
 

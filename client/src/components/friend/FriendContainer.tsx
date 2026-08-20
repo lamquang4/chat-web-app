@@ -24,18 +24,21 @@ function FriendContainer() {
 
   const {
     data: friends,
+    isLoading: isLoadingFriends,
     fetchNextPage: fetchNextFriendsPage,
     hasNextPage: hasNextFriendsPage,
     isFetchingNextPage: isFetchingNextFriendsPage,
   } = useGetFriendList(debouncedSearch, isFriendPage);
   const {
     data: friendRequests,
+    isLoading: isLoadingFriendRequests,
     fetchNextPage: fetchNextFriendRequestsPage,
     hasNextPage: hasNextFriendRequestsPage,
     isFetchingNextPage: isFetchingNextFriendRequestsPage,
   } = useGetFriendRequestList(debouncedSearch, isRequestPage);
   const {
     data: suggestedFriends,
+    isLoading: isLoadingSuggestedFriends,
     fetchNextPage: fetchNextSuggestedFriendsPage,
     hasNextPage: hasNextSuggestedFriendsPage,
     isFetchingNextPage: isFetchingNextSuggestedFriendsPage,
@@ -102,6 +105,7 @@ function FriendContainer() {
           fetchNextPage={fetchNextFriendsPage}
           hasNextPage={hasNextFriendsPage}
           isFetchingNextPage={isFetchingNextFriendsPage}
+          isLoading={isLoadingFriends}
         />
       )}
 
@@ -111,7 +115,8 @@ function FriendContainer() {
           fetchNextPage={fetchNextFriendRequestsPage}
           hasNextPage={hasNextFriendRequestsPage}
           isFetchingNextPage={isFetchingNextFriendRequestsPage}
-        />
+         isLoading={isLoadingFriendRequests}
+          />
       )}
 
       {isSuggestionPage && (
@@ -120,6 +125,7 @@ function FriendContainer() {
           fetchNextPage={fetchNextSuggestedFriendsPage}
           hasNextPage={hasNextSuggestedFriendsPage}
           isFetchingNextPage={isFetchingNextSuggestedFriendsPage}
+          isLoading={isLoadingSuggestedFriends}
         />
       )}
     </div>

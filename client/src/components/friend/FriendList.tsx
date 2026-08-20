@@ -6,12 +6,15 @@ import { useGetOrCreatePrivateConversation } from "../../hooks/queries/useConver
 import { useNavigate } from "react-router-dom";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Loading from "../ui/Loading";
+import Image from "../ui/Image";
+import FriendListSkeleton from "../skeleton/FriendListSkeleton";
 
 interface Props {
   friends: FriendResponse[];
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  isLoading: boolean;
 }
 
 function FriendList({
@@ -19,6 +22,7 @@ function FriendList({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  isLoading,
 }: Props) {
   const navigate = useNavigate();
 
@@ -57,38 +61,52 @@ function FriendList({
   };
 
   return (
-    <div className="max-h-[400px] h-full overflow-y-auto">
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
-        {friends.map((friend) => (
-          <UserItem
-            key={friend.user_id}
-            avatarUrl={friend.avatar_url}
-            title={`${friend.first_name} ${friend.last_name}`}
-            isOnline={friend.is_online}
-            titleAs="h5"
-            titleClassName="font-semibold"
-            dropdownItems={[
-              {
-                label: "Nhắn tin",
-                icon: <MessageCircleMore size={20} />,
-                onClick: () => {
-                  handleMessage(friend.user_id);
+    <div
+      className={`max-h-[400px] h-full ${friends.length ? "overflow-y-auto" : "overflow-hidden"}`}
+    >
+      {isLoading ? (
+        <FriendListSkeleton count={6} />
+      ) : friends.length ? (
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+          {friends.map((friend) => (
+            <UserItem
+              key={friend.user_id}
+              avatarUrl={friend.avatar_url}
+              title={`${friend.first_name} ${friend.last_name}`}
+              isOnline={friend.is_online}
+              titleAs="h5"
+              titleClassName="font-semibold"
+              dropdownItems={[
+                {
+                  label: "Nhắn tin",
+                  icon: <MessageCircleMore size={20} />,
+                  onClick: () => handleMessage(friend.user_id),
+                  disabled: isLoadingGetOrCreatePrivateConversation,
                 },
-                disabled: isLoadingGetOrCreatePrivateConversation,
-              },
-              {
-                label: "Hủy kết bạn",
-                icon: <UserRoundX size={20} />,
-                onClick: () => {
-                  handleRemoveFriend(friend.user_id);
+                {
+                  label: "Hủy kết bạn",
+                  icon: <UserRoundX size={20} />,
+                  onClick: () => handleRemoveFriend(friend.user_id),
+                  disabled: isLoadingRemoveFriend,
+                  textColor: "text-danger",
                 },
-                disabled: isLoadingRemoveFriend,
-                textColor: "text-danger",
-              },
-            ]}
-          />
-        ))}
-      </div>
+              ]}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <div className="flex flex-col items-center gap-[15px]">
+            <Image
+              src="/assets/notfound1.png"
+              className="w-[140px]"
+              alt="not found"
+              loading="eager"
+            />
+            <h4 className="font-semibold">Không tìm thấy</h4>
+          </div>
+        </div>
+      )}
 
       <div ref={loadMoreRef} className="h-1" />
 

@@ -80,7 +80,7 @@ function SideMenu() {
       <aside
         className={`fixed top-0 left-0 h-full w-full max-w-[380px] bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-50 flex flex-col ${sideMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:sticky lg:translate-x-0 lg:z-auto`}
       >
-        <div className="flex flex-col min-h-0 gap-6 px-[15px] py-4">
+        <div className="flex flex-col min-h-0 gap-6 px-[15px] py-4 flex-1">
           <div className="flex justify-between items-center">
             <h3 className="font-bold">Đoạn chat</h3>
 

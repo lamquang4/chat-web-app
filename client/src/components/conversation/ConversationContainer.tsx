@@ -13,12 +13,14 @@ import { useEffect } from "react";
 import { getSocket, onSocketReady } from "../../hooks/socket/socket";
 import { SOCKET_EVENTS } from "../../hooks/socket/events";
 import { jwtUtil } from "../../utils/jwtUtil";
+import Image from "../ui/Image";
+import Loading from "../ui/Loading";
 
 function ConversationContainer() {
   const { conversationId } = useParams();
   const [replyTo, setReplyTo] = useState<ReplyMessageResponse | null>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useGetConversationDetail(conversationId as string);
 
   useMessageSocket(conversationId as string);
@@ -93,35 +95,48 @@ function ConversationContainer() {
     recallMessage.mutate(messageId);
   };
 
-  if (!conversation) {
-    return null;
-  }
-
   return (
     <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white">
-      <ConversationHeader
-        conversationId={conversation.conversation_id}
-        type={conversation.type}
-        name={conversation.name}
-        is_online={conversation.is_online}
-        avatar_url={conversation.avatar_url}
-      />
+      {isLoading ? (
+        <Loading size={40} color="black" thickness={2} height={100} />
+      ) : !conversation ? (
+        <div className="flex items-center justify-center h-full px-[15px]">
+          <div className="flex flex-col items-center gap-[15px]">
+            <Image
+              src="/assets/message.png"
+              className="w-[160px]"
+              alt="not found"
+              loading="eager"
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <ConversationHeader
+            conversationId={conversation.conversation_id}
+            type={conversation.type}
+            name={conversation.name}
+            is_online={conversation.is_online}
+            avatar_url={conversation.avatar_url}
+          />
 
-      <ConversationBody
-        messages={messages}
-        loadMoreRef={loadMoreRef}
-        hasNextPage={Boolean(hasNextPage)}
-        isFetchingNextPage={isFetchingNextPage}
-        onLoadMore={() => fetchNextPage()}
-        onReply={handleReply}
-        onRecall={handleRecall}
-      />
+          <ConversationBody
+            messages={messages}
+            loadMoreRef={loadMoreRef}
+            hasNextPage={Boolean(hasNextPage)}
+            isFetchingNextPage={isFetchingNextPage}
+            onLoadMore={() => fetchNextPage()}
+            onReply={handleReply}
+            onRecall={handleRecall}
+          />
 
-      <ConversationFooter
-        conversationId={conversation.conversation_id}
-        replyTo={replyTo}
-        onCancelReply={() => setReplyTo(null)}
-      />
+          <ConversationFooter
+            conversationId={conversation.conversation_id}
+            replyTo={replyTo}
+            onCancelReply={() => setReplyTo(null)}
+          />
+        </>
+      )}
     </div>
   );
 }

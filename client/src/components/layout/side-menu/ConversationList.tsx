@@ -1,6 +1,8 @@
 import { useGetConversationList } from "../../../hooks/queries/useConversations";
 import { useIntersectionObserver } from "../../../hooks/useIntersectionObserver";
 import type { ConversationType } from "../../../types/types";
+import ConversationListSkeleton from "../../skeleton/ConversationListSkeleton";
+import Image from "../../ui/Image";
 import Loading from "../../ui/Loading";
 import ConversationItem from "./ConversationItem";
 
@@ -15,6 +17,7 @@ function ConversationList({ type, q }: Props) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useGetConversationList(type, q);
 
   const loadMoreRef = useIntersectionObserver({
@@ -22,13 +25,31 @@ function ConversationList({ type, q }: Props) {
     onIntersect: fetchNextPage,
   });
   return (
-    <div className="overflow-y-auto">
-      {conversations?.content.map((conversation) => (
-        <ConversationItem
-          conversation={conversation}
-          key={conversation.conversation_id}
-        />
-      ))}
+    <div
+      className={`${conversations?.content?.length ? "overflow-y-auto" : "overflow-hidden"} h-full`}
+    >
+      {isLoading ? (
+        <ConversationListSkeleton count={6} />
+      ) : conversations?.content?.length ? (
+        conversations?.content.map((conversation) => (
+          <ConversationItem
+            conversation={conversation}
+            key={conversation.conversation_id}
+          />
+        ))
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <div className="flex flex-col items-center gap-[15px]">
+            <Image
+              src="/assets/notfound1.png"
+              className="w-[120px]"
+              alt="not found"
+              loading="eager"
+            />
+            <h4 className="font-semibold">Không tìm thấy</h4>
+          </div>
+        </div>
+      )}
 
       <div ref={loadMoreRef} className="h-1" />
 
