@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Loading from "../ui/Loading";
 import Image from "../ui/Image";
-import FriendListSkeleton from "../skeleton/FriendListSkeleton";
+import UserListSkeleton from "../skeleton/UserListSkeleton";
 
 interface Props {
   friendSuggests: SuggestedFriendResponse[];
@@ -65,7 +65,7 @@ function SuggestedFriendList({
       className={`max-h-[400px] h-full ${friendSuggests.length ? "overflow-y-auto" : "overflow-hidden"}`}
     >
       {isLoading ? (
-        <FriendListSkeleton count={6} showExtra extraCount={2} />
+        <UserListSkeleton count={6} showExtra extraCount={2} />
       ) : friendSuggests?.length ? (
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           {friendSuggests.map((friendSuggest) => (

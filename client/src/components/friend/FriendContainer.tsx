@@ -9,13 +9,17 @@ import {
   useGetFriendRequestList,
   useGetSuggestedFriends,
 } from "../../hooks/queries/useFriends";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useDebounce from "../../hooks/useDebounce";
 
 function FriendContainer() {
   const { pathname } = useLocation();
 
-  const [search, setSearch] = useState<string>("");
+  const [searchState, setSearchState] = useState({
+    pathname,
+    value: "",
+  });
+  const search = searchState.pathname === pathname ? searchState.value : "";
   const debouncedSearch = useDebounce(search.trim(), 500);
 
   const isFriendPage = pathname === "/friends";
@@ -44,10 +48,6 @@ function FriendContainer() {
     isFetchingNextPage: isFetchingNextSuggestedFriendsPage,
   } = useGetSuggestedFriends(debouncedSearch, isSuggestionPage);
 
-  useEffect(() => {
-    setSearch("");
-  }, [pathname]);
-
   const count = isRequestPage
     ? (friendRequests?.content.length ?? 0)
     : isFriendPage
@@ -65,7 +65,10 @@ function FriendContainer() {
       </h3>
 
       <div className="flex justify-between items-center gap-4 lg:flex-row flex-col">
-        <SearchInput value={search} onChange={setSearch} />
+        <SearchInput
+          value={search}
+          onChange={(value) => setSearchState({ pathname, value })}
+        />
 
         <div className="flex gap-2">
           {!isFriendPage && (

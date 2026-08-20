@@ -9,7 +9,7 @@ import {
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Loading from "../ui/Loading";
 import Image from "../ui/Image";
-import FriendListSkeleton from "../skeleton/FriendListSkeleton";
+import UserListSkeleton from "../skeleton/UserListSkeleton";
 
 interface Props {
   friendRequests: FriendRequestResponse[];
@@ -58,7 +58,7 @@ function FriendRequestList({
       className={`max-h-[400px] h-full ${friendRequests.length ? "overflow-y-auto" : "overflow-hidden"}`}
     >
       {isLoading ? (
-        <FriendListSkeleton count={6} showSubtitle showExtra extraCount={2} />
+        <UserListSkeleton count={6} showSubtitle showExtra extraCount={2} />
       ) : friendRequests.length ? (
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           {friendRequests.map((friendRequest) => (

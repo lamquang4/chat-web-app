@@ -26,20 +26,20 @@ function ConversationContainer() {
   useMessageSocket(conversationId as string);
 
   const conversation = data?.conversation;
-  const messages = data?.messages ?? [];
+  const messages = data?.messages;
 
   useEffect(() => {
     const currentUserId = jwtUtil.getUserId();
-    const unreadMessages = messages.filter(
+    const unreadMessages = messages?.filter(
       (message) =>
         !message.is_me &&
         !message.seen_by.some((user) => user.user_id === currentUserId),
     );
-    if (unreadMessages.length === 0) return;
+    if (unreadMessages?.length === 0) return;
 
     const markAsSeen = () => {
       const socket = getSocket();
-      unreadMessages.forEach((message) => {
+      unreadMessages?.forEach((message) => {
         socket.emit(SOCKET_EVENTS.MESSAGE_SEEN, {
           conversation_id: conversationId,
           message_id: message.message_id,
@@ -121,7 +121,7 @@ function ConversationContainer() {
           />
 
           <ConversationBody
-            messages={messages}
+            messages={messages || []}
             loadMoreRef={loadMoreRef}
             hasNextPage={Boolean(hasNextPage)}
             isFetchingNextPage={isFetchingNextPage}

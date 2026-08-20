@@ -236,6 +236,9 @@ export const useAddGroupMembers = (conversationId: string) => {
       queryClient.invalidateQueries({
         queryKey: conversationKeys.all,
       });
+      queryClient.invalidateQueries({
+        queryKey: ["friends", "addable", conversationId],
+      });
 
       toast.success(res.message || "Đã thêm thành viên");
     },

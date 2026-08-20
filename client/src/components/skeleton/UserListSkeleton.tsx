@@ -6,7 +6,7 @@ interface Props {
   extraCount?: number;
 }
 
-function FriendListSkeleton({
+function UserListSkeleton({
   count = 6,
   avatarSize = "w-12 h-12",
   showSubtitle = false,
@@ -51,4 +51,4 @@ function FriendListSkeleton({
   );
 }
 
-export default FriendListSkeleton;
+export default UserListSkeleton;

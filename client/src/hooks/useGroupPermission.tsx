@@ -1,4 +1,4 @@
-import type {  GroupMemberResponse, MemberRole } from "../types/types";
+import type { GroupMemberResponse, MemberRole } from "../types/types";
 
 type Params = {
   members: GroupMemberResponse[];
@@ -18,7 +18,7 @@ export function useGroupPermission({ members, currentUserId }: Params) {
   const canDeleteGroup = currentUserRole === "owner";
 
   const canKickMember = (targetRole: MemberRole) => {
-    if (targetRole === "owner") return false;
+    if (targetRole === "owner" || targetRole === "admin") return false;
     return currentUserRole === "owner" || currentUserRole === "admin";
   };
 

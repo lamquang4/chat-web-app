@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Loading from "../ui/Loading";
 import Image from "../ui/Image";
-import FriendListSkeleton from "../skeleton/FriendListSkeleton";
+import UserListSkeleton from "../skeleton/UserListSkeleton";
 
 interface Props {
   friends: FriendResponse[];
@@ -65,7 +65,7 @@ function FriendList({
       className={`max-h-[400px] h-full ${friends.length ? "overflow-y-auto" : "overflow-hidden"}`}
     >
       {isLoading ? (
-        <FriendListSkeleton count={6} />
+        <UserListSkeleton count={6} />
       ) : friends.length ? (
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           {friends.map((friend) => (

@@ -7,6 +7,10 @@ import SearchInput from "../ui/SearchInput";
 import UserSelectItem from "../ui/UserSelectItem";
 import { useGetFriendsNotInConversation } from "../../hooks/queries/useFriends";
 import { useAddGroupMembers } from "../../hooks/queries/useConversations";
+import useDebounce from "../../hooks/useDebounce";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import Loading from "../ui/Loading";
+import UserSelectListSkeleton from "../skeleton/UserSelectListSkeleton";
 
 interface Props {
   onClose: () => void;
@@ -17,10 +21,23 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
   const [selected, setSelected] = useState<FriendResponse[]>([]);
   const [search, setSearch] = useState<string>("");
 
-  const { data: friends } = useGetFriendsNotInConversation(conversationId);
+  const debouncedSearch = useDebounce(search.trim(), 500);
+
+  const {
+    data: friends,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useGetFriendsNotInConversation(conversationId, debouncedSearch);
 
   const addGroupMembers = useAddGroupMembers(conversationId);
   const isLoadingAddGroupMembers = addGroupMembers.isPending;
+
+  const loadMoreRef = useIntersectionObserver({
+    enabled: hasNextPage && !isFetchingNextPage,
+    onIntersect: fetchNextPage,
+  });
 
   const isSelected = (userId: string) =>
     selected.some((s) => s.user_id === userId);
@@ -92,7 +109,9 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
             <SearchInput value={search} onChange={setSearch} />
 
             <div className="max-h-[280px] overflow-y-auto custom-scroll">
-              {friends?.content?.length === 0 ? (
+              {isLoading ? (
+                <UserSelectListSkeleton count={6} avatarSize="w-10 h-10" />
+              ) : friends?.content?.length === 0 ? (
                 <p className="text-center py-2 text-neutral">
                   Không tìm thấy kết quả
                 </p>
@@ -109,6 +128,17 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
                   />
                 ))
               )}
+
+              <div ref={loadMoreRef} className="h-1" />
+
+              {isFetchingNextPage && (
+                <Loading
+                  height={10}
+                  size={24}
+                  color={"black"}
+                  thickness={1.5}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -117,6 +147,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
       <div className="flex items-center justify-center pt-4">
         <Button
           onClick={handleSubmit}
+          disabled={isLoadingAddGroupMembers || selected.length === 0}
           className="px-2 py-2.5 font-medium rounded-lg bg-success text-white"
         >
           Thêm vào nhóm

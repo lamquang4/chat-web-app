@@ -418,6 +418,10 @@ const removeGroupMember = async (userId, conversationId, targetUserId) => {
     throw new AppError(CANNOT_ACT_ON_OWNER);
   }
 
+  if (membership.role === "admin" && targetMembership.role === "admin") {
+    throw new AppError(NOT_GROUP_ADMIN_OR_OWNER);
+  }
+
   const totalMembers = await ConversationMember.countDocuments({
     conversation_id: conversationId,
   });

@@ -46,7 +46,6 @@ function ConversationList({ type, q }: Props) {
               alt="not found"
               loading="eager"
             />
-            <h4 className="font-semibold">Không tìm thấy</h4>
           </div>
         </div>
       )}

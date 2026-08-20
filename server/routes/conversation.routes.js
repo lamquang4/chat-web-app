@@ -12,6 +12,7 @@ const {
 const {
   createGroupSchema,
   updateGroupSchema,
+  addGroupMembersSchema,
 } = require("../validate/conversation.validate");
 const conversationController = require("../controllers/conversation.controller");
 
@@ -40,7 +41,11 @@ router.put(
 );
 
 router.delete("/group/:conversationId", conversationController.deleteGroup);
-router.post("/:conversationId/members", conversationController.addGroupMembers);
+router.post(
+  "/:conversationId/members",
+  validate(addGroupMembersSchema, "body"),
+  conversationController.addGroupMembers,
+);
 router.delete(
   "/:conversationId/members/:userId",
   conversationController.removeGroupMember,
