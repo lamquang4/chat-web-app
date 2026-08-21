@@ -8,7 +8,7 @@
 
 | Hạng mục | Công nghệ / Công cụ                                                                                                                                               |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend | Vite + TypeScript + React 19 <br> TailwindCSS <br> Redux <br> Axios + Tanstack query <br> Zod + React form hook <br> socket.io-client <br> js-cookie + jwt-decode |
+| Frontend | Vite + TypeScript + React 19 <br> TailwindCSS <br> Redux <br> Axios + Tanstack query <br> Zod + React Hook Form <br> socket.io-client <br> js-cookie + jwt-decode |
 | Backend  | Node.js + Express.js <br> JWT + bcrypt <br> Socket.io <br> Cloudinary + Multer <br> Nodemailer                                                                    |
 | Database | MySQL, MongoDB                                                                                                                                                    |
 
