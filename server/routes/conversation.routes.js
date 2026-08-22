@@ -6,7 +6,7 @@ const {
 } = require("../middleware/auth.middleware");
 const { validate } = require("../middleware/validate.middleware");
 const {
-  uploadImage,
+  uploadAvatar,
   validateImageSize,
 } = require("../middleware/upload.middleware");
 const {
@@ -24,7 +24,7 @@ router.get("/group/:conversationId", conversationController.getGroupMembers);
 
 router.post(
   "/group",
-  uploadImage,
+  uploadAvatar,
   validateImageSize,
   conversationController.normalizeMemberIds,
   validate(createGroupSchema, "body"),
@@ -33,7 +33,7 @@ router.post(
 
 router.put(
   "/group/:conversationId",
-  uploadImage,
+  uploadAvatar,
   validateImageSize,
   conversationController.normalizeMemberIds,
   validate(updateGroupSchema, "body"),

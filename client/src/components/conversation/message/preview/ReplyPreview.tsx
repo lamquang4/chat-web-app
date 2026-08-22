@@ -6,7 +6,7 @@ import Image from "../../../ui/Image";
 interface Props {
   replyTo: ReplyMessageResponse;
   onCancel: () => void;
-};
+}
 
 function ReplyPreview({ replyTo, onCancel }: Props) {
   const attachment = replyTo.attachments?.[0];

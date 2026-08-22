@@ -6,7 +6,7 @@ const {
   authMiddleware,
 } = require("../middleware/auth.middleware");
 const {
-  uploadImage,
+  uploadAvatar,
   validateImageSize,
 } = require("../middleware/upload.middleware");
 const { updateUserSchema } = require("../validate/user.validate");
@@ -18,7 +18,7 @@ router.put(
   "/me",
   authMiddleware,
   requireAuth,
-  uploadImage, 
+  uploadAvatar,
   validateImageSize,
   validate(updateUserSchema, "body"), 
   userController.updateUser,

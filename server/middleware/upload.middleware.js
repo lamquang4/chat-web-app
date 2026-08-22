@@ -14,7 +14,7 @@ const storage = multer.memoryStorage();
 const isImageType = (mimetype) => ALLOWED_IMAGE_MIME_TYPES.includes(mimetype);
 const isFileType = (mimetype) => ALLOWED_FILE_MIME_TYPES.includes(mimetype);
 
-const uploadImage = multer({
+const uploadAvatar = multer({
   storage,
   limits: {
     files: 1,
@@ -64,7 +64,7 @@ const validateAttachmentSize = (req, res, next) => {
 };
 
 module.exports = {
-  uploadImage: uploadImage.single("avatar"),
+  uploadAvatar: uploadAvatar.single("avatar"),
   validateImageSize,
   uploadAttachments: uploadAttachments.array("attachments", MAX_UPLOAD),
   validateAttachmentSize,

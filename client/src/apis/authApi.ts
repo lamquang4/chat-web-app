@@ -5,8 +5,6 @@ import type {
   RegisterRequest,
   VerifyRegisterOtpRequest,
   ResendRegisterOtpRequest,
-  RefreshTokenRequest,
-  RefreshTokenResponse,
 } from "../types/types";
 import { axiosInstance, axiosPublic } from "./axiosInstance";
 
@@ -31,11 +29,6 @@ export const authApi = {
   login: (data: LoginRequest) =>
     axiosPublic
       .post<ApiResponse<LoginResponse>>(`${BASE}/login`, data)
-      .then((r) => r.data),
-
-  refreshToken: (data: RefreshTokenRequest) =>
-    axiosPublic
-      .post<ApiResponse<RefreshTokenResponse>>(`${BASE}/refresh-token`, data)
       .then((r) => r.data),
 
   logout: () =>

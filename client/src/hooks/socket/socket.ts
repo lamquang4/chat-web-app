@@ -1,6 +1,6 @@
 import { io, type Socket } from "socket.io-client";
 import { jwtUtil } from "../../utils/jwtUtil";
-import { performRefresh } from "../../apis/axiosInstance";
+import { refreshAccessToken } from "../../apis/axiosInstance";
 
 let socket: Socket | null = null;
 let readyCallbacks: Array<() => void> = [];
@@ -16,7 +16,7 @@ export const connectSocket = async (): Promise<void> => {
 
     try {
       if (jwtUtil.isAccessTokenExpired()) {
-        await performRefresh();
+        await refreshAccessToken();
       }
     } catch {
       jwtUtil.clearTokens();

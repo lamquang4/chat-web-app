@@ -10,10 +10,7 @@ import type {
   RegisterRequest,
   VerifyRegisterOtpRequest,
   ResendRegisterOtpRequest,
-  RefreshTokenRequest,
-  RefreshTokenResponse,
 } from "../../types/types";
-
 import { authApi } from "../../apis/authApi";
 import { jwtUtil } from "../../utils/jwtUtil";
 import { connectSocket, disconnectSocket } from "../socket/socket";
@@ -104,50 +101,6 @@ export const useResendRegisterOtp = () => {
 
     onError: (error) => {
       toast.error(error.response?.data?.message ?? "Gửi lại OTP thất bại");
-    },
-  });
-};
-
-export const useRefreshToken = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    ApiResponse<RefreshTokenResponse>,
-    AxiosError<ErrorResponse>,
-    void
-  >({
-    mutationFn: () => {
-      const refreshToken = jwtUtil.getRefreshTokenRaw();
-
-      if (!refreshToken) {
-        return Promise.reject(new Error("Không tìm thấy refresh token"));
-      }
-
-      const data: RefreshTokenRequest = {
-        refresh_token: refreshToken,
-      };
-
-      return authApi.refreshToken(data);
-    },
-
-    onSuccess: (res) => {
-      const data = res.data;
-
-      if (!data) return;
-
-      jwtUtil.setAccessToken(data.access_token);
-
-      queryClient.invalidateQueries({
-        queryKey: authKeys.all,
-      });
-    },
-
-    onError: () => {
-      jwtUtil.clearTokens();
-
-      queryClient.clear();
-
-      disconnectSocket();
     },
   });
 };

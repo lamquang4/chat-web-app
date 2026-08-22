@@ -16,9 +16,21 @@ export const axiosInstance = axios.create({
   timeout: 10000,
 });
 
+// Nếu có nhiều request cùng lúc phát hiện accessToken hết hạn
+// Chỉ gọi 1 API refresh token duy nhất
+// Các request còn lại sẽ chờ kết quả refresh của 1 refresh thôi
 let refreshPromise: Promise<string> | null = null;
 
-export const performRefresh = (): Promise<string> => {
+// Khi refresh token hết hạn hoặc không hợp lệ thì xóa access token + refresh token
+const handleInvalidRefreshToken = (error: unknown): void => {
+  if (axios.isAxiosError(error) && error.response?.status === 401) {
+    jwtUtil.clearTokens();
+    window.location.href = "/";
+  }
+};
+
+// Hàm gọi API để lấy access token mới bằng refresh token
+export const refreshAccessToken = (): Promise<string> => {
   if (refreshPromise) return refreshPromise;
 
   refreshPromise = (async () => {
@@ -46,6 +58,7 @@ export const performRefresh = (): Promise<string> => {
   return refreshPromise;
 };
 
+// chủ động kiểm tra và refresh token TRƯỚC khi nó thực sự hết hạn  (để hạn chế tối đa việc request bị BE trả về lỗi 401)
 axiosInstance.interceptors.request.use(async (config) => {
   let accessToken = jwtUtil.getAccessTokenRaw();
 
@@ -54,9 +67,10 @@ axiosInstance.interceptors.request.use(async (config) => {
     (!accessToken || jwtUtil.isAccessTokenExpiringSoon())
   ) {
     try {
-      accessToken = await performRefresh();
-    } catch {
-      accessToken = undefined;
+      accessToken = await refreshAccessToken();
+    } catch (error) {
+      handleInvalidRefreshToken(error);
+      return Promise.reject(error);
     }
   }
 
@@ -68,7 +82,8 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Response interceptor
+// Khi BE trả về response nếu accessToken vẫn bị BE từ chối vì hết hạn
+// thì refresh lại và retry request đó đúng 1 lần duy nhất
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<{ code?: string }>) => {
@@ -87,16 +102,15 @@ axiosInstance.interceptors.response.use(
       !originalRequest._retry &&
       jwtUtil.hasValidLocalRefreshToken()
     ) {
-      originalRequest._retry = true;
+      originalRequest._retry = true; // Đánh dấu đã retry, tránh lặp vô hạn nếu vẫn lỗi
 
       try {
-        const newToken = await performRefresh();
+        const newToken = await refreshAccessToken();
         originalRequest.headers = originalRequest.headers ?? {};
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
-      } catch {
-        jwtUtil.clearTokens();
-        window.location.href = "/";
+      } catch (refreshError) {
+        handleInvalidRefreshToken(refreshError);
         return Promise.reject(error);
       }
     }
