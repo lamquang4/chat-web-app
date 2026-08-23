@@ -85,7 +85,7 @@ function VoiceRecordingPreview({
     <div className="flex items-center gap-2 w-full">
       <Button
         onClick={isRecording ? onCancel : onDelete}
-        className="p-1.5 rounded-full text-neutral bg-gray-200/70 hover:bg-primary hover:text-white"
+        className="p-1.5 rounded-full text-neutral bg-neutral-200 hover:bg-primary hover:text-white"
       >
         <X size={20} />
       </Button>
@@ -104,7 +104,7 @@ function VoiceRecordingPreview({
           )}
         </Button>
 
-        <div className="flex-1 h-1 rounded-full overflow-hidden bg-gray-300">
+        <div className="flex-1 h-1 rounded-full overflow-hidden bg-neutral-200">
           <div
             className={`h-full bg-white rounded-full ${
               isRecording ? "w-full animate-pulse" : ""

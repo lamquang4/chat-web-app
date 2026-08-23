@@ -14,9 +14,9 @@ function UserSelectListSkeleton({
           key={index}
           className="flex items-center gap-3 px-2 py-2 rounded-md"
         >
-          <div className={`shrink-0 rounded-full bg-gray-200 ${avatarSize}`} />
-          <div className="h-4 w-2/3 rounded bg-gray-200" />
-          <div className="ml-auto w-5 h-5 rounded-full bg-gray-200" />
+          <div className={`shrink-0 rounded-full bg-neutral-300 ${avatarSize}`} />
+          <div className="h-4 w-2/3 rounded bg-neutral-300" />
+          <div className="ml-auto w-5 h-5 rounded-full bg-neutral-300" />
         </div>
       ))}
     </div>

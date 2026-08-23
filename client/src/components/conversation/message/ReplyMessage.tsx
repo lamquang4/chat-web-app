@@ -3,11 +3,10 @@ import type { ReplyMessageResponse } from "../../../types/types";
 import Image from "../../ui/Image";
 interface Props {
   reply: ReplyMessageResponse;
-  isMe: boolean;
   onClick?: () => void;
 }
 
-function ReplyMessage({ reply, isMe, onClick }: Props) {
+function ReplyMessage({ reply, onClick }: Props) {
   const attachment = reply.attachments?.[0];
   const content = reply.content;
   const link = reply.link_preview;
@@ -15,13 +14,11 @@ function ReplyMessage({ reply, isMe, onClick }: Props) {
   return (
     <div
       onClick={onClick}
-      className={`flex items-start gap-2 px-3 py-2 rounded-2xl w-full bg-gray-200/70 ${
+      className={`flex items-start gap-2 px-3 py-2 rounded-2xl bg-neutral-200 text-neutral ${
         onClick && "cursor-pointer"
       }`}
     >
-      <div
-        className={`w-0.5 self-stretch rounded-full shrink-0 ${isMe ? "bg-primary" : "bg-neutral"}`}
-      />
+      <div className={`w-0.5 self-stretch rounded-full shrink-0 bg-neutral`} />
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {(attachment?.type === "image" || link) && (
           <Image
@@ -34,7 +31,7 @@ function ReplyMessage({ reply, isMe, onClick }: Props) {
         <div className="flex-1 min-w-0">
           <p className="font-medium truncate">{reply.sender_name}</p>
 
-          <div className="flex items-center gap-1.5 min-w-0 text-neutral font-medium">
+          <div className="flex items-center gap-1.5 min-w-0 font-medium">
             {attachment?.type === "image" && (
               <span className="flex items-center gap-1.5 shrink-0">
                 <ImageIcon size={16} />

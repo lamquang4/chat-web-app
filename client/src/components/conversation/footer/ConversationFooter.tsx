@@ -143,7 +143,7 @@ function ConversationFooter({ conversationId, replyTo, onCancelReply }: Props) {
     recorder.isRecording;
 
   return (
-    <div className="flex flex-col border-t border-gray-200">
+    <div className="flex flex-col border-t border-neutral-300">
       {replyTo && <ReplyPreview replyTo={replyTo} onCancel={onCancelReply} />}
 
       <div className="flex items-center gap-2 px-4 py-3">
@@ -178,7 +178,7 @@ function ConversationFooter({ conversationId, replyTo, onCancelReply }: Props) {
         <Button
           onClick={handleSendMessage}
           disabled={!canSend || isLoadingSendMessage}
-          className={`p-1.5 rounded-full ${canSend && !isLoadingSendMessage ? "bg-primary text-white" : "text-neutral bg-gray-200/70"}`}
+          className={`p-1.5 rounded-full ${canSend && !isLoadingSendMessage ? "bg-primary text-white" : "text-neutral bg-neutral-200"}`}
         >
           <SendHorizontal size={20} />
         </Button>

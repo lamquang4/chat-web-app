@@ -97,15 +97,17 @@ function ConversationContainer() {
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white">
+    <div
+      className={`flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white ${isLoading && "justify-center items-center"}`}
+    >
       {isLoading ? (
-        <Loading size={40} color="black" thickness={2} height={100} />
+        <Loading size={45} color="black" thickness={2} height={0} />
       ) : !conversation ? (
         <div className="flex items-center justify-center h-full px-[15px]">
           <div className="flex flex-col items-center gap-[15px]">
             <Image
               src="/assets/message.png"
-              className="w-[160px]"
+              className="w-[160px] sm:w-[180px]"
               alt="not found"
               loading="eager"
             />

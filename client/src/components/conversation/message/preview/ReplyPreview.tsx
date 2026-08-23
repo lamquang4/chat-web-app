@@ -17,7 +17,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
     return null;
   }
   return (
-    <div className="flex items-center justify-between gap-2 px-4 py-2 bg-gray-200/70 rounded-t-2xl border-b border-gray-200">
+    <div className="flex items-center justify-between gap-2 px-4 py-2 bg-neutral-200 border-b border-neutral-300">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {(attachment?.type === "image" || link) && (
           <Image

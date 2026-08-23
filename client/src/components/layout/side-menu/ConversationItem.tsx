@@ -28,7 +28,7 @@ function ConversationItem({ conversation }: Props) {
       onClick={() => dispatch(closeSideMenu())}
     >
       <div
-        className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-gray-200/70 w-full`}
+        className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-neutral-200 w-full`}
       >
         <div className="relative flex shrink-0">
           <Image

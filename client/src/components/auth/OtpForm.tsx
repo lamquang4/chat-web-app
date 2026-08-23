@@ -227,7 +227,7 @@ function OtpForm({ email }: Props) {
             <Button
               onClick={() => dispatch(setAuthView("register"))}
               type="button"
-              className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-300 hover:border-gray-400 transition-all"
+              className="w-10 h-10 rounded-full flex items-center justify-center border border-neutral-300 hover:border-neutral-400 transition-all"
             >
               <MoveLeft size={22} />
             </Button>
@@ -261,7 +261,7 @@ function OtpForm({ email }: Props) {
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
                 className={`w-[45px] h-[45px] text-center text-[1rem] font-semibold border rounded-md transition-colors
-                          ${digit ? "border-primary text-primary" : "border-gray-300"}
+                          ${digit ? "border-primary text-primary" : "border-neutral-300"}
                           focus:border-primary`}
               />
             ))}

@@ -96,7 +96,7 @@ function ConversationBody({
         <div ref={loadMoreRef} className="h-1" />
 
         {isFetchingNextPage && (
-          <Loading height={10} size={24} color="black" thickness={1.5} />
+          <Loading height={0} size={30} color="gray" thickness={2} />
         )}
 
         <div className="flex flex-col gap-4">
@@ -125,7 +125,7 @@ function ConversationBody({
           <Button
             type="button"
             onClick={() => scrollToBottom(true)}
-            className="w-9 h-9 rounded-full bg-white hover:bg-gray-200/70 border border-gray-300 pointer-events-auto text-neutral flex justify-center items-center shadow-md"
+            className="w-9 h-9 rounded-full bg-white hover:bg-neutral-200 border border-neutral-300 pointer-events-auto text-neutral flex justify-center items-center shadow-md"
           >
             <ArrowDown size={22} />
           </Button>

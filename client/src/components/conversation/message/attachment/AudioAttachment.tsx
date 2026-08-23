@@ -93,53 +93,59 @@ function AudioAttachment({ att, isMe }: Props) {
       : formatDuration(duration);
 
   return (
-    <div className="flex items-center gap-3 px-3 py-2.5 w-auto h-full">
-      <audio ref={audioRef} src={att.url} preload="auto" />
+    <div
+      className={`rounded-2xl ${isMe ? "bg-primary text-white" : "bg-neutral-200"}`}
+    >
+      <div className="flex items-center gap-3 px-3 py-2.5 w-auto h-full">
+        <audio ref={audioRef} src={att.url} preload="auto" />
 
-      <Button
-        onClick={toggle}
-        aria-label={isPlaying ? "Tạm dừng" : "Phát"}
-        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isPlaying ? "bg-primary" : "bg-primary"} `}
-      >
-        {isPlaying ? (
-          <Pause size={16} className="text-white" fill="white" />
-        ) : (
-          <Play size={16} className="text-white ml-0.5" fill="white" />
-        )}
-      </Button>
+        <Button
+          onClick={toggle}
+          aria-label={isPlaying ? "Tạm dừng" : "Phát"}
+          className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isPlaying ? "bg-primary" : "bg-primary"} `}
+        >
+          {isPlaying ? (
+            <Pause size={16} className="text-white" fill="white" />
+          ) : (
+            <Play size={16} className="text-white ml-0.5" fill="white" />
+          )}
+        </Button>
 
-      <div
-        className="flex-1 min-w-0 flex items-center gap-1 h-6 cursor-pointer relative"
-        onClick={handleSeek}
-        role="slider"
-        aria-valuenow={Math.round(progress)}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label="Tiến trình audio"
-      >
-        {barHeights.map((height, i) => {
-          const filled = (i / BAR_COUNT) * 100 <= progress;
-          return (
-            <div
-              key={i}
-              className={`w-[3px] rounded-full transition-colors duration-100 shrink-0 ${
-                isMe
-                  ? filled
-                    ? "bg-white"
-                    : "bg-white/40"
-                  : filled
-                    ? "bg-primary"
-                    : "bg-gray-300"
-              }`}
-              style={{ height: `${height}%` }}
-            />
-          );
-        })}
+        <div
+          className="flex-1 min-w-0 flex items-center gap-1 h-6 cursor-pointer relative"
+          onClick={handleSeek}
+          role="slider"
+          aria-valuenow={Math.round(progress)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Tiến trình audio"
+        >
+          {barHeights.map((height, i) => {
+            const filled = (i / BAR_COUNT) * 100 <= progress;
+            return (
+              <div
+                key={i}
+                className={`w-[3px] rounded-full transition-colors duration-100 shrink-0 ${
+                  isMe
+                    ? filled
+                      ? "bg-white"
+                      : "bg-white/40"
+                    : filled
+                      ? "bg-primary"
+                      : "bg-neutral-300"
+                }`}
+                style={{ height: `${height}%` }}
+              />
+            );
+          })}
+        </div>
+
+        <span
+          className={`font-medium text-right shrink-0 w-[38px] ${isMe ? "text-white" : "text-neutral"}`}
+        >
+          {displayTime}
+        </span>
       </div>
-
-      <span className="font-medium tabular-nums text-right shrink-0 w-[38px]">
-        {displayTime}
-      </span>
     </div>
   );
 }

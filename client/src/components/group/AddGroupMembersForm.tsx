@@ -84,7 +84,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
                 {selected.map((f) => (
                   <div
                     key={f.user_id}
-                    className="flex items-center gap-2 bg-gray-200/70 rounded-md p-2 shrink-0"
+                    className="flex items-center gap-2 bg-neutral-200 rounded-md p-2 shrink-0"
                   >
                     <div className="w-6 h-6 rounded-full overflow-hidden shrink-0">
                       <Image
@@ -96,7 +96,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
                     <span className="font-medium">{f.last_name}</span>
 
                     <Button onClick={() => removeSelected(f.user_id)}>
-                      <X size={16} strokeWidth={2.5} />
+                      <X size={16} />
                     </Button>
                   </div>
                 ))}
@@ -108,7 +108,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
             <SearchInput value={search} onChange={setSearch} />
 
             <div
-              className={`overflow-y-auto custom-scroll ${isLoading ? "flex justify-center items-center h-[320px]" : "max-h-[320px]"}`}
+              className={`overflow-y-auto h-[320px] ${isLoading && "flex justify-center items-center"}`}
             >
               {isLoading ? (
                 <Loading size={45} color="black" thickness={2} height={0} />

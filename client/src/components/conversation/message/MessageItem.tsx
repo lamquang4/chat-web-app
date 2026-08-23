@@ -11,6 +11,7 @@ import MessageAction from "./MessageAction";
 import SeenIndicator from "./SeenIndicator";
 import { Copy, Reply, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import LinkPreview from "./LinkPreview";
 
 interface Props {
   message: MessageResponse;
@@ -149,7 +150,7 @@ function MessageItem({
       className={`relative group flex ${is_me ? "justify-end" : "justify-start"}`}
     >
       <div className="max-w-[85%] sm:max-w-[75%] w-full flex flex-col gap-2 select-none">
-        {!is_me && <span className="text-neutral">{sender_name}</span>}
+        {!is_me && <span>{sender_name}</span>}
 
         <div
           className={`flex items-start gap-4 ${is_me ? "flex-row-reverse" : "flex-row"}`}
@@ -169,7 +170,6 @@ function MessageItem({
               {!is_recalled && reply_message && (
                 <ReplyMessage
                   reply={reply_message}
-                  isMe={is_me}
                   onClick={() =>
                     onJumpToReplyMessage?.(reply_message.message_id)
                   }
@@ -178,8 +178,7 @@ function MessageItem({
 
               {is_recalled && (
                 <div
-                  className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word italic
-        ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-200/70 rounded-bl-none"}`}
+                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word italic ${is_me ? "bg-primary text-white" : "bg-neutral-200"}`}
                 >
                   <p>Tin nhắn đã thu hồi</p>
                 </div>
@@ -200,66 +199,38 @@ function MessageItem({
               )}
 
               {audios.map((att) => (
-                <div
+                <AudioAttachment
                   key={att.attachment_id}
-                  className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-200/70 text-neutral"}`}
-                >
-                  <AudioAttachment att={att} isMe={is_me} />
-                </div>
+                  att={att}
+                  isMe={is_me}
+                />
               ))}
 
               {documents.map((att) => (
-                <div
+                <DocumentAttachment
                   key={att.attachment_id}
-                  className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-200/70 text-neutral"}`}
-                >
-                  <DocumentAttachment att={att} />
-                </div>
+                  att={att}
+                  isMe={is_me}
+                />
               ))}
+
+              {!is_recalled && link_preview?.url && (
+                <LinkPreview linkPreview={link_preview} isMe={is_me} />
+              )}
 
               {!is_recalled && content && (
                 <div
-                  className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-200/70 rounded-bl-none"}`}
+                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word ${is_me ? "bg-primary text-white" : "bg-neutral-200"}`}
                 >
                   <p>{content}</p>
                 </div>
-              )}
-
-              {!is_recalled && link_preview?.url && (
-                <a
-                  href={link_preview.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`block w-full max-w-90 overflow-hidden rounded-xl ${is_me ? "bg-primary text-white" : "bg-gray-200/70"}`}
-                >
-                  {link_preview.image && (
-                    <Image
-                      src={link_preview.image}
-                      alt={link_preview.title ?? link_preview.site_name ?? ""}
-                      className="block max-h-96 w-full object-contain"
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="px-3 py-2 space-y-2">
-                    <p className="font-semibold line-clamp-2">
-                      {link_preview.title ?? link_preview.url}
-                    </p>
-                    {link_preview.description && (
-                      <p className="line-clamp-2">{link_preview.description}</p>
-                    )}
-                    <p>
-                      {link_preview.site_name ??
-                        new URL(link_preview.url).hostname}
-                    </p>
-                  </div>
-                </a>
               )}
             </div>
 
             <div
               className={`flex items-center gap-1 ${is_me ? "flex-row-reverse" : "flex-row"}`}
             >
-              <span className="text-neutral">{timeStr}</span>
+              <span>{timeStr}</span>
               {is_me && <SeenIndicator is_seen={is_seen} seen_by={seen_by} />}
             </div>
           </div>

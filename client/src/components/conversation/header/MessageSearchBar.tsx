@@ -17,7 +17,7 @@ function MessageSearchBar({ onClose, isOpen }: Props) {
 
   return (
     <div
-      className={`absolute z-20 left-0 w-full bg-white border-y border-gray-200 shadow-sm transition-all duration-300 overflow-hidden ${
+      className={`absolute z-20 left-0 w-full bg-white border-y border-neutral-300 transition-all duration-300 overflow-hidden ${
         isOpen ? "opacity-100 visible top-full" : "opacity-0 invisible top-22.5"
       }`}
     >
@@ -41,17 +41,17 @@ function MessageSearchBar({ onClose, isOpen }: Props) {
             {hasResults ? `${currentIndex}/${totalResults}` : "0/0"}
           </span>
 
-          <div className="flex items-center gap-0.5 border-x border-gray-200 px-2">
+          <div className="flex items-center gap-0.5 border-x border-neutral-300 px-2">
             <Button
               disabled={!hasResults}
-              className="text-neutral hover:text-primary p-1.5 rounded-full hover:bg-secondary transition-colors"
+              className="text-neutral p-1 rounded-full hover:bg-neutral-200 transition-colors"
             >
               <ChevronUp size={22} />
             </Button>
 
             <Button
               disabled={!hasResults}
-              className="text-neutral hover:text-primary p-1.5 rounded-full hover:bg-secondary transition-colors"
+              className="text-neutral p-1 rounded-full hover:bg-neutral-200 transition-colors"
             >
               <ChevronDown size={22} />
             </Button>
@@ -59,7 +59,7 @@ function MessageSearchBar({ onClose, isOpen }: Props) {
 
           <Button
             onClick={onClose}
-            className="text-neutral p-1.5 rounded-full transition-colors hover:bg-secondary"
+            className="text-neutral p-1 rounded-full transition-colors hover:bg-neutral-200"
           >
             <X size={22} />
           </Button>

@@ -235,10 +235,8 @@ function EditGroupForm({
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center gap-4 w-full">
             <Label
-              className={`relative w-25 h-25 rounded-full bg-gray-200/70 flex items-center justify-center shrink-0 overflow-hidden transition-colors group ${
-                canEditGroupInfo
-                  ? "hover:bg-gray-200 cursor-pointer"
-                  : "cursor-default"
+              className={`relative w-25 h-25 rounded-full bg-neutral-200 flex items-center justify-center shrink-0 overflow-hidden group ${
+                canEditGroupInfo && "cursor-pointer"
               }`}
             >
               <Image
@@ -271,7 +269,7 @@ function EditGroupForm({
                 maxLength={MAX_GROUP_NAME_LENGTH}
                 placeholder="Nhập tên nhóm..."
                 readOnly={!canEditGroupInfo}
-                className={`w-full font-medium bg-transparent border-b border-gray-200 py-2 transition-colors ${
+                className={`w-full font-medium bg-transparent border-b border-neutral-300 py-2 transition-colors ${
                   canEditGroupInfo
                     ? "focus:border-primary"
                     : "cursor-default text-neutral"

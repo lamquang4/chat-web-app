@@ -1,4 +1,4 @@
-import { Check, CheckCheck } from "lucide-react";
+import { Check } from "lucide-react";
 import type { MessageSeenResponse } from "../../../types/types";
 import Image from "../../ui/Image";
 import Tooltip from "../../ui/Tooltip";
@@ -6,7 +6,7 @@ import Tooltip from "../../ui/Tooltip";
 interface Props {
   is_seen: boolean;
   seen_by?: MessageSeenResponse[];
-};
+}
 
 function SeenIndicator({ is_seen, seen_by }: Props) {
   if (is_seen && seen_by && seen_by.length > 0) {
@@ -18,7 +18,7 @@ function SeenIndicator({ is_seen, seen_by }: Props) {
               key={u.user_id}
               src={u.avatar_url ?? "/assets/user.png"}
               alt={`${u.first_name} ${u.last_name}`}
-              className="w-4 h-4 rounded-full object-cover border border-white"
+              className="w-4 h-4 rounded-full object-cover"
             />
 
             <Tooltip text={`${u.first_name} ${u.last_name}`} />
@@ -27,8 +27,7 @@ function SeenIndicator({ is_seen, seen_by }: Props) {
       </div>
     );
   }
-  if (is_seen) return <CheckCheck size={13} className="text-primary" />;
-  return <Check size={13} className="text-gray-400" />;
+  return <Check size={13} className="text-neutral" />;
 }
 
 export default SeenIndicator;

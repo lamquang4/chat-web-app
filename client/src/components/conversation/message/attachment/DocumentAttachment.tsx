@@ -5,9 +5,10 @@ import toast from "react-hot-toast";
 
 interface Props {
   att: MessageAttachmentResponse;
+  isMe: boolean;
 }
 
-function DocumentAttachment({ att }: Props) {
+function DocumentAttachment({ att, isMe }: Props) {
   const handleDownload = async () => {
     try {
       const response = await fetch(att.url);
@@ -27,18 +28,22 @@ function DocumentAttachment({ att }: Props) {
 
   return (
     <div
-      className="inline-flex items-center gap-3 px-3 py-2.5 rounded-2xl max-w-[260px] min-w-[160px] cursor-pointer"
-      onClick={handleDownload}
-      role="button"
-      tabIndex={0}
+      className={`rounded-2xl ${isMe ? "bg-primary text-white" : "bg-neutral-200 text-neutral"}`}
     >
-      <FileText size={24} />
+      <div
+        className="inline-flex items-center gap-3 px-3 py-2.5 rounded-2xl max-w-[260px] cursor-pointer"
+        onClick={handleDownload}
+        role="button"
+        tabIndex={0}
+      >
+        <FileText size={30} strokeWidth={1.5} />
 
-      <div className="min-w-0 space-y-0.5">
-        <p className="font-semibold truncate leading-snug max-w-[180px]">
-          {att.file_name}
-        </p>
-        <p>{formatFileSize(att.file_size)}</p>
+        <div className="min-w-0 space-y-0.5">
+          <p className="font-semibold truncate leading-snug max-w-[180px]">
+            {att.file_name}
+          </p>
+          <p>{formatFileSize(att.file_size)}</p>
+        </div>
       </div>
     </div>
   );

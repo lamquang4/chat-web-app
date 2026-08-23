@@ -72,7 +72,7 @@ function AccountForm() {
       <div className="w-full flex justify-center items-center">
         <div className="bg-white rounded-lg shadow-md max-w-[480px] w-full px-[15px] md:px-[30px] py-[40px]">
           <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
-            <Label className="relative w-24 h-24 rounded-full bg-gray-200/70 flex items-center justify-center shrink-0 overflow-hidden hover:bg-gray-200 transition-colors group cursor-pointer mx-auto">
+            <Label className="relative w-24 h-24 rounded-full bg-neutral-200/70 flex items-center justify-center shrink-0 overflow-hidden hover:bg-neutral-200 transition-colors group cursor-pointer mx-auto">
               <Image
                 src={avatarPreview ?? "/assets/user.png"}
                 alt="Ảnh đại diện"
@@ -103,7 +103,7 @@ function AccountForm() {
                       type="text"
                       id="first_name"
                       placeholder="Nhập họ"
-                      className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                      className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
                       error={errors.first_name?.message}
                     />
                   )}
@@ -124,7 +124,7 @@ function AccountForm() {
                       type="text"
                       id="last_name"
                       placeholder="Nhập tên"
-                      className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                      className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
                       error={errors.last_name?.message}
                     />
                   )}
@@ -143,7 +143,7 @@ function AccountForm() {
                 id="email"
                 readOnly
                 placeholder="Nhập email"
-                className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary cursor-not-allowed"
                 value={account?.email}
               />
             </div>
@@ -161,7 +161,7 @@ function AccountForm() {
                     type="tel"
                     id="phone"
                     placeholder="Nhập số điện thoại"
-                    className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                    className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
                     error={errors.phone?.message}
                   />
                 )}

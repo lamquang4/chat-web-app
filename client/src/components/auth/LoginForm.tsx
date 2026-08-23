@@ -67,7 +67,7 @@ function LoginForm() {
               type="email"
               id="email"
               placeholder="Nhập email"
-              className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+              className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
               error={errors.email?.message}
               {...register("email")}
             />
@@ -84,7 +84,7 @@ function LoginForm() {
                 type={!showPassword ? "password" : "text"}
                 id="password"
                 placeholder="Nhập mật khẩu"
-                className="block w-full px-3 pr-12 py-2 border border-gray-300 focus:border-primary"
+                className="block w-full px-3 pr-12 py-2 border border-neutral-300 focus:border-primary"
                 {...register("password")}
                 error={errors.password?.message}
               />

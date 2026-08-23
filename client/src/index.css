@@ -7,6 +7,9 @@
   --color-success: #74c69d;
   --color-info: #076ffe;
   --color-danger: #d9534f;
+
+  --color-neutral-200: #f3f3f3;
+  --color-neutral-300: #d1d5db;
   --color-neutral: #74767d;
 
   --font-family: "Quicksand", sans-serif;

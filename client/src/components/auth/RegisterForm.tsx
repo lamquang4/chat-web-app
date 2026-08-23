@@ -75,7 +75,7 @@ function RegisterForm({ onSuccess }: Props) {
                 type="text"
                 id="first_name"
                 placeholder="Nhập họ"
-                className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
                 error={errors.first_name?.message}
                 {...register("first_name")}
               />
@@ -91,7 +91,7 @@ function RegisterForm({ onSuccess }: Props) {
                 type="text"
                 id="last_name"
                 placeholder="Nhập tên"
-                className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+                className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
                 error={errors.last_name?.message}
                 {...register("last_name")}
               />
@@ -107,7 +107,7 @@ function RegisterForm({ onSuccess }: Props) {
               type="email"
               id="email"
               placeholder="Nhập email"
-              className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+              className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
               error={errors.email?.message}
               {...register("email")}
             />
@@ -122,7 +122,7 @@ function RegisterForm({ onSuccess }: Props) {
               type="tel"
               id="phone"
               placeholder="Nhập số điện thoại"
-              className="block w-full px-3 py-2 border border-gray-300 focus:border-primary"
+              className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
               error={errors.phone?.message}
               {...register("phone")}
             />
@@ -141,7 +141,7 @@ function RegisterForm({ onSuccess }: Props) {
                 placeholder="Nhập mật khẩu"
                 {...register("password")}
                 error={errors.password?.message}
-                className="block w-full px-3 pr-12 py-2 border border-gray-300 focus:border-primary"
+                className="block w-full px-3 pr-12 py-2 border border-neutral-300 focus:border-primary"
               />
 
               <Button
