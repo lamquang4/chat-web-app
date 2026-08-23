@@ -14,7 +14,7 @@ function UserListSkeleton({
   extraCount = 2,
 }: Props) {
   return (
-    <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+    <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}

@@ -60,7 +60,7 @@ function FriendRequestList({
       {isLoading ? (
         <UserListSkeleton count={6} showSubtitle showExtra extraCount={2} />
       ) : friendRequests.length ? (
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
           {friendRequests.map((friendRequest) => (
             <UserItem
               key={friendRequest.requester_id}
@@ -106,7 +106,6 @@ function FriendRequestList({
               alt="not found"
               loading="eager"
             />
-            <h4 className="font-semibold">Không tìm thấy</h4>
           </div>
         </div>
       )}

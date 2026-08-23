@@ -13,6 +13,13 @@ const messageSchema = new mongoose.Schema(
       required: true,
     },
     content: { type: String, default: null, maxlength: 5000 },
+    link_preview: {
+      url: { type: String, default: null },
+      title: { type: String, default: null },
+      description: { type: String, default: null },
+      image: { type: String, default: null },
+      site_name: { type: String, default: null },
+    },
     reply_msg_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",

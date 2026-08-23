@@ -67,7 +67,7 @@ function SuggestedFriendList({
       {isLoading ? (
         <UserListSkeleton count={6} showExtra extraCount={2} />
       ) : friendSuggests?.length ? (
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
           {friendSuggests.map((friendSuggest) => (
             <UserItem
               avatarUrl={friendSuggest.avatar_url}
@@ -107,7 +107,6 @@ function SuggestedFriendList({
               alt="not found"
               loading="eager"
             />
-            <h4 className="font-semibold">Không tìm thấy</h4>
           </div>
         </div>
       )}

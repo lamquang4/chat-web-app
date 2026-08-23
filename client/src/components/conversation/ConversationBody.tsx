@@ -90,7 +90,7 @@ function ConversationBody({
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className="relative flex flex-col flex-1 overflow-y-auto"
+      className="relative flex flex-col flex-1 overflow-y-auto gap-4"
     >
       <div className="px-3.75 py-10">
         <div ref={loadMoreRef} className="h-1" />
@@ -99,21 +99,24 @@ function ConversationBody({
           <Loading height={10} size={24} color="black" thickness={1.5} />
         )}
 
-        {messages.map((message) => (
-          <div
-            key={message.message_id}
-            ref={(el) => {
-              replyMessageRefs.current[message.message_id] = el;
-            }}
-          >
-            <MessageItem
-              message={message}
-              onReply={onReply}
-              onRecall={onRecall}
-              onJumpToReplyMessage={scrollToReplyMessage}
-            />
-          </div>
-        ))}
+        <div className="flex flex-col gap-4">
+          {messages.map((message) => (
+            <div
+              key={message.message_id}
+              ref={(el) => {
+                replyMessageRefs.current[message.message_id] = el;
+              }}
+            >
+              <MessageItem
+                message={message}
+                onReply={onReply}
+                onRecall={onRecall}
+                onJumpToReplyMessage={scrollToReplyMessage}
+              />
+            </div>
+          ))}
+        </div>
+
         <div ref={bottomRef} />
       </div>
 
@@ -122,7 +125,7 @@ function ConversationBody({
           <Button
             type="button"
             onClick={() => scrollToBottom(true)}
-            className="w-9 h-9 rounded-full bg-white hover:bg-gray-100 border border-gray-300 pointer-events-auto text-neutral flex justify-center items-center shadow-md"
+            className="w-9 h-9 rounded-full bg-white hover:bg-gray-200/70 border border-gray-300 pointer-events-auto text-neutral flex justify-center items-center shadow-md"
           >
             <ArrowDown size={22} />
           </Button>

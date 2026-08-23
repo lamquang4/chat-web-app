@@ -9,13 +9,13 @@ interface Props {
 function SearchInput({ value, onChange }: Props) {
   return (
     <div className="flex-1 min-w-0 w-full">
-      <form className="flex items-stretch w-full overflow-hidden duration-200 bg-gray-100 rounded-lg font-medium">
+      <form className="flex items-stretch w-full overflow-hidden duration-200 bg-gray-200/70 rounded-lg font-medium">
         <div className="px-2 flex items-center">
           <Search size={20} strokeWidth={1.5} />
         </div>
 
         <Input
-          type="text"
+          type="search"
           className="w-full pr-2 py-3 text-[0.9rem] bg-transparent outline-none border-none"
           maxLength={100}
           placeholder="Tìm kiếm..."

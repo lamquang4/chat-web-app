@@ -30,6 +30,7 @@ function MessageItem({
     sender_name,
     sender_avatar_url,
     content,
+    link_preview,
     attachments,
     reply_message,
     is_recalled,
@@ -109,25 +110,25 @@ function MessageItem({
     handlePressEnd();
   };
 
-  const onContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-  };
-
   const actions = [
     {
       label: "Trả lời",
       icon: <Reply size={18} />,
       onClick: () => onReply?.(message),
     },
-    {
-      label: "Sao chép",
-      icon: <Copy size={18} />,
-      onClick: () => {
-        navigator.clipboard.writeText(content ?? "");
-        toast.success("Sao chép văn bản thành công");
-      },
-    },
-    ...(message.is_me && !is_recalled
+    ...(content
+      ? [
+          {
+            label: "Sao chép",
+            icon: <Copy size={18} />,
+            onClick: () => {
+              navigator.clipboard.writeText(content ?? "");
+              toast.success("Sao chép văn bản thành công");
+            },
+          },
+        ]
+      : []),
+    ...(message.is_me
       ? [
           {
             label: "Thu hồi",
@@ -139,22 +140,19 @@ function MessageItem({
       : []),
   ];
 
-  const actions1 = actions.filter((a) => a.label !== "Sao chép");
-
   return (
     <div
       ref={itemRef}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
-      onContextMenu={onContextMenu}
       className={`relative group flex ${is_me ? "justify-end" : "justify-start"}`}
     >
       <div className="max-w-[85%] sm:max-w-[75%] w-full flex flex-col gap-2 select-none">
         {!is_me && <span className="text-neutral">{sender_name}</span>}
 
         <div
-          className={`flex items-start gap-2 ${is_me ? "flex-row-reverse" : "flex-row"}`}
+          className={`flex items-start gap-4 ${is_me ? "flex-row-reverse" : "flex-row"}`}
         >
           {!is_me && (
             <Image
@@ -164,62 +162,99 @@ function MessageItem({
             />
           )}
 
-          <div
-            className={`relative flex flex-col gap-2 ${is_me ? "items-end" : "items-start"}`}
-          >
-            {reply_message && (
-              <ReplyMessage
-                reply={reply_message}
-                isMe={is_me}
-                onClick={() => onJumpToReplyMessage?.(reply_message.message_id)}
-              />
-            )}
+          <div className={`relative flex flex-col gap-2`}>
+            <div
+              className={`flex flex-col gap-2 ${is_me ? "items-end" : "items-start"}`}
+            >
+              {!is_recalled && reply_message && (
+                <ReplyMessage
+                  reply={reply_message}
+                  isMe={is_me}
+                  onClick={() =>
+                    onJumpToReplyMessage?.(reply_message.message_id)
+                  }
+                />
+              )}
 
-            {is_recalled && (
-              <div
-                className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word italic
-        ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-100 rounded-bl-none"}`}
-              >
-                <p>Tin nhắn đã thu hồi</p>
-              </div>
-            )}
+              {is_recalled && (
+                <div
+                  className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word italic
+        ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-200/70 rounded-bl-none"}`}
+                >
+                  <p>Tin nhắn đã thu hồi</p>
+                </div>
+              )}
 
-            {images.length > 0 && (
-              <div
-                className={`flex gap-1 flex-wrap ${is_me ? "justify-end" : "justify-start"}`}
-              >
-                {images.map((att) => (
-                  <ImageAttachment key={att.attachment_id} att={att} />
-                ))}
-              </div>
-            )}
+              {images.length > 0 && (
+                <div
+                  className={`flex gap-1 flex-wrap ${is_me ? "justify-end" : "justify-start"}`}
+                >
+                  {images.map((att) => (
+                    <ImageAttachment
+                      key={att.attachment_id}
+                      att={att}
+                      size={images.length === 1 ? "large" : "small"}
+                    />
+                  ))}
+                </div>
+              )}
 
-            {audios.map((att) => (
-              <div
-                key={att.attachment_id}
-                className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-100 text-neutral"}`}
-              >
-                <AudioAttachment att={att} isMe={is_me} />
-              </div>
-            ))}
+              {audios.map((att) => (
+                <div
+                  key={att.attachment_id}
+                  className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-200/70 text-neutral"}`}
+                >
+                  <AudioAttachment att={att} isMe={is_me} />
+                </div>
+              ))}
 
-            {documents.map((att) => (
-              <div
-                key={att.attachment_id}
-                className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-100 text-neutral"}`}
-              >
-                <DocumentAttachment att={att} />
-              </div>
-            ))}
+              {documents.map((att) => (
+                <div
+                  key={att.attachment_id}
+                  className={`rounded-2xl ${is_me ? "bg-primary text-white" : "bg-gray-200/70 text-neutral"}`}
+                >
+                  <DocumentAttachment att={att} />
+                </div>
+              ))}
 
-            {!is_recalled && content && (
-              <div
-                className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word
-        ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-100 rounded-bl-none"}`}
-              >
-                <p>{content}</p>
-              </div>
-            )}
+              {!is_recalled && content && (
+                <div
+                  className={`px-4 py-2.5 rounded-2xl leading-relaxed wrap-break-word ${is_me ? "bg-primary text-white rounded-br-none" : "bg-gray-200/70 rounded-bl-none"}`}
+                >
+                  <p>{content}</p>
+                </div>
+              )}
+
+              {!is_recalled && link_preview?.url && (
+                <a
+                  href={link_preview.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`block w-full max-w-90 overflow-hidden rounded-xl ${is_me ? "bg-primary text-white" : "bg-gray-200/70"}`}
+                >
+                  {link_preview.image && (
+                    <Image
+                      src={link_preview.image}
+                      alt={link_preview.title ?? link_preview.site_name ?? ""}
+                      className="block max-h-96 w-full object-contain"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="px-3 py-2 space-y-2">
+                    <p className="font-semibold line-clamp-2">
+                      {link_preview.title ?? link_preview.url}
+                    </p>
+                    {link_preview.description && (
+                      <p className="line-clamp-2">{link_preview.description}</p>
+                    )}
+                    <p>
+                      {link_preview.site_name ??
+                        new URL(link_preview.url).hostname}
+                    </p>
+                  </div>
+                </a>
+              )}
+            </div>
 
             <div
               className={`flex items-center gap-1 ${is_me ? "flex-row-reverse" : "flex-row"}`}
@@ -231,11 +266,13 @@ function MessageItem({
         </div>
       </div>
 
-      <MessageAction
-        actions={content ? actions : actions1}
-        forceVisible={showActions}
-        onActionDone={() => setShowActions(false)}
-      />
+      {!is_recalled && (
+        <MessageAction
+          actions={actions}
+          forceVisible={showActions}
+          onActionDone={() => setShowActions(false)}
+        />
+      )}
     </div>
   );
 }

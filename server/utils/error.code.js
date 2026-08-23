@@ -376,6 +376,11 @@ const ErrorCode = {
     status: 404,
     message: "Tin nhắn được trả lời không tồn tại",
   },
+  REPLY_MESSAGE_RECALLED: {
+    code: "REPLY_MESSAGE_RECALLED",
+    status: 400,
+    message: "Không thể trả lời tin nhắn đã được thu hồi",
+  },
   MESSAGE_CONTENT_REQUIRED: {
     code: "MESSAGE_CONTENT_REQUIRED",
     status: 400,

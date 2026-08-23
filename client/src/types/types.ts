@@ -132,6 +132,7 @@ export interface MessageResponse {
   sender_name: string;
   sender_avatar_url: string | null;
   content: string | null;
+  link_preview: LinkPreviewResponse | null;
   attachments: MessageAttachmentResponse[];
   reply_message: ReplyMessageResponse | null;
   seen_by: MessageSeenResponse[];
@@ -139,6 +140,14 @@ export interface MessageResponse {
   is_me: boolean;
   is_seen: boolean;
   created_at: string;
+}
+
+export interface LinkPreviewResponse {
+  url: string;
+  title: string | null;
+  description: string | null;
+  image: string | null;
+  site_name: string | null;
 }
 
 export interface MessageSeenResponse {
@@ -162,7 +171,8 @@ export interface ReplyMessageResponse {
   message_id: string;
   sender_name: string;
   content: string | null;
-  attachments: MessageAttachmentResponse[];
+  link_preview: LinkPreviewResponse | null;
+  attachments: MessageAttachmentResponse[] | null;
 }
 
 // Không cần phân trang

@@ -1,11 +1,9 @@
-const { Op } = require("sequelize");
 const Conversation = require("../models/conversation.model");
 const ConversationMember = require("../models/conversation-member.model");
 const Message = require("../models/message.model");
 const MessageAttachment = require("../models/message-attachment.model");
 const MessageSeen = require("../models/message-seen.model");
 const User = require("../entities/user.entity");
-const Friend = require("../entities/friend.entity");
 const { isOnline } = require("../socket/online-users");
 const { getIO } = require("../socket");
 const {
@@ -787,6 +785,8 @@ const buildMessagesPage = async (conversationId, currentUserId, page, size) => {
       sender_name: `${sender.last_name} ${sender.first_name}`,
       sender_avatar_url: sender.avatar_url,
       content: msg.is_recalled ? null : msg.content,
+      link_preview:
+        !msg.is_recalled && msg.link_preview?.url ? msg.link_preview : null,
       attachments: msg.is_recalled
         ? []
         : msgAttachments.map(toAttachmentResponse),

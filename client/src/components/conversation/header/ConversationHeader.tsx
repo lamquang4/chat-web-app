@@ -1,9 +1,10 @@
-import { Phone, Video } from "lucide-react";
-import Button from "../ui/Button";
-import Image from "../ui/Image";
+import { Phone, SearchSlash, Video } from "lucide-react";
+import Button from "../../ui/Button";
+import Image from "../../ui/Image";
 import { useState } from "react";
-import type { ConversationType } from "../../types/types";
-import EditGroupModal from "../group/EditGroupModal";
+import type { ConversationType } from "../../../types/types";
+import EditGroupModal from "../../group/EditGroupModal";
+import MessageSearchBar from "./MessageSearchBar";
 
 interface Props {
   avatar_url: string | null;
@@ -21,6 +22,7 @@ function ConversationHeader({
   name,
 }: Props) {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openSearchBar, setOpenSearchBar] = useState<boolean>(false);
 
   const handleOpenModal = () => {
     if (type === "private") return;
@@ -30,9 +32,17 @@ function ConversationHeader({
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const handleToggleSearchBar = () => {
+    setOpenSearchBar((prev) => !prev);
+  };
+
+  const handleCloseSearchBar = () => {
+    setOpenSearchBar(false);
+  };
   return (
     <>
-      <div className="flex justify-between items-center px-[15px] py-4 border-b border-gray-200 w-full">
+      <div className="flex relative justify-between items-center px-3.75 py-4 border-b border-gray-200 w-full">
         <div
           className={`flex gap-2 items-center ${type === "group" && "cursor-pointer"}`}
           onClick={handleOpenModal}
@@ -44,7 +54,7 @@ function ConversationHeader({
                 (type === "group" ? "/assets/group.png" : "/assets/user.png")
               }
               alt={name}
-              className="w-12 h-12 rounded-full object-contain"
+              className="w-12 h-12 rounded-full object-cover"
             />
             {is_online && (
               <span className="absolute bottom-0 right-0 w-4 h-4 bg-success border-2 border-white rounded-full" />
@@ -70,7 +80,18 @@ function ConversationHeader({
           <Button className="text-primary">
             <Video size={22} />
           </Button>
+
+          <Button className="text-primary" onClick={handleToggleSearchBar}>
+            <SearchSlash size={22} />
+          </Button>
         </div>
+
+        {openSearchBar && (
+          <MessageSearchBar
+            isOpen={openSearchBar}
+            onClose={handleCloseSearchBar}
+          />
+        )}
       </div>
 
       {openModal && type === "group" && (

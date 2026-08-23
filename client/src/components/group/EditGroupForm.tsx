@@ -231,11 +231,11 @@ function EditGroupForm({
       onSubmit={handleSubmit(onSubmit, onError)}
       className="flex flex-col flex-1 min-h-0"
     >
-      <div className="flex-1 overflow-y-auto custom-scroll">
+      <div className="flex-1 overflow-y-auto">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center gap-4 w-full">
             <Label
-              className={`relative w-25 h-25 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden transition-colors group ${
+              className={`relative w-25 h-25 rounded-full bg-gray-200/70 flex items-center justify-center shrink-0 overflow-hidden transition-colors group ${
                 canEditGroupInfo
                   ? "hover:bg-gray-200 cursor-pointer"
                   : "cursor-default"
@@ -280,7 +280,7 @@ function EditGroupForm({
             </div>
           </div>
 
-          <div className="max-h-[280px] overflow-y-auto custom-scroll space-y-2">
+          <div className="max-h-[280px] overflow-y-auto space-y-2">
             <div className="space-y-1">
               {members?.map((member) => {
                 const isMe = member.user_id === account?.user_id;

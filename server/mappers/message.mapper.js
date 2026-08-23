@@ -19,6 +19,10 @@ const toReplyMessageResponse = (
     message_id: replyMessage._id.toString(),
     sender_name: `${replySender.first_name} ${replySender.last_name}`,
     content: replyMessage.is_recalled ? null : replyMessage.content,
+    link_preview:
+      !replyMessage.is_recalled && replyMessage.link_preview?.url
+        ? replyMessage.link_preview
+        : null,
     attachments: replyMessage.is_recalled
       ? []
       : replyAttachments.map(toAttachmentResponse),
@@ -52,6 +56,10 @@ const toMessageResponse = (
     sender_name: `${sender.first_name} ${sender.last_name}`,
     sender_avatar_url: sender.avatar_url,
     content: message.is_recalled ? null : message.content,
+    link_preview:
+      !message.is_recalled && message.link_preview?.url
+        ? message.link_preview
+        : null,
     attachments: message.is_recalled
       ? []
       : attachments.map(toAttachmentResponse),

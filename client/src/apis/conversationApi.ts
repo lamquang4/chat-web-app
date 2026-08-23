@@ -22,6 +22,7 @@ export interface GetConversationsParams {
 export interface GetConversationDetailParams {
   page?: number;
   size?: number;
+  q?: string;
 }
 
 const BASE = "/conversations";

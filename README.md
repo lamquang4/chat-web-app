@@ -2,7 +2,9 @@
 
 Ứng dụng chat web thời gian thực với đầy đủ tính năng nhắn tin, quản lý bạn bè và quản lý nhóm trò chuyện.
 
-![](docs/images/ui1.png)
+![](docs/images/ui1.webp)
+
+![](docs/images/ui2.webp)
 
 ## Công nghệ sử dụng
 

@@ -10,7 +10,6 @@ import { useAddGroupMembers } from "../../hooks/queries/useConversations";
 import useDebounce from "../../hooks/useDebounce";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Loading from "../ui/Loading";
-import UserSelectListSkeleton from "../skeleton/UserSelectListSkeleton";
 
 interface Props {
   onClose: () => void;
@@ -85,7 +84,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
                 {selected.map((f) => (
                   <div
                     key={f.user_id}
-                    className="flex items-center gap-2 bg-gray-100 rounded-md p-2 shrink-0"
+                    className="flex items-center gap-2 bg-gray-200/70 rounded-md p-2 shrink-0"
                   >
                     <div className="w-6 h-6 rounded-full overflow-hidden shrink-0">
                       <Image
@@ -108,9 +107,11 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
           <div className="flex flex-col gap-2">
             <SearchInput value={search} onChange={setSearch} />
 
-            <div className="max-h-[280px] overflow-y-auto custom-scroll">
+            <div
+              className={`overflow-y-auto custom-scroll ${isLoading ? "flex justify-center items-center h-[320px]" : "max-h-[320px]"}`}
+            >
               {isLoading ? (
-                <UserSelectListSkeleton count={6} avatarSize="w-10 h-10" />
+                <Loading size={45} color="black" thickness={2} height={0} />
               ) : friends?.content?.length === 0 ? (
                 <p className="text-center py-2 text-neutral">
                   Không tìm thấy kết quả

@@ -1,6 +1,6 @@
 import ConversationBody from "./ConversationBody";
 import ConversationFooter from "./footer/ConversationFooter";
-import ConversationHeader from "./ConversationHeader";
+import ConversationHeader from "./header/ConversationHeader";
 import type { MessageResponse, ReplyMessageResponse } from "../../types/types";
 import { useState } from "react";
 import Swal from "sweetalert2";
@@ -70,6 +70,7 @@ function ConversationContainer() {
       message_id: message.message_id,
       sender_name: message.sender_name,
       content: message.content,
+      link_preview: message.link_preview,
       attachments: message.attachments,
     });
   };

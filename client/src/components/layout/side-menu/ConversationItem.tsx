@@ -28,7 +28,7 @@ function ConversationItem({ conversation }: Props) {
       onClick={() => dispatch(closeSideMenu())}
     >
       <div
-        className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-gray-100 w-full`}
+        className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-gray-200/70 w-full`}
       >
         <div className="relative flex shrink-0">
           <Image
@@ -37,7 +37,7 @@ function ConversationItem({ conversation }: Props) {
               (type === "group" ? "/assets/group.png" : "/assets/user.png")
             }
             alt={name}
-            className="w-12 h-12 rounded-full object-contain"
+            className="w-12 h-12 rounded-full object-cover"
           />
           {is_online && (
             <span className="absolute bottom-0 right-0 w-4 h-4 bg-success border-2 border-white rounded-full" />

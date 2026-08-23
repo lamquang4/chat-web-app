@@ -15,6 +15,11 @@ const {
   deleteCloudinaryFile,
 } = require("../utils/cloudinary.util");
 const { ALLOWED_IMAGE_MIME_TYPES } = require("../constants/limit");
+const {
+  getLinkFromContent,
+  removeLinkFromContent,
+  getLinkPreview,
+} = require("../utils/link-preview.util");
 const AppError = require("../utils/app.error");
 const {
   NOT_CONVERSATION_MEMBER,
@@ -24,6 +29,7 @@ const {
   MESSAGE_NOT_FOUND,
   NOT_MESSAGE_OWNER,
   MESSAGE_ALREADY_RECALLED,
+  REPLY_MESSAGE_RECALLED,
 } = require("../utils/error.code");
 
 const resolveAttachmentType = (mimetype) => {
@@ -72,6 +78,10 @@ const buildReplyPayload = async (replyMessageId, conversationId) => {
     throw new AppError(REPLY_MESSAGE_NOT_FOUND);
   }
 
+  if (replyMessage.is_recalled) {
+    throw new AppError(REPLY_MESSAGE_RECALLED);
+  }
+
   const [replySender, replyAttachments] = await Promise.all([
     User.findByPk(replyMessage.sender_id),
     MessageAttachment.find({ message_id: replyMessageId }).lean(),
@@ -108,11 +118,17 @@ const sendMessage = async (
     reply_message_id,
     conversationId,
   );
+  const link = getLinkFromContent(trimmedContent);
+  const linkPreview = await getLinkPreview(trimmedContent);
+  const messageContent = linkPreview
+    ? removeLinkFromContent(trimmedContent, link)
+    : trimmedContent || null;
 
   const message = await Message.create({
     conversation_id: conversationId,
     sender_id: String(userId),
-    content: trimmedContent || null,
+    content: messageContent,
+    link_preview: linkPreview,
     reply_msg_id: replyPayload ? replyPayload.message._id : null,
   });
 
@@ -198,9 +214,16 @@ const recallMessage = async (userId, messageId) => {
     }),
   );
 
-  message.is_recalled = true;
-  message.content = null;
-  await message.save();
+  await Message.updateOne(
+    { _id: messageId },
+    {
+      $set: {
+        is_recalled: true,
+        content: null,
+        link_preview: null,
+      },
+    },
+  );
 
   await MessageAttachment.deleteMany({ message_id: messageId });
 

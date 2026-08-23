@@ -67,7 +67,7 @@ function FriendList({
       {isLoading ? (
         <UserListSkeleton count={6} />
       ) : friends.length ? (
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
           {friends.map((friend) => (
             <UserItem
               key={friend.user_id}
@@ -103,7 +103,6 @@ function FriendList({
               alt="not found"
               loading="eager"
             />
-            <h4 className="font-semibold">Không tìm thấy</h4>
           </div>
         </div>
       )}

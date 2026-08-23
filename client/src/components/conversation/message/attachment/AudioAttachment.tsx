@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { Loader2, Pause, Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import type { MessageAttachmentResponse } from "../../../../types/types";
 import Button from "../../../ui/Button";
 import { formatDuration } from "../../../../utils/formatters";
@@ -16,7 +16,6 @@ function AudioAttachment({ att, isMe }: Props) {
   const [progress, setProgress] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(att.duration ?? 0);
-  const [isBuffering, setIsBuffering] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const toggle = () => {
@@ -66,24 +65,16 @@ function AudioAttachment({ att, isMe }: Props) {
       setCurrentTime(0);
     };
 
-    const onWaiting = () => setIsBuffering(true);
-    const onCanPlay = () => setIsBuffering(false);
-
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("loadedmetadata", syncDurationFromAudio);
     audio.addEventListener("durationchange", syncDurationFromAudio);
     audio.addEventListener("ended", onEnded);
-    audio.addEventListener("waiting", onWaiting);
-    audio.addEventListener("canplay", onCanPlay);
-    audio.addEventListener("playing", onCanPlay);
+
     return () => {
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("loadedmetadata", syncDurationFromAudio);
       audio.removeEventListener("durationchange", syncDurationFromAudio);
       audio.removeEventListener("ended", onEnded);
-      audio.removeEventListener("waiting", onWaiting);
-      audio.removeEventListener("canplay", onCanPlay);
-      audio.removeEventListener("playing", onCanPlay);
     };
   }, []);
 
@@ -146,11 +137,9 @@ function AudioAttachment({ att, isMe }: Props) {
         })}
       </div>
 
-      {isBuffering ? (
-        <Loader2 size={14} className="shrink-0 animate-spin text-primary" />
-      ) : (
-        <span className="font-medium">{displayTime}</span>
-      )}
+      <span className="font-medium tabular-nums text-right shrink-0 w-[38px]">
+        {displayTime}
+      </span>
     </div>
   );
 }
