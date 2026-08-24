@@ -69,6 +69,7 @@ export const useGetConversationDetail = (conversationId: string, size = 20) => {
       }),
 
     initialPageParam: 0,
+    enabled: !!conversationId,
     getNextPageParam: (lastPage) => {
       const { page, size, totalElements, totalPages } = lastPage.data.messages;
       const pageCount = totalPages ?? Math.ceil(totalElements / size);

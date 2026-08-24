@@ -46,25 +46,21 @@ export const refreshAccessToken = (): Promise<string> => {
     return data.data.access_token;
   })();
 
-  refreshPromise.then(
-    () => {
-      refreshPromise = null;
-    },
-    () => {
-      refreshPromise = null;
-    },
-  );
+  refreshPromise.finally(() => {
+    refreshPromise = null;
+  });
 
   return refreshPromise;
 };
 
-// chủ động kiểm tra và refresh token TRƯỚC khi nó thực sự hết hạn  (để hạn chế tối đa việc request bị BE trả về lỗi 401)
+// chủ động kiểm tra và refresh token TRƯỚC khi nó thực sự hết hạn
+// (để hạn chế tối đa việc request bị BE trả về lỗi 401)
 axiosInstance.interceptors.request.use(async (config) => {
   let accessToken = jwtUtil.getAccessTokenRaw();
 
   if (
     jwtUtil.hasValidLocalRefreshToken() &&
-    (!accessToken || jwtUtil.isAccessTokenExpiringSoon())
+    jwtUtil.isAccessTokenExpiringSoon()
   ) {
     try {
       accessToken = await refreshAccessToken();
@@ -75,7 +71,6 @@ axiosInstance.interceptors.request.use(async (config) => {
   }
 
   if (accessToken) {
-    config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
@@ -106,7 +101,6 @@ axiosInstance.interceptors.response.use(
 
       try {
         const newToken = await refreshAccessToken();
-        originalRequest.headers = originalRequest.headers ?? {};
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {

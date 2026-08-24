@@ -18,7 +18,7 @@ function AuthLayout() {
     return <LoginForm />;
   };
   return (
-    <section className="bg-[#F1F4F9] w-full">
+    <section className="bg-neutral-100 w-full">
       <div className="flex justify-center items-center h-screen">
         <div className="bg-white rounded-lg shadow-md max-w-[480px] w-full">
           {renderForm()}
