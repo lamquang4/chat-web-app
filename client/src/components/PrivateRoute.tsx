@@ -4,7 +4,10 @@ import { jwtUtil } from "../utils/jwtUtil";
 function PrivateRoute({ children }: { children?: React.ReactNode }) {
   const location = useLocation();
 
-  const isAuthenticated = jwtUtil.hasValidLocalRefreshToken();
+  const isAccessTokenValid = !jwtUtil.isAccessTokenExpired();
+  const hasValidRefreshToken = jwtUtil.hasValidLocalRefreshToken();
+
+  const isAuthenticated = isAccessTokenValid || hasValidRefreshToken;
 
   if (!isAuthenticated) {
     return <Navigate to="/" state={{ from: location }} replace />;

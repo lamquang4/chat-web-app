@@ -253,12 +253,16 @@ const login = async ({ email, password, user_agent, ip_address }) => {
   const activeSessions = await Session.findAll({
     where: {
       user_id: user.id,
-      is_revoked: false,
+      is_revoked: false, // Bỏ qua các session đã bị thu hồi/đăng xuất
       expires_at: {
-        [Op.gt]: new Date(),
+        [Op.gt]: new Date(), // Bỏ qua các session đã hết hạn
       },
     },
-    order: [["created_at", "ASC"]],
+
+    // [CƠ CHẾ Least Recently Used]
+    // Phần tử đầu mảng là thiết bị lâu nhất không sử dụng
+    // Phần tử cuối mảng là thiết bị vừa mới sử dụng gần đây
+    order: [["last_active_at", "ASC"]],
   });
 
   // Nếu đã đạt giới hạn → revoke session cũ nhất
