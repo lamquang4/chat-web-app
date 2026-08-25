@@ -29,21 +29,41 @@ const handleInvalidRefreshToken = (error: unknown): void => {
   }
 };
 
+// Gọi API refresh để lấy access token + refresh token mới
+const doRefresh = async (): Promise<string> => {
+  const refreshToken = jwtUtil.getRefreshTokenRaw();
+  if (!refreshToken) throw new Error("Không có refresh token");
+
+  const { data } = await axiosPublic.post<ApiResponse<RefreshTokenResponse>>(
+    "/auth/refresh-token",
+    { refresh_token: refreshToken },
+  );
+
+  // BE áp dụng refresh token rotation, mỗi lần refresh
+  // sẽ trả về refresh_token mới và vô hiệu hóa token cũ.
+  jwtUtil.setAccessToken(data.data.access_token);
+  jwtUtil.setRefreshToken(data.data.refresh_token);
+
+  return data.data.access_token;
+};
+
 // Hàm gọi API để lấy access token mới bằng refresh token
+// Dùng Web Locks API để đồng bộ giữa nhiều tab cùng domain
 export const refreshAccessToken = (): Promise<string> => {
   if (refreshPromise) return refreshPromise;
 
   refreshPromise = (async () => {
-    const refreshToken = jwtUtil.getRefreshTokenRaw();
-    if (!refreshToken) throw new Error("Không có refresh token");
+    if (typeof navigator !== "undefined" && "locks" in navigator) {
+      return navigator.locks.request("auth-refresh-token", async () => {
+        if (!jwtUtil.isAccessTokenExpiringSoon()) {
+          const current = jwtUtil.getAccessTokenRaw();
+          if (current) return current;
+        }
+        return doRefresh();
+      });
+    }
 
-    const { data } = await axiosPublic.post<ApiResponse<RefreshTokenResponse>>(
-      "/auth/refresh-token",
-      { refresh_token: refreshToken },
-    );
-
-    jwtUtil.setAccessToken(data.data.access_token);
-    return data.data.access_token;
+    return doRefresh();
   })();
 
   refreshPromise.finally(() => {
@@ -53,8 +73,6 @@ export const refreshAccessToken = (): Promise<string> => {
   return refreshPromise;
 };
 
-// chủ động kiểm tra và refresh token TRƯỚC khi nó thực sự hết hạn
-// (để hạn chế tối đa việc request bị BE trả về lỗi 401)
 axiosInstance.interceptors.request.use(async (config) => {
   let accessToken = jwtUtil.getAccessTokenRaw();
 
@@ -77,8 +95,6 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Khi BE trả về response nếu accessToken vẫn bị BE từ chối vì hết hạn
-// thì refresh lại và retry request đó đúng 1 lần duy nhất
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<{ code?: string }>) => {

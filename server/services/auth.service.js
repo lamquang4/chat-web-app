@@ -239,71 +239,72 @@ const login = async ({ email, password, user_agent, ip_address }) => {
     throw new AppError(INVALID_CREDENTIALS);
   }
 
-  if (!user.is_verified) {
-    throw new AppError(EMAIL_NOT_VERIFIED);
-  }
-
   const is_password_valid = await bcrypt.compare(password, user.password_hash);
 
   if (!is_password_valid) {
     throw new AppError(INVALID_CREDENTIALS);
   }
 
-  // Lấy các session đang hoạt động
-  const activeSessions = await Session.findAll({
-    where: {
-      user_id: user.id,
-      is_revoked: false, // Bỏ qua các session đã bị thu hồi/đăng xuất
-      expires_at: {
-        [Op.gt]: new Date(), // Bỏ qua các session đã hết hạn
-      },
-    },
-
-    // [CƠ CHẾ Least Recently Used]
-    // Phần tử đầu mảng là thiết bị lâu nhất không sử dụng
-    // Phần tử cuối mảng là thiết bị vừa mới sử dụng gần đây
-    order: [["last_active_at", "ASC"]],
-  });
-
-  // Nếu đã đạt giới hạn → revoke session cũ nhất
-  if (activeSessions.length >= MAX_ACTIVE_SESSIONS_PER_USER) {
-    const numberToRevoke =
-      activeSessions.length - MAX_ACTIVE_SESSIONS_PER_USER + 1;
-
-    const sessionsToRevoke = activeSessions.slice(0, numberToRevoke);
-
-    await Session.update(
-      {
-        is_revoked: true,
-      },
-      {
-        where: {
-          id: sessionsToRevoke.map((session) => session.id),
-        },
-      },
-    );
+  if (!user.is_verified) {
+    throw new AppError(EMAIL_NOT_VERIFIED);
   }
 
-  const refresh_token = generateRefreshToken(user.id);
+  const result = await sequelize.transaction(async (t) => {
+    const activeSessions = await Session.findAll({
+      where: {
+        user_id: user.id,
+        is_revoked: false,
+        expires_at: {
+          [Op.gt]: new Date(),
+        },
+      },
+      order: [["last_active_at", "ASC"]],
+      transaction: t,
+      lock: t.LOCK.UPDATE, // khoá các row liên quan trong transaction này
+    });
 
-  const refresh_token_hash = hashToken(refresh_token);
+    if (activeSessions.length >= MAX_ACTIVE_SESSIONS_PER_USER) {
+      const numberToRevoke =
+        activeSessions.length - MAX_ACTIVE_SESSIONS_PER_USER + 1;
 
-  const expires_at = new Date(Date.now() + ms(config.jwt.sessionExpiration));
+      const sessionsToRevoke = activeSessions.slice(0, numberToRevoke);
 
-  const session = await Session.create({
-    user_id: user.id,
-    refresh_token_hash,
-    user_agent: user_agent || null,
-    ip_address: ip_address || null,
-    expires_at,
+      await Session.update(
+        { is_revoked: true },
+        {
+          where: {
+            id: sessionsToRevoke.map((session) => session.id),
+          },
+          transaction: t,
+        },
+      );
+    }
+
+    const refresh_token = generateRefreshToken(user.id);
+    const refresh_token_hash = hashToken(refresh_token);
+    const expires_at = new Date(Date.now() + ms(config.jwt.sessionExpiration));
+
+    const session = await Session.create(
+      {
+        user_id: user.id,
+        refresh_token_hash,
+        user_agent: user_agent || null,
+        ip_address: ip_address || null,
+        expires_at,
+        last_active_at: new Date(),
+      },
+      { transaction: t },
+    );
+
+    return { session, refresh_token };
   });
 
-  const access_token = generateAccessToken(user.id, session.id);
+  const access_token = generateAccessToken(user.id, result.session.id);
 
   return {
     user_id: String(user.id),
     access_token,
-    refresh_token,
+    refresh_token: result.refresh_token,
     expires_in: Math.floor(ms(config.jwt.accessExpiration) / 1000),
   };
 };
@@ -325,12 +326,23 @@ const refreshToken = async (refresh_token) => {
 
   const session = await Session.findOne({
     where: {
-      refresh_token_hash,
       user_id: payload.sub,
+      refresh_token_hash,
     },
   });
 
   if (!session) {
+    const stillHasActiveSession = await Session.findOne({
+      where: { user_id: payload.sub, is_revoked: false },
+    });
+
+    if (stillHasActiveSession) {
+      await Session.update(
+        { is_revoked: true },
+        { where: { user_id: payload.sub, is_revoked: false } },
+      );
+    }
+
     throw new AppError(INVALID_REFRESH_TOKEN);
   }
 
@@ -355,11 +367,15 @@ const refreshToken = async (refresh_token) => {
 
   const access_token = generateAccessToken(user.id, session.id);
 
+  // Rotation: cấp refresh token mới, expires_at vẫn giữ nguyên không thay đổi
+  const new_refresh_token = generateRefreshToken(user.id, session.expires_at);
+  session.refresh_token_hash = hashToken(new_refresh_token);
   session.last_active_at = new Date();
   await session.save();
 
   return {
     access_token,
+    refresh_token: new_refresh_token,
     expires_in: Math.floor(ms(config.jwt.accessExpiration) / 1000),
   };
 };

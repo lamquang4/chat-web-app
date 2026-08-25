@@ -8,10 +8,7 @@ const startSessionCleanupJob = () => {
     try {
       const deletedCount = await Session.destroy({
         where: {
-          [Op.or]: [
-            { expires_at: { [Op.lt]: new Date() } },
-            { is_revoked: true },
-          ],
+          expires_at: { [Op.lt]: new Date() },
         },
       });
 

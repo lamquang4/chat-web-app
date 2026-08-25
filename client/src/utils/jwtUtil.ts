@@ -21,6 +21,11 @@ const setTokenCookie = (name: string, rawToken: string): void => {
   }
 
   const expiresInDays = (payload.exp - Date.now() / 1000) / 86400;
+
+  if (expiresInDays <= 0) {
+    return;
+  }
+
   cookieUtil.set(name, rawToken, { ...COOKIE_OPTIONS, expires: expiresInDays });
 };
 

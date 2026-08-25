@@ -42,6 +42,7 @@ Session.init(
     },
     last_active_at: {
       type: DataTypes.DATE,
+      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
   },

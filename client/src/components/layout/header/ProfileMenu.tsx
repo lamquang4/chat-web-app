@@ -58,7 +58,9 @@ function ProfileMenu() {
         />
 
         <p className="font-medium">
-          {account?.first_name + " " + account?.last_name}
+          {account?.first_name && account?.last_name
+            ? `${account.first_name} ${account.last_name}`
+            : ""}
         </p>
       </div>
 
