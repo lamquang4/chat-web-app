@@ -124,6 +124,7 @@ function ConversationContainer() {
           />
 
           <ConversationBody
+            conversationId={conversation.conversation_id}
             messages={messages || []}
             loadMoreRef={loadMoreRef}
             hasNextPage={Boolean(hasNextPage)}

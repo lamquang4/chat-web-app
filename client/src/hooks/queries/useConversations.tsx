@@ -31,6 +31,9 @@ export const conversationKeys = {
 
   members: (conversationId: string) =>
     [...conversationKeys.all, "members", conversationId] as const,
+
+  images: (conversationId: string) =>
+    [...conversationKeys.all, "images", conversationId] as const,
 };
 
 export const useGetConversationList = (
@@ -96,6 +99,19 @@ export const useGetConversationDetail = (conversationId: string, size = 20) => {
 
       totalElements: data.pages[0]?.data.messages.totalElements ?? 0,
     }),
+  });
+};
+
+export const useGetConversationImages = (
+  conversationId: string,
+  enabled = true,
+) => {
+  return useQuery({
+    queryKey: conversationKeys.images(conversationId),
+    queryFn: () => conversationApi.getConversationImages(conversationId),
+    select: (res) => res.data,
+    enabled: Boolean(conversationId) && enabled,
+    staleTime: 5 * 60 * 1000, // ảnh cũ không đổi, khỏi refetch liên tục
   });
 };
 

@@ -4,22 +4,23 @@ import Download from "yet-another-react-lightbox/plugins/download";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
 interface Props {
-  image: string;
+  images: string[];
+  index: number;
   open: boolean;
   onClose: () => void;
-};
+}
 
-function ImageViewer({ image, open, onClose }: Props) {
+function ImageViewer({ images, index, open, onClose }: Props) {
   return (
     <Lightbox
       open={open}
       close={onClose}
-      slides={[{ src: image }]}
-      render={{
-        buttonPrev: () => null,
-        buttonNext: () => null,
-      }}
+      index={index}
+      slides={images.map((src) => ({ src }))}
       plugins={[Download, Zoom]}
+      zoom={{
+        scrollToZoom: true,
+      }}
     />
   );
 }

@@ -100,6 +100,13 @@ export interface UserResponse {
   avatar_url: string | null;
 }
 
+export interface ConversationImageResponse {
+  attachment_id: string;
+  message_id: string;
+  url: string;
+  created_at: string;
+}
+
 export interface GetOrCreatePrivateConversationResponse {
   conversation_id: string;
 }

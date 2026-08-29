@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Conversation = require("../models/conversation.model");
 const ConversationMember = require("../models/conversation-member.model");
 const Message = require("../models/message.model");
@@ -216,6 +217,39 @@ const buildAndNotifyListUpdate = async (conversation, userId, memberIds) => {
       isLastMessageSeen: true,
     }),
   );
+};
+
+const getConversationImages = async (userId, conversationId) => {
+  await assertMember(conversationId, userId);
+
+  const images = await MessageAttachment.aggregate([
+    {
+      $match: {
+        conversation_id: new mongoose.Types.ObjectId(conversationId),
+        type: "image",
+      },
+    },
+    {
+      $lookup: {
+        from: Message.collection.name,
+        localField: "message_id",
+        foreignField: "_id",
+        as: "message",
+      },
+    },
+    { $unwind: "$message" },
+    { $match: { "message.is_recalled": { $ne: true } } },
+    { $sort: { created_at: -1 } },
+    { $limit: 200 },
+    { $project: { url: 1, message_id: 1, created_at: 1 } },
+  ]);
+
+  return images.map((img) => ({
+    attachment_id: String(img._id),
+    message_id: String(img.message_id),
+    url: img.url,
+    created_at: img.created_at,
+  }));
 };
 
 const getOrCreatePrivateConversation = async (userId, targetUserId) => {
@@ -845,4 +879,5 @@ module.exports = {
   getConversationDetail,
   getGroupMembers,
   getOrCreatePrivateConversation,
+  getConversationImages,
 };

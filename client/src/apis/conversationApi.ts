@@ -9,6 +9,7 @@ import type {
   GroupMemberResponse,
   AddGroupMembersRequest,
   GetOrCreatePrivateConversationResponse,
+  ConversationImageResponse,
 } from "../types/types";
 import { axiosInstance } from "./axiosInstance";
 
@@ -56,6 +57,13 @@ const buildUpdateGroupFormData = (data: UpdateGroupRequest) => {
 };
 
 export const conversationApi = {
+  getConversationImages: (conversationId: string) =>
+    axiosInstance
+      .get<
+        ApiResponse<ConversationImageResponse[]>
+      >(`${BASE}/${conversationId}/images`)
+      .then((r) => r.data),
+
   getConversationList: (params?: GetConversationsParams) =>
     axiosInstance
       .get<

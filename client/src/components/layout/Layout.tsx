@@ -1,15 +1,15 @@
 import Header from "./header/Header";
 import SideMenu from "./side-menu/SideMenu";
-import { useConversationListSocket } from "../../hooks/useConversationListSocket";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { useFriendSocket } from "../../hooks/useFriendSocket";
+import { useConversationSocket } from "../../hooks/useConversationSocket";
 
 interface Props {
   children: React.ReactNode;
 }
 
 function Layout({ children }: Props) {
-  useConversationListSocket();
+  useConversationSocket();
   useOnlineStatus();
   useFriendSocket();
 

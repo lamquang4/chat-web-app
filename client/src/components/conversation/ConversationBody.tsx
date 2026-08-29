@@ -4,8 +4,11 @@ import MessageItem from "./message/MessageItem";
 import Button from "../ui/Button";
 import { ArrowDown } from "lucide-react";
 import Loading from "../ui/Loading";
+import ImageViewer from "../ui/ImageViewer";
+import { useGetConversationImages } from "../../hooks/queries/useConversations";
 
 interface Props {
+  conversationId: string;
   messages: MessageResponse[];
   loadMoreRef: RefObject<HTMLDivElement | null>;
   hasNextPage: boolean;
@@ -16,6 +19,7 @@ interface Props {
 }
 
 function ConversationBody({
+  conversationId,
   messages,
   loadMoreRef,
   hasNextPage,
@@ -29,8 +33,29 @@ function ConversationBody({
 
   const replyMessageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null); // đánh dấu vị trí hình giúp khi bấm vào hình để imageviewer hiển thị
+  const [shouldFetchImages, setShouldFetchImages] = useState(false);
   const isAtBottomRef = useRef<boolean>(true);
   const isFirstRenderRef = useRef<boolean>(true);
+
+  const {
+    data: images = [],
+    refetch,
+    isFetched,
+  } = useGetConversationImages(conversationId, shouldFetchImages);
+
+  const handleOpenImage = async (attachmentId: string) => {
+    setShouldFetchImages(true);
+
+    const list = isFetched ? images : ((await refetch()).data ?? []);
+
+    const index = list.findIndex((img) => img.attachment_id === attachmentId);
+    if (index !== -1) setViewerIndex(index);
+  };
+
+  const handleCloseViewer = () => {
+    setViewerIndex(null);
+  };
 
   const setAtBottom = (value: boolean) => {
     isAtBottomRef.current = value;
@@ -112,6 +137,7 @@ function ConversationBody({
                 onReply={onReply}
                 onRecall={onRecall}
                 onJumpToReplyMessage={scrollToReplyMessage}
+                onOpenImage={handleOpenImage}
               />
             </div>
           ))}
@@ -130,6 +156,15 @@ function ConversationBody({
             <ArrowDown size={22} />
           </Button>
         </div>
+      )}
+
+      {viewerIndex !== null && (
+        <ImageViewer
+          images={images.map((img) => img.url)}
+          index={viewerIndex}
+          open={viewerIndex !== null}
+          onClose={handleCloseViewer}
+        />
       )}
     </div>
   );

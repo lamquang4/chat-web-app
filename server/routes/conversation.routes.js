@@ -21,6 +21,10 @@ router.use(authMiddleware, requireAuth);
 router.get("/", conversationController.getConversationList);
 router.get("/:conversationId", conversationController.getConversationDetail);
 router.get("/group/:conversationId", conversationController.getGroupMembers);
+router.get(
+  "/:conversationId/images",
+  conversationController.getConversationImages,
+);
 
 router.post(
   "/group",

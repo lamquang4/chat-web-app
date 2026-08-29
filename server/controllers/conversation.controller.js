@@ -28,6 +28,22 @@ const normalizeMemberIds = (req, res, next) => {
   next();
 };
 
+const getConversationImages = async (req, res, next) => {
+  try {
+    const result = await conversationService.getConversationImages(
+      req.user.id,
+      req.params.conversationId,
+    );
+
+    return response.success(res, {
+      message: "Tạo nhóm thành công",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createGroup = async (req, res, next) => {
   try {
     await conversationService.createGroup(req.user.id, req.body, req.file);
@@ -238,6 +254,7 @@ module.exports = {
   createGroup,
   updateGroup,
   deleteGroup,
+  getConversationImages,
   getConversationList,
   getConversationDetail,
   getOrCreatePrivateConversation,

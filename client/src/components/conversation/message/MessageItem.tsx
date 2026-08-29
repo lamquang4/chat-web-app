@@ -18,6 +18,7 @@ interface Props {
   onReply?: (message: MessageResponse) => void;
   onRecall?: (messageId: string) => void;
   onJumpToReplyMessage?: (messageId: string) => void;
+  onOpenImage: (attachmentId: string) => void;
 }
 
 function MessageItem({
@@ -25,6 +26,7 @@ function MessageItem({
   onReply,
   onRecall,
   onJumpToReplyMessage,
+  onOpenImage,
 }: Props) {
   const {
     is_me,
@@ -193,6 +195,7 @@ function MessageItem({
                       key={att.attachment_id}
                       att={att}
                       size={images.length === 1 ? "large" : "small"}
+                      onOpenImage={onOpenImage}
                     />
                   ))}
                 </div>

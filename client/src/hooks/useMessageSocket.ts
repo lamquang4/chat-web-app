@@ -30,14 +30,11 @@ export function useMessageSocket(conversationId: string) {
       queryClient.invalidateQueries({
         queryKey: conversationDetailQueryKey(conversationId),
       });
-
-      // Cập nhật luôn last_message ở sidebar, khỏi cần gọi lại REST
-      queryClient.invalidateQueries({ queryKey: conversationKeys.all });
     },
     [conversationId, queryClient],
   );
 
-  const handleRecalled = useCallback(
+  const handleRecalledMessage = useCallback(
     ({ message_id }: { message_id: string }) => {
       void message_id;
       queryClient.invalidateQueries({
@@ -48,7 +45,7 @@ export function useMessageSocket(conversationId: string) {
   );
 
   useSocketListener(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
-  useSocketListener(SOCKET_EVENTS.MESSAGE_RECALLED, handleRecalled);
+  useSocketListener(SOCKET_EVENTS.MESSAGE_RECALLED, handleRecalledMessage);
   useSocketListener(
     SOCKET_EVENTS.MESSAGE_SEEN,
     ({

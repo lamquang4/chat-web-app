@@ -15,7 +15,7 @@ export function useConversationSocket() {
   const navigate = useNavigate();
 
   // Bị thêm vào 1 nhóm mới
-  const handleCreated = useCallback(
+  const handleCreatedGroup = useCallback(
     (conversation: ConversationListResponse) => {
       queryClient.setQueriesData<
         ApiResponse<{ content: ConversationListResponse[] }>
@@ -36,7 +36,7 @@ export function useConversationSocket() {
   );
 
   // Nhóm bị sửa tên/avatar/thành viên bởi người khác
-  const handleUpdated = useCallback(
+  const handleUpdatedGroup = useCallback(
     (conversation: ConversationListResponse) => {
       queryClient.setQueriesData<
         ApiResponse<{ content: ConversationListResponse[] }>
@@ -81,7 +81,7 @@ export function useConversationSocket() {
   );
 
   // Nhóm bị giải tán bởi owner
-  const handleDeleted = useCallback(
+  const handleDeletedGroup = useCallback(
     (conversation_id: string) => {
       queryClient.setQueriesData<
         ApiResponse<{ content: ConversationListResponse[] }>
@@ -119,7 +119,22 @@ export function useConversationSocket() {
     [queryClient, navigate],
   );
 
-  useSocketListener(SOCKET_EVENTS.CONVERSATION_CREATED, handleCreated);
-  useSocketListener(SOCKET_EVENTS.CONVERSATION_UPDATED, handleUpdated);
-  useSocketListener(SOCKET_EVENTS.CONVERSATION_DELETED, handleDeleted);
+  const handleConversationActivity = useCallback(
+    (payload: { conversation_id: string }) => {
+      queryClient.invalidateQueries({
+        queryKey: [...conversationKeys.all, "list"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [...conversationKeys.all, "detail", payload.conversation_id],
+      });
+    },
+    [queryClient],
+  );
+
+  useSocketListener(SOCKET_EVENTS.MESSAGE_NEW, handleConversationActivity);
+  useSocketListener(SOCKET_EVENTS.MESSAGE_SEEN, handleConversationActivity);
+  useSocketListener(SOCKET_EVENTS.CONVERSATION_CREATED, handleCreatedGroup);
+  useSocketListener(SOCKET_EVENTS.CONVERSATION_UPDATED, handleUpdatedGroup);
+  useSocketListener(SOCKET_EVENTS.CONVERSATION_DELETED, handleDeletedGroup);
 }

@@ -21,7 +21,7 @@ export const ALLOWED_FILE_MIME_TYPES = [
 
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-export const MAX_UPLOAD = 10;
+export const MAX_UPLOAD = 5;
 export const MAX_CONTENT_LENGTH = 5000;
 export const MAX_GROUP_MEMBERS = 20;
 export const MAX_GROUP_NAME_LENGTH = 50;
