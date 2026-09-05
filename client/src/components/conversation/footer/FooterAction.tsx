@@ -68,7 +68,7 @@ function FooterAction({ onImageSelect, onFileSelect, onMicClick }: Props) {
   return (
     <div className="relative flex items-center gap-1" ref={containerRef}>
       <Button
-        className={`p-1.5 rounded-full ${dropDownOpen ? "bg-primary text-white" : "text-neutral bg-neutral-200"}`}
+        className={`p-1.5 rounded-full ${dropDownOpen ? "bg-primary text-white" : "text-text-muted bg-bg"}`}
         onClick={handleToggleDropdown}
       >
         <Plus size={20} />

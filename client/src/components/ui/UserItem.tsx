@@ -26,7 +26,7 @@ function UserItem({
   titleAs: TitleTag = "p",
   titleClassName = "font-medium",
   subtitle,
-  subtitleClassName = "text-neutral font-medium",
+  subtitleClassName = "text-text-muted font-medium",
   isOnline,
   dropdownItems,
   extra,
@@ -52,7 +52,7 @@ function UserItem({
   };
 
   return (
-    <div className="flex flex-col gap-6 border border-neutral-300 py-2 px-2 rounded-lg hover:bg-neutral-200 w-full">
+    <div className="flex flex-col gap-6 border border-border py-2 px-2 rounded-lg hover:bg-bg w-full">
       <div className="flex justify-between items-center gap-3">
         <div className="flex gap-3 items-center flex-1 min-w-0">
           <div className={`relative shrink-0 ${avatarSize}`}>
@@ -78,7 +78,7 @@ function UserItem({
           <div className="relative shrink-0" ref={containerRef}>
             <Button
               type="button"
-              className="w-7 h-7 p-1 flex justify-center items-center text-neutral"
+              className="w-7 h-7 p-1 flex justify-center items-center text-text-muted"
               onClick={handleToggleDropdown}
             >
               <Ellipsis size={20} />

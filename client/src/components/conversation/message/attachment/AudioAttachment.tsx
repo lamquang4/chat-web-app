@@ -93,9 +93,7 @@ function AudioAttachment({ att, isMe }: Props) {
       : formatDuration(duration);
 
   return (
-    <div
-      className={`rounded-2xl ${isMe ? "bg-primary text-white" : "bg-neutral-200"}`}
-    >
+    <div className={`rounded-2xl ${isMe ? "bg-primary text-white" : "bg-bg"}`}>
       <div className="flex items-center gap-3 px-3 py-2.5 w-auto h-full">
         <audio ref={audioRef} src={att.url} preload="auto" />
 
@@ -132,7 +130,7 @@ function AudioAttachment({ att, isMe }: Props) {
                       : "bg-white/40"
                     : filled
                       ? "bg-primary"
-                      : "bg-neutral-300"
+                      : "bg-border"
                 }`}
                 style={{ height: `${height}%` }}
               />
@@ -141,7 +139,7 @@ function AudioAttachment({ att, isMe }: Props) {
         </div>
 
         <span
-          className={`font-medium text-right shrink-0 w-[38px] ${isMe ? "text-white" : "text-neutral"}`}
+          className={`font-medium text-right shrink-0 w-[38px] ${isMe ? "text-white" : "text-text-muted"}`}
         >
           {displayTime}
         </span>

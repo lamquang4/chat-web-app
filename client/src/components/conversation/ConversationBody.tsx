@@ -151,7 +151,7 @@ function ConversationBody({
           <Button
             type="button"
             onClick={() => scrollToBottom(true)}
-            className="w-9 h-9 rounded-full bg-white hover:bg-neutral-200 border border-neutral-300 pointer-events-auto text-neutral flex justify-center items-center shadow-md"
+            className="w-9 h-9 rounded-full bg-white hover:bg-bg border border-border pointer-events-auto text-text-muted flex justify-center items-center shadow-md"
           >
             <ArrowDown size={22} />
           </Button>

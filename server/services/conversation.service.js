@@ -685,6 +685,7 @@ const getConversationList = async (userId, { page, size, type, q }) => {
                 image: "[Hình ảnh]",
                 document: "[Tệp đính kèm]",
                 audio: "[Tin nhắn thoại]",
+                video: "[Video]",
               }[firstAttachment.type]
             : "";
         }

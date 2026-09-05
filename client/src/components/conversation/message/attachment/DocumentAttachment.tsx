@@ -28,7 +28,7 @@ function DocumentAttachment({ att, isMe }: Props) {
 
   return (
     <div
-      className={`rounded-2xl ${isMe ? "bg-primary text-white" : "bg-neutral-200 text-neutral"}`}
+      className={`rounded-2xl ${isMe ? "bg-primary text-white" : "bg-bg text-text-muted"}`}
     >
       <div
         className="inline-flex items-center gap-3 px-3 py-2.5 rounded-2xl max-w-[260px] cursor-pointer"

@@ -43,11 +43,11 @@ function DropdownMenu({
             to={item.href}
             onClick={item.onClick}
             target={item.target}
-            className="block px-2.5 py-3.5 hover:bg-neutral-200 w-full"
+            className="block px-2.5 py-3.5 hover:bg-bg w-full"
           >
             <div
               className={`flex items-center gap-2 font-medium ${
-                item.textColor ?? "text-neutral"
+                item.textColor ?? "text-text-muted"
               }`}
             >
               {item.icon}
@@ -60,8 +60,8 @@ function DropdownMenu({
             type="button"
             onClick={item.onClick}
             disabled={item.disabled}
-            className={`px-2.5 py-3.5 hover:bg-neutral-200 w-full flex items-center gap-2 font-medium ${
-              item.textColor ?? "text-neutral"
+            className={`px-2.5 py-3.5 hover:bg-bg w-full flex items-center gap-2 font-medium ${
+              item.textColor ?? "text-text-muted"
             }`}
           >
             {item.icon}

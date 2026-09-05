@@ -18,19 +18,19 @@ function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-10 flex w-full bg-white border-neutral-300 items-center border-b">
+    <header className="sticky top-0 z-10 flex w-full bg-white border-border items-center border-b">
       <div className="w-full flex justify-between items-center px-[15px] py-4">
         <div className="flex sm:gap-[20px] gap-[15px] items-center">
           <Button
             onClick={() => dispatch(toggleSideMenu())}
-            className="bg-neutral-200 w-8.5 h-8.5 rounded-lg justify-center items-center flex lg:hidden"
+            className="bg-bg w-8.5 h-8.5 rounded-lg justify-center items-center flex lg:hidden"
           >
             <Menu size={18} />
           </Button>
 
           <Button
             onClick={handleFullscreen}
-            className="bg-neutral-200 w-8.5 h-8.5 rounded-lg justify-center items-center sm:flex hidden"
+            className="bg-bg w-8.5 h-8.5 rounded-lg justify-center items-center sm:flex hidden"
           >
             <Maximize size={18} />
           </Button>

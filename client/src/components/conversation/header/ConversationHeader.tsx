@@ -33,7 +33,7 @@ function ConversationHeader({
 
   return (
     <>
-      <div className="flex relative justify-between items-center px-[15px] py-4 border-b border-neutral-300 w-full">
+      <div className="flex relative justify-between items-center px-[15px] py-4 border-b border-border w-full">
         <div
           className={`flex gap-2 items-center ${type === "group" && "cursor-pointer"}`}
           onClick={handleOpenModal}
@@ -56,7 +56,7 @@ function ConversationHeader({
             <h5 className={`font-semibold`}>{name}</h5>
 
             <span
-              className={`font-medium ${is_online ? "text-success" : "text-neutral"}`}
+              className={`font-medium ${is_online ? "text-success" : "text-text-muted"}`}
             >
               {is_online ? "Đang hoạt động" : "Đang ngoại tuyến"}
             </span>

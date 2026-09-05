@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import ImagePreview from "./ImagePreview";
 import FilePreview from "./FilePreview";
+import VideoPreview from "./VideoPreview";
 import Input from "../../../ui/Input";
 import Button from "../../../ui/Button";
 import { Plus } from "lucide-react";
@@ -59,7 +60,7 @@ function PreviewList({ previews, onRemove, onAdd }: Props) {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       className={`flex items-center gap-2 overflow-x-auto snap-x snap-proximity scroll-smooth transition-colors px-4 py-2 ${
-        isDragging ? "bg-primary" : "bg-neutral-200"
+        isDragging ? "bg-primary" : "bg-bg"
       }`}
     >
       <div>
@@ -85,10 +86,15 @@ function PreviewList({ previews, onRemove, onAdd }: Props) {
 
       {previews.map((item) => (
         <div key={item.id} className="shrink-0">
-          {item.previewUrl ? (
+          {item.previewUrl && item.file.type.startsWith("image/") ? (
             <ImagePreview
               previewUrl={item.previewUrl}
               name={item.file.name}
+              onRemove={() => onRemove(item.id)}
+            />
+          ) : item.previewUrl && item.file.type.startsWith("video/") ? (
+            <VideoPreview
+              previewUrl={item.previewUrl}
               onRemove={() => onRemove(item.id)}
             />
           ) : (

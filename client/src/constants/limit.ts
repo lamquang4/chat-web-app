@@ -17,6 +17,8 @@ export const ALLOWED_FILE_MIME_TYPES = [
   "audio/webm", // .webm
   "audio/ogg", // .ogg
   "audio/wav", // .wav
+  "video/mp4",
+  "video/webm",
 ];
 
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB

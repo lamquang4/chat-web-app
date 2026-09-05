@@ -13,6 +13,8 @@ module.exports = {
     "audio/webm",
     "audio/ogg",
     "audio/wav",
+    "video/mp4",
+    "video/webm",
   ],
   MAX_IMAGE_SIZE: 5 * 1024 * 1024,
   MAX_FILE_SIZE: 10 * 1024 * 1024,

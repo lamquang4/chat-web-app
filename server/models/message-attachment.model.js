@@ -15,7 +15,7 @@ const messageAttachmentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["image", "document", "audio"],
+    enum: ["image", "document", "audio", "video"],
     required: true,
   },
   url: { type: String, required: true },

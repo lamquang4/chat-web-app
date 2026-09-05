@@ -8,10 +8,12 @@
   --color-info: #076ffe;
   --color-danger: #d9534f;
 
-  --color-neutral-100: #f1f4f9;
-  --color-neutral-200: #f3f3f3; /* bg */
-  --color-neutral-300: #d1d5db; /* border */
-  --color-neutral: #74767d; /* text */
+  --color-bg: #f3f3f3;
+  --color-bg-1: #f1f4f9;
+  --color-border: #d1d5db;
+  --color-skeleton: #e5e7eb;
+  --color-text: #444444;
+  --color-text-muted: #74767d;
 
   --font-family: "Quicksand", sans-serif;
 }
@@ -22,7 +24,7 @@
   }
 
   body {
-    @apply font-family text-[#444];
+    @apply font-family text-text;
   }
 
   a,

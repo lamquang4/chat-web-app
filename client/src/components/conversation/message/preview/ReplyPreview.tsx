@@ -1,4 +1,11 @@
-import { X, Image as ImageIcon, FileText, Mic, Link2 } from "lucide-react";
+import {
+  X,
+  Image as ImageIcon,
+  FileText,
+  Mic,
+  Link2,
+  Film,
+} from "lucide-react";
 import type { ReplyMessageResponse } from "../../../../types/types";
 import Button from "../../../ui/Button";
 import Image from "../../../ui/Image";
@@ -17,7 +24,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
     return null;
   }
   return (
-    <div className="flex items-center justify-between gap-2 px-4 py-2 bg-neutral-200 border-b border-neutral-300">
+    <div className="flex items-center justify-between gap-2 px-4 py-2 bg-bg border-b border-border">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {(attachment?.type === "image" || link) && (
           <Image
@@ -30,7 +37,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
         <div className="flex-1 min-w-0">
           <p className="font-medium truncate">Trả lời {replyTo.sender_name}</p>
 
-          <div className="flex items-center gap-1.5 min-w-0 text-neutral font-medium">
+          <div className="flex items-center gap-1.5 min-w-0 text-text-muted font-medium">
             {attachment?.type === "image" && (
               <span className="flex items-center gap-1.5 shrink-0">
                 <ImageIcon size={16} />
@@ -42,6 +49,13 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
               <span className="flex items-center gap-1.5 shrink-0">
                 <Mic size={16} />
                 [Tin nhắn thoại]
+              </span>
+            )}
+
+            {attachment?.type === "video" && (
+              <span className="flex items-center gap-1.5 shrink-0">
+                <Film size={16} />
+                [Video]
               </span>
             )}
 
@@ -64,7 +78,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
         </div>
       </div>
 
-      <Button onClick={onCancel} className="text-neutral">
+      <Button onClick={onCancel} className="text-text-muted">
         <X size={20} />
       </Button>
     </div>

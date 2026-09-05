@@ -1,4 +1,4 @@
-import { FileText, ImageIcon, Link2, Mic } from "lucide-react";
+import { FileText, ImageIcon, Link2, Mic, Film } from "lucide-react";
 import type { ReplyMessageResponse } from "../../../types/types";
 import Image from "../../ui/Image";
 interface Props {
@@ -14,11 +14,11 @@ function ReplyMessage({ reply, onClick }: Props) {
   return (
     <div
       onClick={onClick}
-      className={`flex items-start gap-2 px-3 py-2 rounded-2xl bg-neutral-200 text-neutral ${
+      className={`flex items-start gap-2 px-3 py-2 rounded-2xl bg-bg text-text-muted ${
         onClick && "cursor-pointer"
       }`}
     >
-      <div className={`w-0.5 self-stretch rounded-full shrink-0 bg-neutral`} />
+      <div className="w-0.5 self-stretch rounded-full shrink-0 bg-text-muted" />
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {(attachment?.type === "image" || link) && (
           <Image
@@ -43,6 +43,13 @@ function ReplyMessage({ reply, onClick }: Props) {
               <span className="flex items-center gap-1.5 shrink-0">
                 <Mic size={16} />
                 [Tin nhắn thoại]
+              </span>
+            )}
+
+            {attachment?.type === "video" && (
+              <span className="flex items-center gap-1.5 shrink-0">
+                <Film size={16} />
+                [Video]
               </span>
             )}
 

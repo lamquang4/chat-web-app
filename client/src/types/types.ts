@@ -1,5 +1,5 @@
 export type ConversationType = "private" | "group";
-export type AttachmentType = "image" | "document" | "audio";
+export type AttachmentType = "image" | "document" | "audio" | "video";
 export type MemberRole = "owner" | "admin" | "member";
 
 export interface PageResponse<T> {

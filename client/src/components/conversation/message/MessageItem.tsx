@@ -5,6 +5,7 @@ import type { MessageResponse } from "../../../types/types";
 import ImageAttachment from "./attachment/ImageAttachment";
 import AudioAttachment from "./attachment/AudioAttachment";
 import DocumentAttachment from "./attachment/DocumentAttachment";
+import VideoAttachment from "./attachment/VideoAttachment";
 import Image from "../../ui/Image";
 import ReplyMessage from "./ReplyMessage";
 import MessageAction from "./MessageAction";
@@ -47,6 +48,7 @@ function MessageItem({
   const images = attachments?.filter((a) => a.type === "image") ?? [];
   const audios = attachments?.filter((a) => a.type === "audio") ?? [];
   const documents = attachments?.filter((a) => a.type === "document") ?? [];
+  const videos = attachments?.filter((a) => a.type === "video") ?? [];
 
   const [showActions, setShowActions] = useState<boolean>(false);
   const itemRef = useRef<HTMLDivElement>(null);
@@ -180,7 +182,7 @@ function MessageItem({
 
               {is_recalled && (
                 <div
-                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word italic ${is_me ? "bg-primary text-white" : "bg-neutral-200"}`}
+                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word italic ${is_me ? "bg-primary text-white" : "bg-bg"}`}
                 >
                   <p>Tin nhắn đã thu hồi</p>
                 </div>
@@ -217,13 +219,21 @@ function MessageItem({
                 />
               ))}
 
+              {videos.map((att) => (
+                <VideoAttachment
+                  key={att.attachment_id}
+                  att={att}
+                  isMe={is_me}
+                />
+              ))}
+
               {!is_recalled && link_preview?.url && (
                 <LinkPreview linkPreview={link_preview} isMe={is_me} />
               )}
 
               {!is_recalled && content && (
                 <div
-                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word ${is_me ? "bg-primary text-white" : "bg-neutral-200"}`}
+                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word ${is_me ? "bg-primary text-white" : "bg-bg"}`}
                 >
                   <p>{content}</p>
                 </div>

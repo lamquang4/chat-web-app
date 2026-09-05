@@ -64,7 +64,10 @@ function ConversationFooter({ conversationId, replyTo, onCancelReply }: Props) {
       newPreviews.push({
         id: uuidv4(),
         file,
-        previewUrl: isImage ? URL.createObjectURL(file) : undefined,
+        previewUrl:
+          isImage || file.type.startsWith("video/")
+            ? URL.createObjectURL(file)
+            : undefined,
       });
     });
 
@@ -143,7 +146,7 @@ function ConversationFooter({ conversationId, replyTo, onCancelReply }: Props) {
     recorder.isRecording;
 
   return (
-    <div className="flex flex-col border-t border-neutral-300">
+    <div className="flex flex-col border-t border-border">
       {replyTo && <ReplyPreview replyTo={replyTo} onCancel={onCancelReply} />}
 
       <div className="flex items-center gap-2 px-4 py-3">
@@ -178,7 +181,7 @@ function ConversationFooter({ conversationId, replyTo, onCancelReply }: Props) {
         <Button
           onClick={handleSendMessage}
           disabled={!canSend || isLoadingSendMessage}
-          className={`p-1.5 rounded-full ${canSend && !isLoadingSendMessage ? "bg-primary text-white" : "text-neutral bg-neutral-200"}`}
+          className={`p-1.5 rounded-full ${canSend && !isLoadingSendMessage ? "bg-primary text-white" : "text-text-muted bg-bg"}`}
         >
           <SendHorizontal size={20} />
         </Button>

@@ -8,12 +8,10 @@ interface Props {
 
 function FilePreview({ name, onRemove }: Props) {
   return (
-    <div className="relative inline-flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-white border border-neutral-200 max-w-[260px] min-w-[160px]">
+    <div className="relative inline-flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-white border border-border max-w-[260px] min-w-[160px]">
       <FileText size={24} className="text-primary" />
 
-      <div className="min-w-0">
-        <p className="font-semibold truncate leading-snug">{name}</p>
-      </div>
+      <p className="font-semibold truncate leading-snug">{name}</p>
 
       <Button
         onClick={onRemove}

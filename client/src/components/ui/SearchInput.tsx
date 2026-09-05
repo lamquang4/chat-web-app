@@ -9,7 +9,7 @@ interface Props {
 function SearchInput({ value, onChange }: Props) {
   return (
     <div className="flex-1 min-w-0 w-full">
-      <form className="flex items-stretch w-full overflow-hidden duration-200 bg-neutral-200 rounded-lg font-medium">
+      <form className="flex items-stretch w-full overflow-hidden duration-200 bg-bg rounded-lg font-medium">
         <div className="px-2 flex items-center">
           <Search size={20} strokeWidth={1.5} />
         </div>

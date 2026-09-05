@@ -10,7 +10,7 @@ function LinkPreview({ linkPreview, isMe }: Props) {
   return (
     <div
       className={`rounded-xl overflow-hidden max-w-90 ${
-        isMe ? "bg-primary text-white" : "bg-neutral-200"
+        isMe ? "bg-primary text-white" : "bg-bg"
       }`}
     >
       <a href={linkPreview.url} target="_blank" rel="noopener noreferrer">

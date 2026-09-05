@@ -22,7 +22,7 @@ export const fileSchema = z
   })
   .refine((file) => ALLOWED_FILE_MIME_TYPES.includes(file.type), {
     message:
-      "Chỉ hỗ trợ file PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, MP3, MP4, WEBM, OGG, WAV",
+      "Chỉ hỗ trợ file PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, MP3, MP4, WEBM, OGG, WAV và video MP4, WEBM",
   });
 
 export const imagesSchema = z.array(imageSchema);

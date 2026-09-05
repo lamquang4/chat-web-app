@@ -25,7 +25,7 @@
 |                       | Thêm/xóa thành viên   | Thành viên trong nhóm có chức vụ là Owner/Admin mới có thể thêm hoặc xóa thành viên khỏi nhóm          |
 |                       | Phân quyền thành viên | Bổ nhiệm/gỡ quyền Admin, chuyển quyền Owner                                                            |
 |                       | Giải tán nhóm         | Owner mới có thể giải tán nhóm trò chuyện                                                              |
-| **Quản lý tin nhắn**  | Gửi tệp đính kèm      | Cho phép gửi kèm hình ảnh, tài liệu, hoặc ghi âm/gửi file audio trong tin nhắn                         |
+| **Quản lý tin nhắn**  | Gửi tệp đính kèm      | Cho phép gửi kèm hình ảnh, tài liệu, audio và video MP4/WEBM trong tin nhắn                            |
 |                       | Trả lời tin nhắn      | Cho phép phản hồi trực tiếp một tin nhắn cụ thể (của bản thân hoặc người khác), giữ ngữ cảnh hội thoại |
 |                       | Thu hồi tin nhắn      | Cho phép người dùng thu hồi tin nhắn đã gửi của chính bản thân họ                                      |
 | **Quản lý bạn bè**    | Gửi lời mời kết bạn   | Cho phép người dùng gửi yêu cầu kết bạn đến người dùng khác                                            |

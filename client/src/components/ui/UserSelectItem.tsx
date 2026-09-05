@@ -24,7 +24,7 @@ function UserSelectItem({
       type="button"
       onClick={onToggle}
       className={`flex items-center gap-3 w-full p-2 rounded-xl transition-colors text-left ${
-        selected ? "bg-secondary" : "hover:bg-neutral-200"
+        selected ? "bg-secondary" : "hover:bg-bg"
       }`}
     >
       <div className="flex gap-3 items-center flex-1">
@@ -44,7 +44,7 @@ function UserSelectItem({
 
       <div
         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-          selected ? "bg-info border-info" : "border-neutral-300"
+          selected ? "bg-info border-info" : "border-border"
         }`}
       >
         {selected && <Check size={14} className="text-white stroke-3" />}

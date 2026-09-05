@@ -67,7 +67,7 @@ function LoginForm() {
               type="email"
               id="email"
               placeholder="Nhập email"
-              className="block w-full px-3 py-2 border border-neutral-300 focus:border-primary"
+              className="block w-full px-3 py-2 border border-border focus:border-primary"
               error={errors.email?.message}
               {...register("email")}
             />
@@ -84,14 +84,14 @@ function LoginForm() {
                 type={!showPassword ? "password" : "text"}
                 id="password"
                 placeholder="Nhập mật khẩu"
-                className="block w-full px-3 pr-12 py-2 border border-neutral-300 focus:border-primary"
+                className="block w-full px-3 pr-12 py-2 border border-border focus:border-primary"
                 {...register("password")}
                 error={errors.password?.message}
               />
 
               <Button
                 type="button"
-                className="absolute hover-scale right-3 top-1/2 -translate-y-1/2 text-neutral"
+                className="absolute hover-scale right-3 top-1/2 -translate-y-1/2 text-text-muted"
                 onClick={toggleShowPassword}
               >
                 {!showPassword ? <Eye size={22} /> : <EyeOff size={22} />}
