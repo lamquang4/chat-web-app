@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
 const ms = require("ms");
 const config = require("../config/app.config");
-const transporter = require("../config/nodemailer.config");
+const { sendEmail } = require("../config/mailjet.config");
 const { sequelize } = require("../config/database/mysql.config");
 const AppError = require("../utils/app.error");
 const {
@@ -64,15 +64,13 @@ const buildOtpEmailHtml = (otp_code) => `
 `;
 
 const sendOtpEmail = async (to, otp_code) => {
-  try {
-    await transporter.sendMail({
-      from: config.nodemailer.from || config.nodemailer.user,
-      to,
-      subject: "Mã xác thực OTP",
-      html: buildOtpEmailHtml(otp_code),
-    });
-  } catch (error) {
-    console.error("[MAIL] Không thể gửi OTP:", error.code, error.message);
+  const is_sent = await sendEmail({
+    to,
+    subject: "Mã xác thực OTP",
+    html: buildOtpEmailHtml(otp_code),
+  });
+
+  if (!is_sent) {
     throw new AppError(OTP_EMAIL_SEND_FAILED);
   }
 };
@@ -112,6 +110,8 @@ const register = async ({ first_name, last_name, email, phone, password }) => {
   const otp_code_hash = hashOtp(otp_code);
   const expires_at = new Date(Date.now() + OTP_EXPIRE_SECONDS * 1000);
 
+  let created_user = null;
+
   await sequelize.transaction(async (t) => {
     if (existing_by_email) {
       await Otp.destroy({ where: { email }, transaction: t });
@@ -121,7 +121,7 @@ const register = async ({ first_name, last_name, email, phone, password }) => {
         { transaction: t },
       );
     } else {
-      await User.create(
+      created_user = await User.create(
         {
           first_name,
           last_name,
@@ -138,10 +138,15 @@ const register = async ({ first_name, last_name, email, phone, password }) => {
       { email, otp_code_hash, attempts: 0, expires_at },
       { transaction: t },
     );
-
-    // Chỉ commit user và OTP sau khi SMTP nhận email thành công.
-    await sendOtpEmail(email, otp_code);
   });
+
+  try {
+    await sendOtpEmail(email, otp_code);
+  } catch (error) {
+    await Otp.destroy({ where: { email, otp_code_hash } });
+    if (created_user) await created_user.destroy();
+    throw error;
+  }
 
   return null;
 };
@@ -217,8 +222,7 @@ const resendRegisterOtp = async (email) => {
   await sequelize.transaction(async (t) => {
     if (current_otp) {
       const cooldown_expires_at =
-        current_otp.created_at.getTime() +
-        OTP_RESEND_COOLDOWN_SECONDS * 1000;
+        current_otp.created_at.getTime() + OTP_RESEND_COOLDOWN_SECONDS * 1000;
 
       if (Date.now() < cooldown_expires_at) {
         throw new AppError(OTP_RESEND_TOO_SOON);
@@ -236,9 +240,14 @@ const resendRegisterOtp = async (email) => {
       },
       { transaction: t },
     );
-
-    await sendOtpEmail(email, otp_code);
   });
+
+  try {
+    await sendOtpEmail(email, otp_code);
+  } catch (error) {
+    await Otp.destroy({ where: { email, otp_code_hash } });
+    throw error;
+  }
 
   return null;
 };

@@ -16,14 +16,11 @@ module.exports = {
     connectionLimit: Number(process.env.MYSQL_CONNECTION_LIMIT) || 10,
   },
 
-  // Nodemailer
-  nodemailer: {
-    host: process.env.MAIL_HOST,
-    port: Number(process.env.MAIL_PORT) || 587,
-    secure: process.env.MAIL_SECURE === "true",
-    user: process.env.MAIL_USER,
-    password: process.env.MAIL_PASSWORD,
-    from: process.env.MAIL_FROM,
+  // Mailjet Email API qua HTTPS
+  mailjet: {
+    apiKey: process.env.MAILJET_API_KEY,
+    secretKey: process.env.MAILJET_SECRET_KEY,
+    from: process.env.MAILJET_FROM,
   },
 
   // JWT
