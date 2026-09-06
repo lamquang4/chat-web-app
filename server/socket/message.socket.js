@@ -3,20 +3,16 @@ const ConversationMember = require("../models/conversation-member.model");
 const MessageSeen = require("../models/message-seen.model");
 const User = require("../entities/user.entity");
 
-const notifyNewMessage = (io, memberIds, senderId, message) => {
-  memberIds
-    .filter((id) => String(id) !== String(senderId))
-    .forEach((memberId) => {
-      io.to(`user:${memberId}`).emit(EVENTS.MESSAGE_NEW, message);
-    });
+const notifyNewMessage = (io, memberIds, _senderId, message) => {
+  memberIds.forEach((memberId) => {
+    io.to(`user:${memberId}`).emit(EVENTS.MESSAGE_NEW, message);
+  });
 };
 
-const notifyMessageRecalled = (io, memberIds, actorId, payload) => {
-  memberIds
-    .filter((id) => String(id) !== String(actorId))
-    .forEach((memberId) => {
-      io.to(`user:${memberId}`).emit(EVENTS.MESSAGE_RECALLED, payload);
-    });
+const notifyMessageRecalled = (io, memberIds, _actorId, payload) => {
+  memberIds.forEach((memberId) => {
+    io.to(`user:${memberId}`).emit(EVENTS.MESSAGE_RECALLED, payload);
+  });
 };
 
 const registerMessageHandlers = (io, socket) => {

@@ -123,10 +123,12 @@ export function useConversationSocket() {
     (payload: { conversation_id: string }) => {
       queryClient.invalidateQueries({
         queryKey: [...conversationKeys.all, "list"],
+        refetchType: "all",
       });
 
       queryClient.invalidateQueries({
         queryKey: [...conversationKeys.all, "detail", payload.conversation_id],
+        refetchType: "all",
       });
     },
     [queryClient],
@@ -134,6 +136,12 @@ export function useConversationSocket() {
 
   useSocketListener(SOCKET_EVENTS.MESSAGE_NEW, handleConversationActivity);
   useSocketListener(SOCKET_EVENTS.MESSAGE_SEEN, handleConversationActivity);
+  useSocketListener("connect", () => {
+    queryClient.invalidateQueries({
+      queryKey: conversationKeys.all,
+      refetchType: "all",
+    });
+  });
   useSocketListener(SOCKET_EVENTS.CONVERSATION_CREATED, handleCreatedGroup);
   useSocketListener(SOCKET_EVENTS.CONVERSATION_UPDATED, handleUpdatedGroup);
   useSocketListener(SOCKET_EVENTS.CONVERSATION_DELETED, handleDeletedGroup);

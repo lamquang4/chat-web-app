@@ -25,10 +25,11 @@ export function useMessageSocket(conversationId: string) {
 
   const handleNewMessage = useCallback(
     (message: MessageResponse) => {
-      if (message.conversation_id !== conversationId) return;
+      if (String(message.conversation_id) !== String(conversationId)) return;
 
       queryClient.invalidateQueries({
         queryKey: conversationDetailQueryKey(conversationId),
+        refetchType: "all",
       });
     },
     [conversationId, queryClient],
@@ -39,6 +40,7 @@ export function useMessageSocket(conversationId: string) {
       void message_id;
       queryClient.invalidateQueries({
         queryKey: conversationDetailQueryKey(conversationId),
+        refetchType: "all",
       });
     },
     [conversationId, queryClient],
@@ -57,7 +59,7 @@ export function useMessageSocket(conversationId: string) {
       message_id: string;
       seen_by: MessageResponse["seen_by"];
     }) => {
-      if (conversation_id !== conversationId) return;
+      if (String(conversation_id) !== String(conversationId)) return;
       queryClient.setQueriesData<ConversationDetailQueryData>(
         { queryKey: conversationDetailQueryKey(conversationId) },
         (old) => {
