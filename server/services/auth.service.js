@@ -22,6 +22,7 @@ const {
   SESSION_REVOKED,
   SESSION_EXPIRED,
   SESSION_NOT_FOUND,
+  OTP_EMAIL_SEND_FAILED,
 } = require("../utils/error.code");
 const { generateOtpCode, hashOtp } = require("../utils/otp.util");
 const {
@@ -63,12 +64,17 @@ const buildOtpEmailHtml = (otp_code) => `
 `;
 
 const sendOtpEmail = async (to, otp_code) => {
-  await transporter.sendMail({
-    from: config.nodemailer.from,
-    to,
-    subject: "Mã xác thực OTP",
-    html: buildOtpEmailHtml(otp_code),
-  });
+  try {
+    await transporter.sendMail({
+      from: config.nodemailer.from || config.nodemailer.user,
+      to,
+      subject: "Mã xác thực OTP",
+      html: buildOtpEmailHtml(otp_code),
+    });
+  } catch (error) {
+    console.error("[MAIL] Không thể gửi OTP:", error.code, error.message);
+    throw new AppError(OTP_EMAIL_SEND_FAILED);
+  }
 };
 
 const register = async ({ first_name, last_name, email, phone, password }) => {
@@ -132,9 +138,10 @@ const register = async ({ first_name, last_name, email, phone, password }) => {
       { email, otp_code_hash, attempts: 0, expires_at },
       { transaction: t },
     );
-  });
 
-  await sendOtpEmail(email, otp_code);
+    // Chỉ commit user và OTP sau khi SMTP nhận email thành công.
+    await sendOtpEmail(email, otp_code);
+  });
 
   return null;
 };
@@ -204,28 +211,34 @@ const resendRegisterOtp = async (email) => {
     order: [["created_at", "DESC"]],
   });
 
-  if (current_otp) {
-    const cooldown_expires_at =
-      current_otp.created_at.getTime() + OTP_RESEND_COOLDOWN_SECONDS * 1000;
-
-    if (Date.now() < cooldown_expires_at) {
-      throw new AppError(OTP_RESEND_TOO_SOON);
-    }
-
-    await current_otp.destroy();
-  }
-
   const otp_code = generateOtpCode();
   const otp_code_hash = hashOtp(otp_code);
 
-  await Otp.create({
-    email,
-    otp_code_hash,
-    attempts: 0,
-    expires_at: new Date(Date.now() + OTP_EXPIRE_SECONDS * 1000),
-  });
+  await sequelize.transaction(async (t) => {
+    if (current_otp) {
+      const cooldown_expires_at =
+        current_otp.created_at.getTime() +
+        OTP_RESEND_COOLDOWN_SECONDS * 1000;
 
-  await sendOtpEmail(email, otp_code);
+      if (Date.now() < cooldown_expires_at) {
+        throw new AppError(OTP_RESEND_TOO_SOON);
+      }
+
+      await current_otp.destroy({ transaction: t });
+    }
+
+    await Otp.create(
+      {
+        email,
+        otp_code_hash,
+        attempts: 0,
+        expires_at: new Date(Date.now() + OTP_EXPIRE_SECONDS * 1000),
+      },
+      { transaction: t },
+    );
+
+    await sendOtpEmail(email, otp_code);
+  });
 
   return null;
 };

@@ -20,6 +20,11 @@ const ErrorCode = {
     status: 500,
     message: "Lỗi hệ thống",
   },
+  OTP_EMAIL_SEND_FAILED: {
+    code: "OTP_EMAIL_SEND_FAILED",
+    status: 502,
+    message: "Không thể gửi mã OTP đến email, vui lòng thử lại",
+  },
   UNCATEGORIZED_EXCEPTION: {
     code: "UNCATEGORIZED_EXCEPTION",
     status: 500,
