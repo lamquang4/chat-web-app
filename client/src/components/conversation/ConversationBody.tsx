@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { format, isSameDay, isToday, isYesterday } from "date-fns";
+import { vi } from "date-fns/locale";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import type { MessageResponse } from "../../types/types";
 import MessageItem from "./message/MessageItem";
 import Button from "../ui/Button";
@@ -29,7 +37,7 @@ function ConversationBody({
   onRecall,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const replyMessageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
@@ -63,7 +71,11 @@ function ConversationBody({
   };
 
   const scrollToBottom = (smooth: boolean) => {
-    bottomRef.current?.scrollIntoView({
+    const container = containerRef.current;
+    if (!container) return;
+
+    container.scrollTo({
+      top: container.scrollHeight,
       behavior: smooth ? "smooth" : "auto",
     });
   };
@@ -81,27 +93,33 @@ function ConversationBody({
     }
   };
 
-  // Khi có tin nhắn mới / mở conversation -> cuộn xuống nếu đang ở đáy
+  // Reset trạng thái scroll khi chuyển sang cuộc trò chuyện khác.
   useEffect(() => {
+    isFirstRenderRef.current = true;
+    isAtBottomRef.current = true;
+  }, [conversationId]);
+
+  // Khi có tin nhắn mới / mở conversation -> cuộn xuống nếu đang ở đáy
+  useLayoutEffect(() => {
     const smooth = !isFirstRenderRef.current;
 
     if (isFirstRenderRef.current || isAtBottomRef.current) {
       scrollToBottom(smooth);
     }
     isFirstRenderRef.current = false;
-  }, [messages]);
+  }, [conversationId, messages]);
 
   // Theo dõi chiều cao container đổi (ảnh/attachment load xong)
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const content = contentRef.current;
+    if (!content) return;
 
     const resizeObserver = new ResizeObserver(() => {
       if (isAtBottomRef.current) {
         scrollToBottom(false);
       }
     });
-    resizeObserver.observe(container);
+    resizeObserver.observe(content);
     return () => resizeObserver.disconnect();
   }, []);
 
@@ -111,13 +129,20 @@ function ConversationBody({
     el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
+  const formatMessageDate = (date: Date) => {
+    if (isToday(date)) return "Hôm nay";
+    if (isYesterday(date)) return "Hôm qua";
+    return format(date, "EEEE, dd/MM/yyyy", { locale: vi });
+  };
+
   return (
     <div
       ref={containerRef}
       onScroll={handleScroll}
+      style={{ overflowAnchor: "none" }}
       className="relative flex flex-col flex-1 overflow-y-auto gap-4"
     >
-      <div className="px-3.75 py-10">
+      <div ref={contentRef} className="px-3.75 py-10">
         <div ref={loadMoreRef} className="h-1" />
 
         {isFetchingNextPage && (
@@ -125,25 +150,38 @@ function ConversationBody({
         )}
 
         <div className="flex flex-col gap-4">
-          {messages.map((message) => (
-            <div
-              key={message.message_id}
-              ref={(el) => {
-                replyMessageRefs.current[message.message_id] = el;
-              }}
-            >
-              <MessageItem
-                message={message}
-                onReply={onReply}
-                onRecall={onRecall}
-                onJumpToReplyMessage={scrollToReplyMessage}
-                onOpenImage={handleOpenImage}
-              />
-            </div>
-          ))}
-        </div>
+          {messages.map((message, index) => {
+            const messageDate = new Date(message.created_at);
+            const previousMessage = messages[index - 1];
+            const isNewDay =
+              !previousMessage ||
+              !isSameDay(messageDate, new Date(previousMessage.created_at));
 
-        <div ref={bottomRef} />
+            return (
+              <div key={message.message_id} className="flex flex-col gap-4">
+                {isNewDay && (
+                  <div className="flex justify-center py-2 text-text-muted font-medium">
+                    <span>{formatMessageDate(messageDate)}</span>
+                  </div>
+                )}
+
+                <div
+                  ref={(el) => {
+                    replyMessageRefs.current[message.message_id] = el;
+                  }}
+                >
+                  <MessageItem
+                    message={message}
+                    onReply={onReply}
+                    onRecall={onRecall}
+                    onJumpToReplyMessage={scrollToReplyMessage}
+                    onOpenImage={handleOpenImage}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {!isAtBottom && (

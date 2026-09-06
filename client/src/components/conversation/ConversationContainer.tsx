@@ -6,10 +6,9 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { useGetConversationDetail } from "../../hooks/queries/useConversations";
 import { useParams } from "react-router-dom";
-import { useRecallMessage } from "../../hooks/queries/useMesssages";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { useRecallMessage } from "../../hooks/queries/useMessages";
 import { useMessageSocket } from "../../hooks/useMessageSocket";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { getSocket, onSocketReady } from "../../hooks/socket/socket";
 import { SOCKET_EVENTS } from "../../hooks/socket/events";
 import { jwtUtil } from "../../utils/jwtUtil";
@@ -54,12 +53,7 @@ function ConversationContainer() {
   const recallMessage = useRecallMessage();
   const isLoadingRecallMessage = recallMessage.isPending;
 
-  const loadMoreRef = useIntersectionObserver({
-    enabled: Boolean(hasNextPage) && !isFetchingNextPage,
-    onIntersect: () => {
-      fetchNextPage();
-    },
-  });
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const handleReply = (message: MessageResponse) => {
     if (!message) {
@@ -124,6 +118,7 @@ function ConversationContainer() {
           />
 
           <ConversationBody
+            key={conversation.conversation_id}
             conversationId={conversation.conversation_id}
             messages={messages || []}
             loadMoreRef={loadMoreRef}

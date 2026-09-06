@@ -1,15 +1,25 @@
-const cheerio = require("cheerio");
+const {
+  cacheGet,
+  cacheSet,
+  CACHE_TTL_MS,
+  NEGATIVE_CACHE_TTL_MS,
+} = require("./link-preview.cache.util");
+const { isSafeUrl } = require("./link-preview-fetch.util");
+const { fetchPreview } = require("./link-preview-source.util");
 
-const URL_PATTERN = /(https?:\/\/[^\s<]+|www\.[^\s<]+)/i;
+const URL_PATTERN = /(https?:\/\/[^\s<>"'“”‘’)]+|www\.[^\s<>"'“”‘’)]+)/i;
+const TRAILING_PUNCT = /[),.!?;:'"”’]+$/; // Loại bỏ dấu câu nằm cuối URL
 
+// Lấy URL đầu tiên trong nội dung tin nhắn
 const getLinkFromContent = (content) => {
   const match = content?.match(URL_PATTERN);
   if (!match) return null;
 
-  const value = match[0].replace(/[),.!?]+$/, "");
+  const value = match[0].replace(TRAILING_PUNCT, "");
   return value.toLowerCase().startsWith("www.") ? `https://${value}` : value;
 };
 
+// Xóa URL khỏi nội dung tin nhắn
 const removeLinkFromContent = (content, link) => {
   if (!content || !link) return content?.trim() || null;
 
@@ -23,62 +33,27 @@ const removeLinkFromContent = (content, link) => {
   return contentWithoutLink || null;
 };
 
-const isSafeUrl = (value) => {
-  try {
-    const url = new URL(value);
-    if (!["http:", "https:"].includes(url.protocol)) return false;
-    const hostname = url.hostname.toLowerCase();
-    return !(
-      hostname === "localhost" ||
-      hostname === "127.0.0.1" ||
-      hostname === "[::1]" ||
-      hostname.startsWith("10.") ||
-      hostname.startsWith("192.168.") ||
-      hostname.startsWith("169.254.") ||
-      hostname.startsWith("172.16.")
-    );
-  } catch {
-    return false;
-  }
-};
-
 const getLinkPreview = async (content) => {
   const url = getLinkFromContent(content);
-  if (!url || !isSafeUrl(url)) return null;
+  if (!url) return null;
 
-  try {
-    const response = await fetch(url, {
-      headers: { "user-agent": "Mozilla/5.0 (compatible; ChatWebApp/1.0)" },
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!response.ok) return null;
+  const cached = cacheGet(url);
+  if (cached !== undefined) return cached;
 
-    const html = await response.text();
-    const $ = cheerio.load(html);
-    const getMeta = (property, name) =>
-      $(`meta[property="${property}"], meta[name="${name}"]`).attr("content") ||
-      null;
-
-    return {
-      url,
-      title: getMeta("og:title", "twitter:title") || $("title").text() || null,
-      description:
-        getMeta("og:description", "twitter:description") ||
-        $("meta[name='description']").attr("content") ||
-        null,
-      image: getMeta("og:image", "twitter:image") || null,
-      site_name:
-        getMeta("og:site_name", "twitter:site") || new URL(url).hostname,
-    };
-  } catch {
-    return {
-      url,
-      title: null,
-      description: null,
-      image: null,
-      site_name: new URL(url).hostname,
-    };
+  if (!isSafeUrl(url)) {
+    cacheSet(url, null, NEGATIVE_CACHE_TTL_MS);
+    return null;
   }
+
+  let preview = null;
+  try {
+    preview = await fetchPreview(url);
+  } catch {
+    preview = null;
+  }
+
+  cacheSet(url, preview, preview ? CACHE_TTL_MS : NEGATIVE_CACHE_TTL_MS);
+  return preview;
 };
 
 module.exports = { getLinkFromContent, removeLinkFromContent, getLinkPreview };

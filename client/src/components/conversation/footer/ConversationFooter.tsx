@@ -17,7 +17,7 @@ import {
   RECORDING_MIME_TYPE,
 } from "../../../constants/limit";
 import { sendMessageSchema } from "../../../schemas/messageSchema";
-import { useSendMessage } from "../../../hooks/queries/useMesssages";
+import { useSendMessage } from "../../../hooks/queries/useMessages";
 
 interface Props {
   conversationId: string;
