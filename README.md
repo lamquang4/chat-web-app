@@ -6,6 +6,10 @@
 
 ![](docs/images/ui2.webp)
 
+**Live demo**
+
+Website: [![Live Demo](https://img.shields.io/badge/Live_Demo-000000?style=flat-square&logo=render&logoColor=white)](https://chat-web-app-1rj9.onrender.com)
+
 ## Công nghệ sử dụng
 
 | Hạng mục | Công nghệ / Công cụ                                                                                                                                               |
