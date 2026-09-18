@@ -10,15 +10,58 @@
 
 Website: [![Live Demo](https://img.shields.io/badge/Live_Demo-000000?style=flat-square&logo=render&logoColor=white)](https://chat-web-app-1rj9.onrender.com)
 
+## Cài đặt môi trường
+
+**1. Clone repository**
+
+```
+git clone https://github.com/lamquang4/chat-web-app.git
+```
+
+**2. Chạy website bằng Docker**
+
+```
+docker compose up --build
+```
+
 ## Công nghệ sử dụng
 
-| Hạng mục | Công nghệ / Công cụ                                                                                                                                               |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend | Vite + TypeScript + React 19 <br> TailwindCSS <br> Redux <br> Axios + Tanstack query <br> Zod + React Hook Form <br> socket.io-client <br> js-cookie + jwt-decode |
-| Backend  | Node.js + Express.js <br> JWT + bcrypt <br> Socket.io <br> Cloudinary + Multer                                                                                    |
-| Database | MySQL, MongoDB                                                                                                                                                    |
+| Hạng mục         | Công nghệ / Công cụ                                                                                                                                               |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend         | Vite + TypeScript + React 19 <br> TailwindCSS <br> Redux <br> Axios + Tanstack query <br> Zod + React Hook Form <br> socket.io-client <br> js-cookie + jwt-decode |
+| Backend          | Node.js + Express.js <br> JWT + bcrypt <br> Socket.io <br> Cloudinary + Multer                                                                                    |
+| Database         | MySQL, MongoDB                                                                                                                                                    |
+| Containerization | Docker                                                                                                                                                            |
 
-## Chức năng chính
+## Tổng quan hệ thống
+
+### Realtime communication
+
+Hệ thống chat hoạt động theo thời gian thực, cho phép người dùng gửi và nhận tin nhắn ngay lập tức mà không cần tải lại trang.
+
+Socket.IO được sử dụng để đồng bộ dữ liệu giữa client và server, hỗ trợ cập nhật tin nhắn, hội thoại, trạng thái online/offline và các thay đổi trong nhóm theo thời gian thực.
+
+Các tính năng realtime bao gồm:
+
+- Gửi và nhận tin nhắn tức thì
+- Thông báo tin nhắn mới
+- Cập nhật trạng thái online/offline
+- Đồng bộ hội thoại giữa các client
+- Hỗ trợ nhắn tin riêng tư và nhóm
+
+### Authentication & Session Management
+
+Hệ thống sử dụng JWT với access token và refresh token để xác thực người dùng và duy trì phiên đăng nhập. Access token có thời hạn ngắn để xác thực API, còn refresh token được dùng để cấp token mới khi access token hết hạn.
+
+Hệ thống áp dụng refresh token rotation, mỗi lần refresh thành công sẽ tạo refresh token mới thay thế refresh token cũ. Refresh token được lưu dưới dạng hash và gắn với từng session, giúp kiểm soát và revoke phiên đăng nhập.
+
+Để hạn chế Zombie Session, hệ thống sử dụng cơ chế:
+
+- Giới hạn session theo LRU: Mỗi user được giới hạn số lượng session đang hoạt động. Khi vượt quá giới hạn, hệ thống tự động revoke các session lâu không hoạt động nhất trước.
+
+- Chạy scheduled job định kỳ để tự động xóa các session đã hết hạn hoặc đã bị revoke.
+
+### Chức năng chính
 
 | Chức năng             | Hành động             | Mô tả                                                                                                  |
 | --------------------- | --------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -37,7 +80,7 @@ Website: [![Live Demo](https://img.shields.io/badge/Live_Demo-000000?style=flat-
 |                       | Từ chối kết bạn       | Cho phép người dùng từ chối lời mời kết bạn đã nhận                                                    |
 |                       | Xóa kết bạn           | Cho phép người dùng gỡ bỏ mối quan hệ bạn bè đã thiết lập trước đó với người khác                      |
 
-## Chức vụ trong nhóm trò chuyện
+### Phân quyền trong nhóm trò chuyện
 
 | Hành động                | Owner | Admin | Member |
 | ------------------------ | :---: | :---: | :----: |
@@ -48,3 +91,14 @@ Website: [![Live Demo](https://img.shields.io/badge/Live_Demo-000000?style=flat-
 | Gỡ quyền Admin           |  ✅   |  ❌   |   ❌   |
 | Chuyển quyền Owner       |  ✅   |  ❌   |   ❌   |
 | Giải tán nhóm            |  ✅   |  ❌   |   ❌   |
+
+### Upload hỗ trợ
+
+Hệ thống hỗ trợ upload nhiều loại trong cuộc trò chuyện như hình ảnh, video, audio và tài liệu. Các tệp được tải lên Cloudinary và lưu trữ dưới dạng URL an toàn, sau đó được hiển thị trực tiếp trong giao diện chat.
+
+Các định dạng được hỗ trợ:
+
+- Hình ảnh: JPG, PNG, WEBP
+- Video: MP4, WEBM
+- Audio: MP3, WAV
+- Tài liệu: PDF, DOC, DOCX, XLSX, TXT
