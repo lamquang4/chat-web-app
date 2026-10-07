@@ -8,7 +8,7 @@ interface Props {
 
 function VideoPreview({ previewUrl, onRemove }: Props) {
   return (
-    <div className="relative rounded-2xl bg-white border border-border aspect-square max-w-[64px]">
+    <div className="relative rounded-2xl bg-white border border-border w-18 h-18">
       <video
         src={previewUrl}
         muted

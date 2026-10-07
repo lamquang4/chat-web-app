@@ -235,7 +235,7 @@ function EditGroupForm({
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center gap-4 w-full">
             <Label
-              className={`relative w-25 h-25 rounded-full bg-bg flex items-center justify-center shrink-0 overflow-hidden group ${
+              className={`relative w-25 h-25 rounded-full bg-muted flex items-center justify-center shrink-0 overflow-hidden group ${
                 canEditGroupInfo && "cursor-pointer"
               }`}
             >
@@ -272,14 +272,14 @@ function EditGroupForm({
                 className={`w-full font-medium bg-transparent border-b border-border py-2 transition-colors ${
                   canEditGroupInfo
                     ? "focus:border-primary"
-                    : "cursor-default text-text-muted"
+                    : "cursor-default text-muted-foreground"
                 }`}
               />
             </div>
           </div>
 
-          <div className="max-h-[280px] overflow-y-auto space-y-2">
-            <div className="space-y-1">
+          <div className="space-y-2">
+            <div className="space-y-1 max-h-[280px] overflow-y-auto ">
               {members?.map((member) => {
                 const isMe = member.user_id === account?.user_id;
 

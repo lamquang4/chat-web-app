@@ -56,7 +56,7 @@ function ConversationHeader({
             <h5 className={`font-semibold`}>{name}</h5>
 
             <span
-              className={`font-medium ${is_online ? "text-success" : "text-text-muted"}`}
+              className={`font-medium ${is_online ? "text-success" : "text-muted-foreground"}`}
             >
               {is_online ? "Đang hoạt động" : "Đang ngoại tuyến"}
             </span>

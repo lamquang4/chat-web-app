@@ -87,7 +87,7 @@ function SideMenu() {
             <div className="flex gap-2 items-center">
               <div className="relative" ref={containerRef}>
                 <Button
-                  className="bg-bg w-8.5 h-8.5 rounded-lg justify-center items-center flex"
+                  className="bg-muted w-8.5 h-8.5 rounded-lg justify-center items-center flex"
                   onClick={handleToggleDropdown}
                 >
                   <Ellipsis size={18} />
@@ -103,7 +103,7 @@ function SideMenu() {
               </div>
 
               <Button
-                className="lg:hidden bg-bg w-8.5 h-8.5 rounded-lg justify-center items-center flex"
+                className="lg:hidden bg-muted w-8.5 h-8.5 rounded-lg justify-center items-center flex"
                 onClick={() => dispatch(closeSideMenu())}
               >
                 <X size={18} />

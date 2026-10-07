@@ -27,7 +27,7 @@ function SeenIndicator({ is_seen, seen_by }: Props) {
       </div>
     );
   }
-  return <Check size={13} className="text-text-muted" />;
+  return <Check size={13} className="text-muted-foreground" />;
 }
 
 export default SeenIndicator;

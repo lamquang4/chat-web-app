@@ -44,14 +44,14 @@ function MessageSearchBar({ onClose, isOpen }: Props) {
           <div className="flex items-center gap-0.5 border-x border-border px-2">
             <Button
               disabled={!hasResults}
-              className="text-text-muted p-1 rounded-full hover:bg-bg transition-colors"
+              className="text-muted-foreground p-1 rounded-full hover:bg-muted transition-colors"
             >
               <ChevronUp size={22} />
             </Button>
 
             <Button
               disabled={!hasResults}
-              className="text-text-muted p-1 rounded-full hover:bg-bg transition-colors"
+              className="text-muted-foreground p-1 rounded-full hover:bg-muted transition-colors"
             >
               <ChevronDown size={22} />
             </Button>
@@ -59,7 +59,7 @@ function MessageSearchBar({ onClose, isOpen }: Props) {
 
           <Button
             onClick={onClose}
-            className="text-text-muted p-1 rounded-full transition-colors hover:bg-bg"
+            className="text-muted-foreground p-1 rounded-full transition-colors hover:bg-muted"
           >
             <X size={22} />
           </Button>

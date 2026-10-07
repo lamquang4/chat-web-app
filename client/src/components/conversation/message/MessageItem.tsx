@@ -182,7 +182,7 @@ function MessageItem({
 
               {is_recalled && (
                 <div
-                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word italic ${is_me ? "bg-primary text-white" : "bg-bg"}`}
+                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word italic ${is_me ? "bg-primary text-white" : "bg-muted"}`}
                 >
                   <p>Tin nhắn đã thu hồi</p>
                 </div>
@@ -233,7 +233,7 @@ function MessageItem({
 
               {!is_recalled && content && (
                 <div
-                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word ${is_me ? "bg-primary text-white" : "bg-bg"}`}
+                  className={`px-4 py-2.5 rounded-xl leading-relaxed wrap-break-word ${is_me ? "bg-primary text-white" : "bg-muted"}`}
                 >
                   <p>{content}</p>
                 </div>

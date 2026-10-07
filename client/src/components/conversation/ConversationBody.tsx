@@ -160,7 +160,7 @@ function ConversationBody({
             return (
               <div key={message.message_id} className="flex flex-col gap-4">
                 {isNewDay && (
-                  <div className="flex justify-center py-2 text-text-muted font-medium">
+                  <div className="flex justify-center py-2 text-muted-foreground font-medium">
                     <span>{formatMessageDate(messageDate)}</span>
                   </div>
                 )}
@@ -189,7 +189,7 @@ function ConversationBody({
           <Button
             type="button"
             onClick={() => scrollToBottom(true)}
-            className="w-9 h-9 rounded-full bg-white hover:bg-bg border border-border pointer-events-auto text-text-muted flex justify-center items-center shadow-md"
+            className="w-9 h-9 rounded-full bg-white hover:bg-muted border border-border pointer-events-auto text-muted-foreground flex justify-center items-center shadow-md"
           >
             <ArrowDown size={22} />
           </Button>

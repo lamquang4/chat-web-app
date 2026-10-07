@@ -24,7 +24,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
     return null;
   }
   return (
-    <div className="flex items-center justify-between gap-2 px-4 py-2 bg-bg border-b border-border">
+    <div className="flex items-center justify-between gap-2 px-4 py-2 bg-muted border-b border-border">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {(attachment?.type === "image" || link) && (
           <Image
@@ -37,7 +37,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
         <div className="flex-1 min-w-0">
           <p className="font-medium truncate">Trả lời {replyTo.sender_name}</p>
 
-          <div className="flex items-center gap-1.5 min-w-0 text-text-muted font-medium">
+          <div className="flex items-center gap-1.5 min-w-0 text-muted-foreground font-medium">
             {attachment?.type === "image" && (
               <span className="flex items-center gap-1.5 shrink-0">
                 <ImageIcon size={16} />
@@ -78,7 +78,7 @@ function ReplyPreview({ replyTo, onCancel }: Props) {
         </div>
       </div>
 
-      <Button onClick={onCancel} className="text-text-muted">
+      <Button onClick={onCancel} className="text-muted-foreground">
         <X size={20} />
       </Button>
     </div>

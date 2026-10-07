@@ -60,7 +60,7 @@ function PreviewList({ previews, onRemove, onAdd }: Props) {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       className={`flex items-center gap-2 overflow-x-auto snap-x snap-proximity scroll-smooth transition-colors px-4 py-2 ${
-        isDragging ? "bg-primary" : "bg-bg"
+        isDragging ? "bg-primary" : "bg-muted"
       }`}
     >
       <div>

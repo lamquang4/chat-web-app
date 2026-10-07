@@ -59,7 +59,7 @@ function LoginForm() {
         </h1>
 
         <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-[5px]">
+          <div className="flex flex-col gap-1">
             <Label htmlFor="email" required>
               Email
             </Label>
@@ -74,7 +74,7 @@ function LoginForm() {
             <FieldError message={errors.email?.message} />
           </div>
 
-          <div>
+          <div className="flex flex-col gap-1">
             <Label htmlFor="password" required>
               Mật khẩu
             </Label>
@@ -91,7 +91,7 @@ function LoginForm() {
 
               <Button
                 type="button"
-                className="absolute hover-scale right-3 top-1/2 -translate-y-1/2 text-text-muted"
+                className="absolute hover-scale right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 onClick={toggleShowPassword}
               >
                 {!showPassword ? <Eye size={22} /> : <EyeOff size={22} />}

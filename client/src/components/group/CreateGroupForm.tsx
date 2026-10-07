@@ -110,10 +110,10 @@ function CreateGroupForm({ onClose }: Props) {
       onSubmit={handleSubmit(onSubmit, onError)}
       className="flex flex-col flex-1 min-h-0"
     >
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-hidden">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center gap-4 w-full">
-            <Label className="relative w-25 h-25 rounded-full bg-bg flex items-center justify-center shrink-0 overflow-hidden group cursor-pointer">
+            <Label className="relative w-25 h-25 rounded-full bg-muted flex items-center justify-center shrink-0 overflow-hidden group cursor-pointer">
               <Image
                 src={avatarPreview || "/assets/group.png"}
                 alt="Ảnh nhóm"
@@ -149,7 +149,7 @@ function CreateGroupForm({ onClose }: Props) {
                 {selected?.map((f) => (
                   <div
                     key={f.user_id}
-                    className="flex items-center gap-2 bg-bg rounded-md p-2 shrink-0"
+                    className="flex items-center gap-2 bg-muted rounded-md p-2 shrink-0"
                   >
                     <div className="w-6 h-6 rounded-full overflow-hidden shrink-0">
                       <Image
@@ -178,7 +178,7 @@ function CreateGroupForm({ onClose }: Props) {
               {isLoading ? (
                 <Loading size={45} color="black" thickness={2} height={0} />
               ) : friends?.content.length === 0 ? (
-                <p className="text-center py-2 text-text-muted">
+                <p className="text-center py-2 text-muted-foreground">
                   Không tìm thấy kết quả
                 </p>
               ) : (

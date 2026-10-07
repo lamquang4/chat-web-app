@@ -28,7 +28,7 @@ function ConversationItem({ conversation }: Props) {
       onClick={() => dispatch(closeSideMenu())}
     >
       <div
-        className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-bg w-full`}
+        className={`flex items-center gap-3 py-2 px-2 cursor-pointer rounded-lg hover:bg-muted w-full`}
       >
         <div className="relative flex shrink-0">
           <Image
@@ -48,7 +48,7 @@ function ConversationItem({ conversation }: Props) {
           <h5 className={`font-semibold`}>{name}</h5>
 
           <p
-            className={`truncate text-text-muted ${is_last_message_seen ? "font-semibold" : "font-medium"}`}
+            className={`truncate text-muted-foreground ${is_last_message_seen ? "font-semibold" : "font-medium"}`}
           >
             {last_message
               ? is_last_message_me

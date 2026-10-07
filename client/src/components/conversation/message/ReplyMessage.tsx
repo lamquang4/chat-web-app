@@ -14,11 +14,11 @@ function ReplyMessage({ reply, onClick }: Props) {
   return (
     <div
       onClick={onClick}
-      className={`flex items-start gap-2 px-3 py-2 rounded-2xl bg-bg text-text-muted ${
+      className={`flex items-start gap-2 px-3 py-2 rounded-2xl bg-muted text-muted-foreground ${
         onClick && "cursor-pointer"
       }`}
     >
-      <div className="w-0.5 self-stretch rounded-full shrink-0 bg-text-muted" />
+      <div className="w-0.5 self-stretch rounded-full shrink-0 bg-muted-foreground" />
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {(attachment?.type === "image" || link) && (
           <Image

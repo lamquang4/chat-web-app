@@ -46,7 +46,7 @@ function MessageInput({
 
   return (
     <div className="relative flex-1 min-w-0">
-      <div className="bg-bg flex flex-col gap-2 rounded-xl overflow-hidden">
+      <div className="bg-muted flex flex-col gap-2 rounded-xl overflow-hidden">
         <PreviewList
           previews={previews}
           onRemove={onRemovePreview}

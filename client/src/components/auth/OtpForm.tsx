@@ -275,7 +275,7 @@ function OtpForm({ email }: Props) {
               className={`font-medium transition-all ${
                 !isCooldownActive
                   ? "text-primary cursor-pointer"
-                  : "text-text-muted cursor-not-allowed"
+                  : "text-muted-foreground cursor-not-allowed"
               }`}
             >
               {isCooldownActive

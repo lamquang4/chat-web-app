@@ -24,7 +24,7 @@ function UserSelectItem({
       type="button"
       onClick={onToggle}
       className={`flex items-center gap-3 w-full p-2 rounded-xl transition-colors text-left ${
-        selected ? "bg-secondary" : "hover:bg-bg"
+        selected ? "bg-secondary" : "hover:bg-muted"
       }`}
     >
       <div className="flex gap-3 items-center flex-1">

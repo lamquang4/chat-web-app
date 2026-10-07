@@ -75,7 +75,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
   };
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="flex-1 overflow-y-auto custom-scroll">
+      <div className="flex-1">
         <div className="flex flex-col gap-4">
           {selected.length > 0 && (
             <div className="flex flex-col gap-2">
@@ -84,7 +84,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
                 {selected.map((f) => (
                   <div
                     key={f.user_id}
-                    className="flex items-center gap-2 bg-bg rounded-md p-2 shrink-0"
+                    className="flex items-center gap-2 bg-muted rounded-md p-2 shrink-0"
                   >
                     <div className="w-6 h-6 rounded-full overflow-hidden shrink-0">
                       <Image
@@ -113,7 +113,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
               {isLoading ? (
                 <Loading size={45} color="black" thickness={2} height={0} />
               ) : friends?.content?.length === 0 ? (
-                <p className="text-center py-2 text-text-muted">
+                <p className="text-center py-2 text-muted-foreground">
                   Không tìm thấy kết quả
                 </p>
               ) : (

@@ -38,7 +38,7 @@ function MessageAction({ actions, forceVisible, onActionDone }: Props) {
               (e.currentTarget as HTMLButtonElement).blur();
             }}
             type="button"
-            className={`flex items-center justify-center gap-1.5 px-3 h-9.5 whitespace-nowrap hover:bg-bg active:bg-bg ${action.className ?? "text-text-muted"}`}
+            className={`flex items-center justify-center gap-1.5 px-3 h-9.5 whitespace-nowrap hover:bg-muted active:bg-muted ${action.className ?? "text-muted-foreground"}`}
           >
             {action.icon}
             <span>{action.label}</span>

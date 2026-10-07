@@ -67,7 +67,7 @@ function RegisterForm({ onSuccess }: Props) {
 
         <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex gap-[15px] sm:flex-row flex-col">
-            <div className="space-y-[5px] w-full">
+            <div className="flex flex-col gap-1 w-full">
               <Label htmlFor="first_name" required>
                 Họ
               </Label>
@@ -83,7 +83,7 @@ function RegisterForm({ onSuccess }: Props) {
               <FieldError message={errors.first_name?.message} />
             </div>
 
-            <div className="space-y-[5px] w-full">
+            <div className="flex flex-col gap-1 w-full">
               <Label htmlFor="last_name" required>
                 Tên
               </Label>
@@ -99,7 +99,7 @@ function RegisterForm({ onSuccess }: Props) {
             </div>
           </div>
 
-          <div className="space-y-[5px] w-full">
+          <div className="flex flex-col gap-1">
             <Label htmlFor="email" required>
               Email
             </Label>
@@ -114,7 +114,7 @@ function RegisterForm({ onSuccess }: Props) {
             <FieldError message={errors.email?.message} />
           </div>
 
-          <div className="space-y-[5px] w-full">
+          <div className="flex flex-col gap-1">
             <Label htmlFor="phone" required>
               Số điện thoại
             </Label>
@@ -129,7 +129,7 @@ function RegisterForm({ onSuccess }: Props) {
             <FieldError message={errors.phone?.message} />
           </div>
 
-          <div className="space-y-[5px]">
+          <div className="flex flex-col gap-1">
             <Label htmlFor="password" required>
               Mật khẩu
             </Label>
@@ -146,7 +146,7 @@ function RegisterForm({ onSuccess }: Props) {
 
               <Button
                 type="button"
-                className="absolute hover-scale right-3 top-1/2 -translate-y-1/2 text-text-muted"
+                className="absolute hover-scale right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 onClick={toggleShowPassword}
               >
                 {!showPassword ? <Eye size={22} /> : <EyeOff size={22} />}

@@ -8,7 +8,7 @@ interface Props {
 function VideoAttachment({ att, isMe }: Props) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl ${isMe ? "bg-primary" : "bg-bg"}`}
+      className={`overflow-hidden rounded-2xl ${isMe ? "bg-primary" : "bg-muted"}`}
     >
       <video
         src={att.url}

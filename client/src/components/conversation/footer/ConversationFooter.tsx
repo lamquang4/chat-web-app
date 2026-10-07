@@ -181,7 +181,7 @@ function ConversationFooter({ conversationId, replyTo, onCancelReply }: Props) {
         <Button
           onClick={handleSendMessage}
           disabled={!canSend || isLoadingSendMessage}
-          className={`p-1.5 rounded-full ${canSend && !isLoadingSendMessage ? "bg-primary text-white" : "text-text-muted bg-bg"}`}
+          className={`p-1.5 rounded-full ${canSend && !isLoadingSendMessage ? "bg-primary text-white" : "text-muted-foreground bg-muted"}`}
         >
           <SendHorizontal size={20} />
         </Button>

@@ -25,7 +25,7 @@ function ConversationTabs() {
             ${
               activeTab === tab.value
                 ? "bg-secondary text-primary"
-                : "hover:bg-bg"
+                : "hover:bg-muted"
             }`}
         >
           {tab.label}
