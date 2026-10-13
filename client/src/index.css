@@ -13,44 +13,36 @@
   --border: #d1d5db;
   --muted: #f3f3f3;
   --muted-foreground: #72747b;
-  --text-h1: 1.8rem;
-  --text-h2: 1.6rem;
-  --text-h3: 1.4rem;
-  --text-h4: 1.2rem;
-  --text-h5: 1rem;
-  --text-body: 0.9rem;
-  --text-small: 0.75rem;
 }
 
 @theme inline {
-  /* Colors */
   --color-background-1: var(--background-1);
   --color-background-2: var(--background-2);
-
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-foreground: var(--foreground);
-
   --color-success: var(--success);
   --color-info: var(--info);
   --color-danger: var(--danger);
-
   --color-border: var(--border);
-
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-
-  /* Typography */
-  --text-h1: var(--text-h1);
-  --text-h2: var(--text-h2);
-  --text-h3: var(--text-h3);
-  --text-h4: var(--text-h4);
-  --text-h5: var(--text-h5);
-  --text-body: var(--text-body);
-  --text-small: var(--text-small);
-
-  /* Font */
   --font-sans: "Quicksand", sans-serif;
+}
+
+@theme {
+  --text-h1: 1.8rem;
+  --text-h1--line-height: 2.25rem;
+  --text-h2: 1.6rem;
+  --text-h2--line-height: 2rem;
+  --text-h3: 1.4rem;
+  --text-h3--line-height: 1.85rem;
+  --text-h4: 1.2rem;
+  --text-h4--line-height: 1.65rem;
+  --text-h5: 1rem;
+  --text-h5--line-height: 1.5rem;
+  --text-body: 0.9rem;
+  --text-small: 0.75rem;
 }
 
 @layer base {
