@@ -30,7 +30,22 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            success: {
+              iconTheme: {
+                primary: "var(--success)",
+                secondary: "#ffffff",
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: "var(--danger)",
+                secondary: "#ffffff",
+              },
+            },
+          }}
+        />
         <ScrollToTop />
         <LayoutRoute />
       </Router>

@@ -16,7 +16,7 @@ function SearchInput({ value, onChange }: Props) {
 
         <Input
           type="search"
-          className="w-full pr-2 py-3 bg-transparent outline-none border-none"
+          className="w-full pr-2 py-3 bg-transparent border-none"
           maxLength={100}
           placeholder="Tìm kiếm..."
           value={value}

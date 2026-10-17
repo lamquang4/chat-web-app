@@ -145,9 +145,7 @@ function ConversationBody({
       <div ref={contentRef} className="px-3.75 py-10">
         <div ref={loadMoreRef} className="h-1" />
 
-        {isFetchingNextPage && (
-          <Loading height={0} size={30} color="gray" thickness={2} />
-        )}
+        {isFetchingNextPage && <Loading size={30} color="gray" thickness={2} />}
 
         <div className="flex flex-col gap-4">
           {messages.map((message, index) => {

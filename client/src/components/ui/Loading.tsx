@@ -1,11 +1,11 @@
 import { ClipLoader } from "react-spinners";
 interface Props {
-  height: number;
+  height?: number;
   size: number;
   color: string;
   thickness: number;
 }
-function Loading({ height, color, size, thickness }: Props) {
+function Loading({ height = 0, color, size, thickness }: Props) {
   return (
     <div
       className="flex justify-center items-center"

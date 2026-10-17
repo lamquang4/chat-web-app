@@ -111,7 +111,7 @@ function AddGroupMembersForm({ onClose, conversationId }: Props) {
               className={`overflow-y-auto h-[320px] ${isLoading && "flex justify-center items-center"}`}
             >
               {isLoading ? (
-                <Loading size={45} color="black" thickness={2} height={0} />
+                <Loading size={45} color="black" thickness={2} />
               ) : friends?.content?.length === 0 ? (
                 <p className="text-center py-2 text-muted-foreground">
                   Không tìm thấy kết quả

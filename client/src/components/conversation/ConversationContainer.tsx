@@ -95,7 +95,7 @@ function ConversationContainer() {
       className={`flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white ${isLoading && "justify-center items-center"}`}
     >
       {isLoading ? (
-        <Loading size={45} color="black" thickness={2} height={0} />
+        <Loading size={45} color="black" thickness={2} />
       ) : !conversation ? (
         <div className="flex items-center justify-center h-full px-[15px]">
           <div className="flex flex-col items-center gap-[15px]">

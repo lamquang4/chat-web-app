@@ -9,7 +9,7 @@ function Select({ children, className, error, ...props }: Props) {
   return (
     <select
       className={twMerge(
-        "text-[0.9rem] outline-none transition-colors border",
+        "outline-none transition-colors border",
         className,
         error && "border-danger focus:border-danger",
       )}

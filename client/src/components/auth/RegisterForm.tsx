@@ -179,7 +179,7 @@ function RegisterForm({ onSuccess }: Props) {
 
       {isLoading && (
         <Overplay>
-          <Loading height={0} size={55} color="white" thickness={8} />
+          <Loading size={55} color="white" thickness={8} />
           <h4 className="text-white">Vui lòng chờ trong giây lát ...</h4>
         </Overplay>
       )}

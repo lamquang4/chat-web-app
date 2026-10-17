@@ -11,7 +11,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
       <input
         ref={ref}
         className={twMerge(
-          "text-[0.9rem] outline-none transition-colors",
+          "outline-none transition-colors",
           className,
           error && "border-danger! focus:border-danger!",
         )}

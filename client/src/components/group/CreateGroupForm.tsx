@@ -176,7 +176,7 @@ function CreateGroupForm({ onClose }: Props) {
               className={`overflow-y-auto ${isLoading ? "flex justify-center items-center h-[220px]" : "max-h-[220px]"}`}
             >
               {isLoading ? (
-                <Loading size={45} color="black" thickness={2} height={0} />
+                <Loading size={45} color="black" thickness={2} />
               ) : friends?.content.length === 0 ? (
                 <p className="text-center py-2 text-muted-foreground">
                   Không tìm thấy kết quả
