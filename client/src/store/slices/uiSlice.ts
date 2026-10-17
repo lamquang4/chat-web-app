@@ -4,12 +4,12 @@ import type { ConversationType } from "../../types/types";
 export type ConversationTab = ConversationType | null;
 
 interface UIState {
-  sideMenuOpen: boolean;
+  sideBarOpen: boolean;
   activeConversationTab: ConversationTab;
 }
 
 const initialState: UIState = {
-  sideMenuOpen: false,
+  sideBarOpen: false,
   activeConversationTab: null,
 };
 
@@ -17,14 +17,14 @@ const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
-    toggleSideMenu(state) {
-      state.sideMenuOpen = !state.sideMenuOpen;
+    toggleSideBar(state) {
+      state.sideBarOpen = !state.sideBarOpen;
     },
-    openSideMenu(state) {
-      state.sideMenuOpen = true;
+    openSideBar(state) {
+      state.sideBarOpen = true;
     },
-    closeSideMenu(state) {
-      state.sideMenuOpen = false;
+    closeSideBar(state) {
+      state.sideBarOpen = false;
     },
     setActiveConversationTab(state, action: PayloadAction<ConversationTab>) {
       state.activeConversationTab = action.payload;
@@ -33,9 +33,9 @@ const uiSlice = createSlice({
 });
 
 export const {
-  toggleSideMenu,
-  openSideMenu,
-  closeSideMenu,
+  toggleSideBar,
+  openSideBar,
+  closeSideBar,
   setActiveConversationTab,
 } = uiSlice.actions;
 

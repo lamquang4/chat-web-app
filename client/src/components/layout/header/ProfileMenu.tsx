@@ -28,12 +28,12 @@ function ProfileMenu() {
   const menuItems = [
     {
       label: "Tài khoản",
-      icon: <CircleUserRound size={20} />,
+      icon: <CircleUserRound size={22} />,
       href: `/account/profile`,
     },
     {
       label: "Đăng xuất",
-      icon: <DoorOpen size={20} />,
+      icon: <DoorOpen size={22} />,
       onClick: () => {
         handleLogout();
       },

@@ -1,7 +1,7 @@
 import Button from "../../ui/Button";
 import { Maximize, Menu } from "lucide-react";
-import { useAppDispatch } from "../../../redux/store";
-import { toggleSideMenu } from "../../../redux/slices/uiSlice";
+import { useAppDispatch } from "../../../store/store";
+import { toggleSideBar } from "../../../store/slices/uiSlice";
 import ProfileMenu from "./ProfileMenu";
 
 function Header() {
@@ -22,7 +22,7 @@ function Header() {
       <div className="w-full flex justify-between items-center px-[15px] py-4">
         <div className="flex sm:gap-[20px] gap-[15px] items-center">
           <Button
-            onClick={() => dispatch(toggleSideMenu())}
+            onClick={() => dispatch(toggleSideBar())}
             className="bg-muted w-8.5 h-8.5 rounded-lg justify-center items-center flex lg:hidden"
           >
             <Menu size={18} />
@@ -30,7 +30,7 @@ function Header() {
 
           <Button
             onClick={handleFullscreen}
-            className="bg-muted w-8.5 h-8.5 rounded-lg justify-center items-center sm:flex hidden"
+            className="bg-muted w-8.5 h-8.5 rounded-lg justify-center items-center lg:flex hidden"
           >
             <Maximize size={18} />
           </Button>

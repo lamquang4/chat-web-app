@@ -1,5 +1,5 @@
 import Header from "./header/Header";
-import SideMenu from "./side-menu/SideMenu";
+import SideMenu from "./side-bar/SideBar";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { useFriendSocket } from "../../hooks/useFriendSocket";
 import { useConversationSocket } from "../../hooks/useConversationSocket";

@@ -2,8 +2,8 @@ import Button from "../../ui/Button";
 import {
   setActiveConversationTab,
   type ConversationTab,
-} from "../../../redux/slices/uiSlice";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
+} from "../../../store/slices/uiSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
 
 const tabs: { label: string; value: ConversationTab }[] = [
   { label: "Tất cả", value: null },

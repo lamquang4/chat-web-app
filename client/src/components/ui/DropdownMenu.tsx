@@ -3,7 +3,7 @@ import Button from "./Button";
 
 export interface DropdownMenuItem {
   label: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   onClick?: () => void;
   href?: string;
   disabled?: boolean;
@@ -12,6 +12,7 @@ export interface DropdownMenuItem {
 }
 
 interface Props {
+  header?: React.ReactNode;
   items: DropdownMenuItem[];
   horizontal?: "left" | "right";
   vertical?: "top" | "bottom";
@@ -19,6 +20,7 @@ interface Props {
 
 function DropdownMenu({
   items,
+  header,
   horizontal = "right",
   vertical = "bottom",
 }: Props) {
@@ -36,6 +38,8 @@ function DropdownMenu({
     <div
       className={`absolute inline-flex flex-col ${horizontalClass[horizontal]} ${verticalClass[vertical]} w-max bg-white shadow-md rounded-sm z-20`}
     >
+      {header}
+
       {items.map((item, index) =>
         item.href ? (
           <Link
@@ -43,7 +47,7 @@ function DropdownMenu({
             to={item.href}
             onClick={item.onClick}
             target={item.target}
-            className="block px-2.5 py-3.5 hover:bg-muted w-full"
+            className="block px-2.5 py-3 hover:bg-muted w-full"
           >
             <div
               className={`flex items-center gap-2 font-medium ${

@@ -1,7 +1,7 @@
 import OtpForm from "./OtpForm";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
-import { useAppSelector } from "../../redux/store";
+import { useAppSelector } from "../../store/store";
 import { useState } from "react";
 
 function AuthLayout() {

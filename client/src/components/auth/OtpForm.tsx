@@ -9,8 +9,8 @@ import {
   OTP_RESEND_COOLDOWN_SECONDS,
   OTP_LENGTH,
 } from "../../constants/limit";
-import { useAppDispatch } from "../../redux/store";
-import { setAuthView } from "../../redux/slices/authViewSlice";
+import { useAppDispatch } from "../../store/store";
+import { setAuthView } from "../../store/slices/authViewSlice";
 import { MoveLeft } from "lucide-react";
 import { validateOtp, validateOtpDigit } from "../../utils/validators";
 import { sendOtpSchema, verifyOtpSchema } from "../../schemas/authSchema";
