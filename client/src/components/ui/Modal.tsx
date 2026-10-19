@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
-import Overplay from "./Overplay";
+import Overlay from "./Overlay";
 import Button from "./Button";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   maxWidth?: string;
 }
 
-function ModalLayout({
+function Modal({
   title,
   onClose,
   children,
@@ -18,7 +18,7 @@ function ModalLayout({
 }: Props) {
   return (
     <>
-      <Overplay onClose={onClose} />
+      <Overlay onClose={onClose} />
 
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
         <div
@@ -39,4 +39,4 @@ function ModalLayout({
   );
 }
 
-export default ModalLayout;
+export default Modal;

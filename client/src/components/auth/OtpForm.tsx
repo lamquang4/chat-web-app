@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Button from "../ui/Button";
 import Loading from "../ui/Loading";
-import Overplay from "../ui/Overplay";
+import Overlay from "../ui/Overlay";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
 import {
@@ -310,12 +310,12 @@ function OtpForm({ email }: Props) {
       </div>
 
       {isLoadingRegisterVerify && (
-        <Overplay>
+        <Overlay>
           <Loading size={55} color="white" thickness={8} />
           <h4 className="text-white font-bold">
             Vui lòng chờ trong giây lát ...
           </h4>
-        </Overplay>
+        </Overlay>
       )}
     </>
   );

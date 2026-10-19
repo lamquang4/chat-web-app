@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Overplay from "../ui/Overplay";
+import Overlay from "../ui/Overlay";
 import Loading from "../ui/Loading";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
@@ -123,10 +123,10 @@ function LoginForm() {
       </div>
 
       {isLoading && (
-        <Overplay>
+        <Overlay>
           <Loading size={55} color="white" thickness={8} />
           <h4 className="text-white">Vui lòng chờ trong giây lát ...</h4>
-        </Overplay>
+        </Overlay>
       )}
     </>
   );

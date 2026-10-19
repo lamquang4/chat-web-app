@@ -1,15 +1,15 @@
-import ModalLayout from "../ui/ModalLayout";
+import Modal from "../ui/Modal";
 import CreateGroupForm from "./CreateGroupForm";
 
 interface Props {
   onClose: () => void;
-};
+}
 
 function CreateGroupModal({ onClose }: Props) {
   return (
-    <ModalLayout title="Tạo nhóm" onClose={onClose}>
+    <Modal title="Tạo nhóm" onClose={onClose}>
       <CreateGroupForm onClose={onClose} />
-    </ModalLayout>
+    </Modal>
   );
 }
 

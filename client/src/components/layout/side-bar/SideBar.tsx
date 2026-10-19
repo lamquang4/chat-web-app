@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { closeSideBar } from "../../../store/slices/uiSlice";
-import Overplay from "../../ui/Overplay";
+import Overlay from "../../ui/Overlay";
 import SearchInput from "../../ui/SearchInput";
 import ConversationTabs from "./ConversationTabs";
 import ConversationList from "./ConversationList";
@@ -117,7 +117,7 @@ function SideBar() {
       </aside>
 
       {sideBarOpen && (
-        <Overplay
+        <Overlay
           onClose={() => dispatch(closeSideBar())}
           className="lg:hidden"
         />

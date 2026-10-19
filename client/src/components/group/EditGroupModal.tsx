@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ModalLayout from "../ui/ModalLayout";
+import Modal from "../ui/Modal";
 import EditGroupForm from "./EditGroupForm";
 import AddGroupMembersForm from "./AddGroupMembersForm";
 
@@ -17,7 +17,7 @@ function EditGroupModal({ onClose, conversationId, name, avatar_url }: Props) {
   const backToEdit = () => setShowAddMembers(false);
 
   return (
-    <ModalLayout
+    <Modal
       title={showAddMembers ? "Thêm thành viên" : `Nhóm ${name}`}
       onClose={showAddMembers ? backToEdit : onClose}
     >
@@ -35,7 +35,7 @@ function EditGroupModal({ onClose, conversationId, name, avatar_url }: Props) {
           avatar_url={avatar_url}
         />
       )}
-    </ModalLayout>
+    </Modal>
   );
 }
 
