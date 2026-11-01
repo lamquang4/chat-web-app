@@ -16,17 +16,34 @@ export const axiosInstance = axios.create({
   timeout: 10000,
 });
 
-// Nếu có nhiều request cùng lúc phát hiện accessToken hết hạn
-// Chỉ gọi 1 API refresh token duy nhất
-// Các request còn lại sẽ chờ kết quả refresh của 1 refresh thôi
+// Nhiều request cùng lúc gặp token hết hạn thì chỉ gọi 1 API refresh
 let refreshPromise: Promise<string> | null = null;
 
-// Khi refresh token hết hạn hoặc không hợp lệ thì xóa access token + refresh token
-const handleInvalidRefreshToken = (error: unknown): void => {
-  if (axios.isAxiosError(error) && error.response?.status === 401) {
-    jwtUtil.clearTokens();
+let isForceLoggingOut = false;
+
+// Xóa token và về trang đăng nhập
+const forceLogout = (): void => {
+  if (isForceLoggingOut) return;
+  isForceLoggingOut = true;
+
+  jwtUtil.clearTokens();
+
+  if (typeof window !== "undefined" && window.location.pathname !== "/") {
     window.location.href = "/";
+  } else {
+    isForceLoggingOut = false;
   }
+};
+
+// Refresh bị BE từ chối (session bị xóa, token bị thu hồi...) thì đăng xuất.
+// Lỗi mạng/timeout (không có response) thì không đăng xuất.
+const handleInvalidRefreshToken = (error: unknown): void => {
+  if (axios.isAxiosError(error)) {
+    if (error.response) forceLogout();
+    return;
+  }
+  // Lỗi "Không có refresh token"
+  forceLogout();
 };
 
 // Gọi API refresh để lấy access token + refresh token mới
@@ -39,25 +56,30 @@ const doRefresh = async (): Promise<string> => {
     { refresh_token: refreshToken },
   );
 
-  // BE áp dụng refresh token rotation, mỗi lần refresh
-  // sẽ trả về refresh_token mới và vô hiệu hóa token cũ.
+  // BE dùng refresh token rotation: mỗi lần refresh trả refresh token mới
+  // và vô hiệu hóa token cũ
   jwtUtil.setAccessToken(data.data.access_token);
   jwtUtil.setRefreshToken(data.data.refresh_token);
 
   return data.data.access_token;
 };
 
-// Hàm gọi API để lấy access token mới bằng refresh token
-// Dùng Web Locks API để đồng bộ giữa nhiều tab cùng domain
-export const refreshAccessToken = (): Promise<string> => {
+// staleToken: access token vừa bị BE từ chối (nếu có).
+// Dùng Web Locks để đồng bộ giữa nhiều tab: nếu tab khác đã refresh xong
+// (token hiện tại khác staleToken và còn hạn) thì dùng luôn.
+export const refreshAccessToken = (staleToken?: string): Promise<string> => {
   if (refreshPromise) return refreshPromise;
 
   refreshPromise = (async () => {
     if (typeof navigator !== "undefined" && "locks" in navigator) {
       return navigator.locks.request("auth-refresh-token", async () => {
-        if (!jwtUtil.isAccessTokenExpiringSoon()) {
-          const current = jwtUtil.getAccessTokenRaw();
-          if (current) return current;
+        const current = jwtUtil.getAccessTokenRaw();
+        if (
+          current &&
+          current !== staleToken &&
+          !jwtUtil.isAccessTokenExpiringSoon()
+        ) {
+          return current;
         }
         return doRefresh();
       });
@@ -73,6 +95,7 @@ export const refreshAccessToken = (): Promise<string> => {
   return refreshPromise;
 };
 
+// Request: token sắp hết hạn thì refresh trước khi gửi
 axiosInstance.interceptors.request.use(async (config) => {
   let accessToken = jwtUtil.getAccessTokenRaw();
 
@@ -95,36 +118,37 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Response: chỉ xét status 401, không phụ thuộc error code
 axiosInstance.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError<{ code?: string }>) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean;
-    };
-    const status = error.response?.status;
-    const errorCode = error.response?.data?.code;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as
+      | (InternalAxiosRequestConfig & { _retry?: boolean })
+      | undefined;
 
-    const isAccessTokenExpired =
-      status === 401 && errorCode === "ACCESS_TOKEN_EXPIRED";
-
-    if (
-      isAccessTokenExpired &&
-      originalRequest &&
-      !originalRequest._retry &&
-      jwtUtil.hasValidLocalRefreshToken()
-    ) {
-      originalRequest._retry = true; // Đánh dấu đã retry, tránh lặp vô hạn nếu vẫn lỗi
-
-      try {
-        const newToken = await refreshAccessToken();
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        handleInvalidRefreshToken(refreshError);
-        return Promise.reject(error);
-      }
+    if (error.response?.status !== 401 || !originalRequest) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    // Đã refresh + retry mà vẫn 401, hoặc không còn refresh token hợp lệ
+    if (originalRequest._retry || !jwtUtil.hasValidLocalRefreshToken()) {
+      forceLogout();
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true; // Tránh lặp vô hạn
+
+    try {
+      const staleToken = String(
+        originalRequest.headers?.Authorization ?? "",
+      ).replace("Bearer ", "");
+
+      const newToken = await refreshAccessToken(staleToken || undefined);
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return axiosInstance(originalRequest);
+    } catch (refreshError) {
+      handleInvalidRefreshToken(refreshError);
+      return Promise.reject(error);
+    }
   },
 );

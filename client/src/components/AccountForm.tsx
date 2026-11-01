@@ -71,7 +71,10 @@ function AccountForm() {
 
       <div className="w-full flex justify-center items-center">
         <div className="bg-white rounded-lg shadow-md max-w-[480px] w-full px-[15px] md:px-[30px] py-[40px]">
-          <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="flex flex-col gap-6"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Label className="relative w-24 h-24 rounded-full bg-muted/70 flex items-center justify-center shrink-0 overflow-hidden hover:bg-muted transition-colors group cursor-pointer mx-auto">
               <Image
                 src={avatarPreview ?? "/assets/user.png"}
@@ -89,90 +92,92 @@ function AccountForm() {
               />
             </Label>
 
-            <div className="flex gap-[15px] sm:flex-row flex-col">
-              <div className="space-y-[5px] w-full">
-                <Label htmlFor="first_name" required>
-                  Họ
-                </Label>
-                <Controller
-                  name="first_name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      type="text"
-                      id="first_name"
-                      placeholder="Nhập họ"
-                      className="block w-full px-3 py-2 border border-border focus:border-primary"
-                      error={errors.first_name?.message}
-                    />
-                  )}
-                />
-                <FieldError message={errors.first_name?.message} />
-              </div>
-
-              <div className="space-y-[5px] w-full">
-                <Label htmlFor="last_name" required>
-                  Tên
-                </Label>
-                <Controller
-                  name="last_name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      type="text"
-                      id="last_name"
-                      placeholder="Nhập tên"
-                      className="block w-full px-3 py-2 border border-border focus:border-primary"
-                      error={errors.last_name?.message}
-                    />
-                  )}
-                />
-                <FieldError message={errors.last_name?.message} />
-              </div>
-            </div>
-
-            <div className="space-y-[5px] w-full">
-              <Label htmlFor="email" required>
-                Email
-              </Label>
-
-              <Input
-                type="email"
-                id="email"
-                readOnly
-                placeholder="Nhập email"
-                className="block w-full px-3 py-2 border border-border focus:border-primary cursor-not-allowed"
-                value={account?.email}
-              />
-            </div>
-
-            <div className="space-y-[5px] w-full">
-              <Label htmlFor="phone" required>
-                Số điện thoại
-              </Label>
-              <Controller
-                name="phone"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="tel"
-                    id="phone"
-                    placeholder="Nhập số điện thoại"
-                    className="block w-full px-3 py-2 border border-border focus:border-primary"
-                    error={errors.phone?.message}
+            <div className="flex flex-col gap-[15px]">
+              <div className="flex gap-[15px] sm:flex-row flex-col">
+                <div className="space-y-[5px] w-full">
+                  <Label htmlFor="first_name" required>
+                    Họ
+                  </Label>
+                  <Controller
+                    name="first_name"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        id="first_name"
+                        placeholder="Nhập họ"
+                        className="block w-full px-3 py-2 border border-border focus:border-primary"
+                        error={errors.first_name?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FieldError message={errors.phone?.message} />
+                  <FieldError message={errors.first_name?.message} />
+                </div>
+
+                <div className="space-y-[5px] w-full">
+                  <Label htmlFor="last_name" required>
+                    Tên
+                  </Label>
+                  <Controller
+                    name="last_name"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        id="last_name"
+                        placeholder="Nhập tên"
+                        className="block w-full px-3 py-2 border border-border focus:border-primary"
+                        error={errors.last_name?.message}
+                      />
+                    )}
+                  />
+                  <FieldError message={errors.last_name?.message} />
+                </div>
+              </div>
+
+              <div className="space-y-[5px] w-full">
+                <Label htmlFor="email" required>
+                  Email
+                </Label>
+
+                <Input
+                  type="email"
+                  id="email"
+                  readOnly
+                  placeholder="Nhập email"
+                  className="block w-full px-3 py-2 border border-border focus:border-primary cursor-not-allowed"
+                  value={account?.email}
+                />
+              </div>
+
+              <div className="space-y-[5px] w-full">
+                <Label htmlFor="phone" required>
+                  Số điện thoại
+                </Label>
+                <Controller
+                  name="phone"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      type="tel"
+                      id="phone"
+                      placeholder="Nhập số điện thoại"
+                      className="block w-full px-3 py-2 border border-border focus:border-primary"
+                      error={errors.phone?.message}
+                    />
+                  )}
+                />
+                <FieldError message={errors.phone?.message} />
+              </div>
             </div>
 
             <Button
               disabled={isSubmitting || isLoading}
               type="submit"
-              className="w-full hover-scale bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
+              className="w-full hover-scale bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center"
             >
               Cập nhật
             </Button>
